@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet implements MySQLInit {
             out.println("<title>Servlet LoginServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>ttServlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>zzServlet LoginServlet at " + request.getContextPath() + "</h1>");
             Connection conn = null;
             Statement stmt = null;
             ResultSet rs = null;
