@@ -7,3 +7,4 @@ Write the TODO list.
 - User (UserID, Username, Password, Name, Email, Tel, IsSubscribed, UserType)
 - HotelRoom (HotelID, RoomType, RoomName, StandardRate, NumOfRoom, RoomSize)
 - Location (Location, HotelID)
+jjjj
