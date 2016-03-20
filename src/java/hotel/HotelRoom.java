@@ -29,7 +29,7 @@ public class HotelRoom implements MySQLInit {
         return roomType;
     }
 
-    public void setRoomType() {
+    public void setRoomType(int roomType) {
         this.roomType = roomType;
     }
 
@@ -37,7 +37,7 @@ public class HotelRoom implements MySQLInit {
         return roomName;
     }
 
-    public void setRoomName() {
+    public void setRoomName(String roomName) {
         this.roomName = roomName;
     }
 
@@ -45,7 +45,7 @@ public class HotelRoom implements MySQLInit {
         return standardRate;
     }
 
-    public void setStandardRate() {
+    public void setStandardRate(String standardRate) {
         this.standardRate = standardRate;
     }
 
@@ -53,7 +53,7 @@ public class HotelRoom implements MySQLInit {
         return numOfRoom;
     }
 
-    public void setNumOfRoom() {
+    public void setNumOfRoom(int numOfRoom) {
         this.numOfRoom = numOfRoom;
     }
 
@@ -61,7 +61,7 @@ public class HotelRoom implements MySQLInit {
         return roomSize;
     }
 
-    public void setRoomSize() {
+    public void setRoomSize(int roomSize) {
         this.roomSize = roomSize;
     }
 
@@ -148,7 +148,7 @@ public class HotelRoom implements MySQLInit {
         return true;
     }
 
-    public static ArrayList<HotelRoom> getAllRoom() {
+    public static ArrayList<HotelRoom> getAllRooms() {
         ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>();
         try {
             Class.forName(SQLDriver);

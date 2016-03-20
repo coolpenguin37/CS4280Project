@@ -113,7 +113,7 @@ public class User implements MySQLInit, UserType {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [User] WHERE [username] = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [User] WHERE [Username] = ?");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
