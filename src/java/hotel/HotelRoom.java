@@ -64,4 +64,115 @@ public class HotelRoom implements MySQLInit {
     public int setRoomSize() {
         this.roomSize = roomSize;
     }
+
+    public Hotel(int hotelID, int roomType, String roomName, 
+        int standardRate, int numOfRoom, int roomSize) {
+        this.hotelID = hotelID;
+        this.roomType = roomType;
+        this.roomName = roomName;
+        this.standardRate = standardRate;
+        this.numOfRoom = numOfRoom;
+        this.roomSize = roomSize;
+    }
+
+    public static ArrayList<HotelRoom> getAllRoom() {
+        ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelRoom]");
+            while (rs.next()) {
+                HotelRoom temp = new User(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
+                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+                roomList.add(temp);
+            }
+
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
+
+            if(conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return roomList;
+    }
+
+    public static boolean updateRoom(HotelRoom r)
+    {
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+            if (!r.getRoomName().equals(""))
+            {
+                String strQuery = "UPDATE [HotelRoom] SET [RoomName] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, r.getRoomName());
+                stmt.setInt(2, r.getHotelID());
+                stmt.setInt(3, r.getRoomType());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (!r.getStandardRate().equals(""))
+            {
+                String strQuery = "UPDATE [HotelRoom] SET [StandardRate] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, r.getStandardRate());
+                stmt.setInt(2, r.getHotelID());
+                stmt.setInt(3, r.getRoomType());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (!r.getNumOfRoom().equals(""))
+            {
+                String strQuery = "UPDATE [HotelRoom] SET [NumOfRoom] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, r.getNumOfRoom());
+                stmt.setInt(2, r.getHotelID());
+                stmt.setInt(3, r.getRoomType());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (!r.getRoomSize().equals("")
+            {
+                String strQuery = "UPDATE [HotelRoom] SET [RoomSize] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, r.getRoomSize());
+                stmt.setInt(2, r.getHotelID());
+                stmt.setInt(3, r.getRoomType());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 }
