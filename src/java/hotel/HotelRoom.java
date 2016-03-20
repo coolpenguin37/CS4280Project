@@ -61,11 +61,11 @@ public class HotelRoom implements MySQLInit {
         return roomSize;
     }
 
-    public int setRoomSize() {
+    public void setRoomSize() {
         this.roomSize = roomSize;
     }
 
-    public Hotel(int hotelID, int roomType, String roomName, 
+    public HotelRoom (int hotelID, int roomType, String roomName, 
         int standardRate, int numOfRoom, int roomSize) {
         this.hotelID = hotelID;
         this.roomType = roomType;
@@ -75,15 +75,24 @@ public class HotelRoom implements MySQLInit {
         this.roomSize = roomSize;
     }
 
+    public HotelRoom (int hotelID, int roomType, String roomName) {
+        this.hotelID = hotelID;
+        this.roomType = roomType;
+        this.roomName = roomName;
+        this.standardRate = 0;
+        this.numOfRoom = 0;
+        this.roomSize = 0;
+    }
+
     public static ArrayList<HotelRoom> getAllRoom() {
-        ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>;
+        ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelRoom]");
             while (rs.next()) {
-                HotelRoom temp = new User(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
+                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
                     rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
                 roomList.add(temp);
             }
@@ -126,7 +135,7 @@ public class HotelRoom implements MySQLInit {
                 }
             }
 
-            if (!r.getStandardRate().equals(""))
+            if (r.getStandardRate() != 0)
             {
                 String strQuery = "UPDATE [HotelRoom] SET [StandardRate] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
@@ -139,7 +148,7 @@ public class HotelRoom implements MySQLInit {
                 }
             }
 
-            if (!r.getNumOfRoom().equals(""))
+            if (r.getNumOfRoom() != 0)
             {
                 String strQuery = "UPDATE [HotelRoom] SET [NumOfRoom] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
@@ -152,7 +161,7 @@ public class HotelRoom implements MySQLInit {
                 }
             }
 
-            if (!r.getRoomSize().equals("")
+            if (r.getRoomSize() != 0)
             {
                 String strQuery = "UPDATE [HotelRoom] SET [RoomSize] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
