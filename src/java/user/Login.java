@@ -27,13 +27,13 @@ public class Login implements MySQLInit {
         ResultSet rs = null;
         
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Class.forName(SQLDriver);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
         try {
-            conn = DriverManager.getConnection(SQLHost, SQLID, SQLPassword);
+            conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             stmt = conn.createStatement();
             String stmp = new String("SELECT * FROM User WHERE USERID='" + userID + "'");
             rs = stmt.executeQuery(stmp);

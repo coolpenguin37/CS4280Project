@@ -48,14 +48,14 @@ public class LoginServlet extends HttpServlet implements MySQLInit {
             ResultSet rs = null;
 
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                Class.forName(SQLDriver);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             out.println("<h1>ttServlet LoginServlet at " + request.getContextPath() + "</h1>");
 
             try {
-                conn = DriverManager.getConnection(SQLHost, SQLID, SQLPassword);
+                conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 String stmp = new String("SELECT * FROM [User]");
                 rs = stmt.executeQuery("SELECT * FROM [User]");
