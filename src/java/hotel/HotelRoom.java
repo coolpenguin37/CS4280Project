@@ -84,6 +84,70 @@ public class HotelRoom implements MySQLInit {
         this.roomSize = 0;
     }
 
+    public static boolean roomExist(int hotelID, int roomType) {
+        boolean founded = false;
+
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelRoom] WHERE [hotelID] = ? AND [roomType] = ?");
+            stmt.setInt(1, hotelID);
+            stmt.setInt(2, roomType);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                founded = true;
+            }
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return founded;
+    }
+
+    public boolean insertToDatabase() {
+        if (HotelRoom.roomExist(this.getHotelID(), this.getRoomType())) {
+            return false;
+        }
+
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelRoom] "
+                + "([HotelID], [RoomType], [RoomName], [StandardRate], [NumOfRoom], [RoomSize]) "
+                + "VALUES (?, ?, ?, ?, ?, ?)");
+            stmt.setInt(1, hotelID);
+            stmt.setInt(2, roomType);
+            stmt.setString(3, roomName);
+            stmt.setInt(4, standardRate);
+            stmt.setInt(5, numOfRoom);
+            stmt.setInt(6, roomSize);
+
+            stmt.executeUpdate();
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }   
+        return true;
+    }
+
     public static ArrayList<HotelRoom> getAllRoom() {
         ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>();
         try {
