@@ -10,3 +10,5 @@ DBCC CHECKIDENT ([HotelInfo], RESEED, 0)
 INSERT INTO [HotelInfo] VALUES ('Smirnoff', 'Moscow', 0, 4);
 INSERT INTO [HotelInfo] VALUES ('ICON', 'Hong Kong', 1, 5);
 INSERT INTO [HotelInfo] VALUES ('Park Hyatt', 'Tokyo', 1, 5);
+SELECT * FROM [HotelInfo];
+

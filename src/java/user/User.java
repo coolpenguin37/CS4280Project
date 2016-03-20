@@ -14,8 +14,7 @@ import database.*;
  * @author Lin Jianxiong
  */
 
-public class User implements MySQLInit, UserType
-{
+public class User implements MySQLInit, UserType {
     int userID;
     String username;
     String password;
