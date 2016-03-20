@@ -13,13 +13,13 @@ import database.*;
  *
  * @author Lin Jianxiong
  */
-public class HotelRoom implements MYSQLInit {
+public class HotelRoom implements MySQLInit {
     int hotelID;
     int roomType;
     String roomName;
     int standardRate;
     int numOfRoom;
-    int size;
+    int roomSize;
 
     public int getHotelID() {
         return hotelID;
@@ -29,7 +29,7 @@ public class HotelRoom implements MYSQLInit {
         return roomType;
     }
 
-    public int setRoomType() {
+    public void setRoomType() {
         this.roomType = roomType;
     }
 
@@ -37,7 +37,7 @@ public class HotelRoom implements MYSQLInit {
         return roomName;
     }
 
-    public String setRoomName() {
+    public void setRoomName() {
         this.roomName = roomName;
     }
 
@@ -45,7 +45,7 @@ public class HotelRoom implements MYSQLInit {
         return standardRate;
     }
 
-    public int setStandardRate() {
+    public void setStandardRate() {
         this.standardRate = standardRate;
     }
 
@@ -53,7 +53,7 @@ public class HotelRoom implements MYSQLInit {
         return numOfRoom;
     }
 
-    public int setNumOfRoom() {
+    public void setNumOfRoom() {
         this.numOfRoom = numOfRoom;
     }
 
