@@ -3,10 +3,20 @@
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>servlets.LoginServlet</servlet-class>
+        
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
+        
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>createAccount</servlet-name>
+        <servlet-class>servlets.createAccount</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createAccount</servlet-name>
+        <url-pattern>/createAccount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -14,6 +24,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>newAccount.html</welcome-file>
     </welcome-file-list>
 </web-app>

@@ -95,9 +95,8 @@ public class User implements MySQLInit, UserType {
         this.userType = COMMONUSER;
     }
 
-    public User(int userID, String username, String password, String name,
+    public User(String username, String password, String name,
         String email, String tel, int isSubscribed, int userType) {
-        this.userID = userID;
         this.username = username;
         this.password = password;
         this.name = name;
@@ -112,7 +111,7 @@ public class User implements MySQLInit, UserType {
 
         try {
             Class.forName(SQLDriver);
-            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);            
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [User] WHERE [Username] = ?");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
@@ -139,6 +138,7 @@ public class User implements MySQLInit, UserType {
     }
 
     public boolean insertToDatabase() {
+        
         if (User.userExist(this.getUsername())) {
             return false;
         }
@@ -173,7 +173,7 @@ public class User implements MySQLInit, UserType {
 
     public static User getUserByUsername(String username)
     {
-        User temp = null;
+        User temp=null;
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
@@ -181,7 +181,7 @@ public class User implements MySQLInit, UserType {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                temp = new User(rs.getInt("UserID"), rs.getString("Username"), 
+                    temp = new User(rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Name"), rs.getString("Email"),
                     rs.getString("Tel"), rs.getInt("IsSubscribed"), rs.getInt("UserType"));
             }
@@ -213,7 +213,7 @@ public class User implements MySQLInit, UserType {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [User]");
             while (rs.next()) {
-                User temp = new User(rs.getInt("UserID"), rs.getString("Username"), 
+                User temp = new User(rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Name"), rs.getString("Email"),
                     rs.getString("Tel"), rs.getInt("IsSubscribed"), rs.getInt("UserType"));
                 userList.add(temp);
@@ -312,7 +312,7 @@ public class User implements MySQLInit, UserType {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [User] WHERE [IsSubscribed] = 'Yes'");
             while (rs.next()) {
-                User temp = new User(rs.getInt("UserID"), rs.getString("Username"), 
+                User temp = new User(rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Name"), rs.getString("Email"),
                     rs.getString("Tel"), rs.getInt("IsSubscribed"), rs.getInt("UserType"));
                 userList.add(temp);
