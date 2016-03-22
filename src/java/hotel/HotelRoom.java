@@ -45,7 +45,7 @@ public class HotelRoom implements MySQLInit {
         return standardRate;
     }
 
-    public void setStandardRate(String standardRate) {
+    public void setStandardRate(int standardRate) {
         this.standardRate = standardRate;
     }
 
