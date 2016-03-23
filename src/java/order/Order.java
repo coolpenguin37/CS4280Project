@@ -106,7 +106,7 @@ public class Order implements MySQLInit, OrderStatus {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Order] WHERE [OrderID] = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Orders] WHERE [OrderID] = ?");
             stmt.setInt(1, orderID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -137,7 +137,7 @@ public class Order implements MySQLInit, OrderStatus {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Order] "
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Orders] "
                 + "([Status] [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, status);
@@ -163,7 +163,7 @@ public class Order implements MySQLInit, OrderStatus {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT MAX([OrderID]) FROM [Order]");
+            ResultSet rs = stmt.executeQuery("SELECT MAX([OrderID]) FROM [Orders]");
             if (rs.next()) {
                 int itmp = rs.getInt("OrderID");
                 DateTime dtCIDate = new DateTime(CIDate);
@@ -188,7 +188,7 @@ public class Order implements MySQLInit, OrderStatus {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Order] WHERE [userID] = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Orders] WHERE [userID] = ?");
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -218,39 +218,42 @@ public class Order implements MySQLInit, OrderStatus {
         return orderList;
     }
 
-    public static int deleteByOrderID(int orderID) {
-        int cnt = 0;
-        try {
-            Class.forName(SQLDriver);
-            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM [Order] WHERE [OrderID] = ?");
-            stmt.setInt(1, orderID);
-            cnt = stmt.executeUpdate();
+    // public static int deleteByOrderID(int orderID) {
+    //     int cnt = 0;
+    //     try {
+    //         Class.forName(SQLDriver);
+    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+    //         PreparedStatement stmt = conn.prepareStatement("DELETE FROM [Orders] WHERE [OrderID] = ?");
+    //         stmt.setInt(1, orderID);
+    //         cnt = stmt.executeUpdate();
 
-            Chris.deleteByOrderID(orderID);
+    //         Chris.deleteByOrderID(orderID);
 
-            if (stmt != null) {
-                stmt.close();
-            }
+    //         if (stmt != null) {
+    //             stmt.close();
+    //         }
 
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-            return 0;
-        }
-        return cnt;
-    }
+    //         if (conn != null) {
+    //             conn.close();
+    //         }
+    //     } catch (Exception e) {
+    //         return 0;
+    //     }
+    //     return cnt;
+    // }
 
     public static int updateStatus(int orderID, int status) {
         int cnt = 0;
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE [Orders] SET [Status] = ? WHERE [OrderID] = ?");
             stmt.setInt(1, status);
             stmt.setInt(2, orderID);
             cnt = stmt.executeUpdate();
+            if (status == COMPLETED || status == ABORTED) {
+                Chris.deleteByOrderID(orderID);
+            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -353,7 +356,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     //         if (o.getStatus() != 0)
     //         {
-    //             String strQuery = "UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?";
+    //             String strQuery = "UPDATE [Orders] SET [Status] = ? WHERE [OrderID] = ?";
     //             PreparedStatement stmt = conn.prepareStatement(strQuery);
     //             stmt.setInt(1, o.getStatus());
     //             stmt.setInt(2, o.getOrderID());
@@ -365,7 +368,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     //         if (o.getCIDate() != null)
     //         {
-    //             String strQuery = "UPDATE [Order] SET [CIDate] = ? WHERE [OrderID] = ?";
+    //             String strQuery = "UPDATE [Orders] SET [CIDate] = ? WHERE [OrderID] = ?";
     //             PreparedStatement stmt = conn.prepareStatement(strQuery);
     //             stmt.setDate(1, o.getCIDate());
     //             stmt.setInt(2, o.getOrderID());
@@ -377,7 +380,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     //         if (o.getCODate() != 0)
     //         {
-    //             String strQuery = "UPDATE [Order] SET [CODate] = ? WHERE [OrderID] = ?";
+    //             String strQuery = "UPDATE [Orders] SET [CODate] = ? WHERE [OrderID] = ?";
     //             PreparedStatement stmt = conn.prepareStatement(strQuery);
     //             stmt.setInt(1, o.getCODate());
     //             stmt.setInt(2, o.getOrderID());
@@ -389,7 +392,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     //         if (o.getRoomType() != 0)
     //         {
-    //             String strQuery = "UPDATE [Order] SET [RoomType] = ? WHERE [OrderID] = ?";
+    //             String strQuery = "UPDATE [Orders] SET [RoomType] = ? WHERE [OrderID] = ?";
     //             PreparedStatement stmt = conn.prepareStatement(strQuery);
     //             stmt.setInt(1, o.getRoomType());
     //             stmt.setInt(2, o.getOrderID());
@@ -401,7 +404,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     //         if (o.getStatus() != 0)
     //         {
-    //             String strQuery = "UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?";
+    //             String strQuery = "UPDATE [Orders] SET [Status] = ? WHERE [OrderID] = ?";
     //             PreparedStatement stmt = conn.prepareStatement(strQuery);
     //             stmt.setInt(1, o.getStatus());
     //             stmt.setInt(2, o.getOrderID());

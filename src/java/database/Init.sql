@@ -12,3 +12,8 @@ INSERT INTO [HotelInfo] VALUES ('ICON', 'Hong Kong', 1, 5);
 INSERT INTO [HotelInfo] VALUES ('Park Hyatt', 'Tokyo', 1, 5);
 SELECT * FROM [HotelInfo];
 
+SELECT [Order.OrderID], [Comment.CommentID], [Comment.Content], [Comment.Score]
+FROM Order INNER JOIN [Comment]
+ON [Order.OrderID] = [Comment.OrderID]
+WHERE [Order.HotelID] IN 
+(SELECT [HotelInfo.HotelID] FROM [HotelInfo] WHERE [HotelName] = ?)
