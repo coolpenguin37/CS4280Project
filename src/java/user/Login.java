@@ -6,6 +6,7 @@
 package user;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  *
@@ -24,9 +25,12 @@ public class Login {
         
         if (User.userExist(username)){
             User u=User.getUserByUsername(username);
-            try {password=PasswordHash.hash(password);}
-            catch (NoSuchAlgorithmException e) {}
-            if (password!=null && u.getPassword().equals(password)){
+            try {password=PasswordHash.hash(password);
+            }
+            catch (NoSuchAlgorithmException e) {
+            }
+            if (Arrays.equals(u.getPassword().getBytes(),password.getBytes())){
+                
                 return u;
             }
             else {
