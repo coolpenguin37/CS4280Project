@@ -50,7 +50,7 @@ public class createAccount extends HttpServlet {
             out.println("<body>");
             String username=request.getParameter("username");
             if (username=="" || username==null || !validateUsername(username)) {
-                String result = "Username is not valid. It should contain only uppercase, lowercase or number.";
+                String result = "Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters";
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
@@ -59,7 +59,7 @@ public class createAccount extends HttpServlet {
             String password=request.getParameter("password");
             if (password=="" || password==null || !validatePassword(password)) {
                 String result = "Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
-                        + "The lengths should be between 6 to 16. Please check";
+                        + "The lengths should be at least 6 characters. Please check";
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
@@ -144,15 +144,16 @@ public class createAccount extends HttpServlet {
          
     }
     //Validate password. The password must contains at least one capital letter, one lowercase letter and one number.
-    //It should be at least 6 characters and at most 16 characters
+    //It should be at least 6 characters
     private boolean validatePassword(String password) {
-        String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$";
+        String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{5,}$";
         Pattern pattern = Pattern.compile(password_pattern);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
     
     //username can only contain one or more uppercase, lowercase and number.
+    //it should be at least 6 characters
     private boolean validateUsername(String username) {
         String username_pattern = "^[a-zA-Z0-9].{5,}$";
         Pattern pattern = Pattern.compile(username_pattern);
