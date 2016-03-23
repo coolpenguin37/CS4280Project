@@ -162,17 +162,17 @@ public class Order implements MySQLInit, OrderStatus {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            Statement stmt = conn.Statement("SELECT MAX([OrderID]) FROM [Order]");
-            ResultSet rs = stmt.executeQuery();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MAX([OrderID]) FROM [Order]");
             if (rs.next()) {
                 int itmp = rs.getInt("OrderID");
-                DateTime dtCIDate = new DateTime(o.getCIDate());
-                DateTime dtCODate = new DateTime(o.getCODate());
+                DateTime dtCIDate = new DateTime(CIDate);
+                DateTime dtCODate = new DateTime(CODate);
                 int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
                 for (int i = 0; i < duration; ++i) {
                     DateTime currentDate = dtCIDate.plusDays(i);
                     java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
-                    Chris ctmp = new Chris(itmp, hotelID, roomType, numOfRoom, sqlDate);
+                    Chris ctmp = new Chris(itmp, sqlDate, hotelID, roomType, numOfRoom);
                     ctmp.insertToDatabase();
                 }
             }
@@ -186,8 +186,29 @@ public class Order implements MySQLInit, OrderStatus {
         ArrayList<Order> orderList = new ArrayList<Order>();
 
         try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Order] WHERE [userID] = ?");
+            stmt.setInt(1, userID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Order temp = new Order(rs.getInt("OrderID"), rs.getInt("status"),
+                    rs.getInt("UserID"), rs.getDate("CIDate"), rs.getDate("CODate"), 
+                    rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getInt("NumOfRoom"));
+                orderList.add(temp);
+            }
 
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
 
+            if(conn != null) {
+                conn.close();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
