@@ -84,18 +84,18 @@ public class HotelRoom implements MySQLInit {
         this.roomSize = 0;
     }
 
-    public static boolean roomExist(int hotelID, int roomType) {
-        boolean founded = false;
-
+    public static int getNumOfRoomByID(int hotelID, int roomType) {
+        int num = 0;
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelRoom] WHERE [hotelID] = ? AND [roomType] = ?");
+            String strQuery = "SELECT [NumOfRoom] FROM [HotelRoom] WHERE [HotelID] = ? AND [RoomType] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
             stmt.setInt(1, hotelID);
             stmt.setInt(2, roomType);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                founded = true;
+                num = rs.getInt(1);
             }
 
             if (rs != null) {
@@ -110,14 +110,14 @@ public class HotelRoom implements MySQLInit {
                 conn.close();
             }
         } catch (Exception e) {
-            return false;
+            return 0;
         }
 
-        return founded;
+        return num;
     }
 
     public boolean insertToDatabase() {
-        if (HotelRoom.roomExist(this.getHotelID(), this.getRoomType())) {
+        if (HotelRoom.getNumOfRoom(this.getHotelID(), this.getRoomType()) > 0) {
             return false;
         }
 
