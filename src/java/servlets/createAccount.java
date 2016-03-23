@@ -10,11 +10,12 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.Object;
+import java.security.NoSuchAlgorithmException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.Object;
 import user.*;
 
 /**
@@ -74,11 +75,17 @@ public class createAccount extends HttpServlet {
                 isSubscribed=1;
             }
             
+            try {
+                password=PasswordHash.hash(password);}
+            catch (NoSuchAlgorithmException e) {}
+            
             User u=new User(username,password,name,email,telephone,isSubscribed,1);
             if (u.insertToDatabase()) {
-            out.println("<p>Success!</p>");}
+            out.println("<p>Success!</p>");
+            out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");}
             else{
-            out.println("<p>Failed...</p>");} 
+            out.println("<p>Failed...</p>");
+            out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");} 
             out.println("</body>");
             out.println("</html>");
         } finally {
