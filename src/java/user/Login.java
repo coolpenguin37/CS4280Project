@@ -12,18 +12,18 @@ import java.security.NoSuchAlgorithmException;
  * @author Jianxiong Lin, yduan7
  */
 public class Login {
-    private String userID;
+    private String username;
     private String password;
     
-    public Login(String userID, String password) {
-        this.userID = userID;
+    public Login(String username, String password) {
+        this.username = username;
         this.password = password; 
     }
     
     public User login() throws loginException{
         
-        if (User.userExist(userID)){
-            User u=User.getUserByUsername(userID);
+        if (User.userExist(username)){
+            User u=User.getUserByUsername(username);
             try {password=PasswordHash.hash(password);}
             catch (NoSuchAlgorithmException e) {}
             if (password!=null && u.getPassword().equals(password)){
