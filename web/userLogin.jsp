@@ -21,12 +21,11 @@
                                 <legend>Member login</legend>
                                 <p><label><b>Username: </b></label><input type="text" name="username"> </p>
                                 <p><label><b>Password: </b></label><input type="password" name="password"></p>
-                                <p>Click <a href="CreateAccount.jsp">here</a> for new member registration!</p>
+                                <p>Click <a href="newAccount.jsp">here</a> for new member registration!</p>
                                 <p><input type="submit" value="Login"></p>   
                                 <% if(request.getAttribute("result") != null) { %>
                                     <p style="color:red"><%= request.getAttribute("result") %></p>
-                                <% } %>
-                            <% } %>      
+                                <% } %>    
                         </fieldset>
                     </form>
             </div>
