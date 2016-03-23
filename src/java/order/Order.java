@@ -17,8 +17,8 @@ public class Order {
     int orderID;
     int status;
     int userID;
-    Date CIDate;
-    Date CODate;
+    java.util.Date CIDate;
+    java.util.Date CODate;
     int hotelID;
     int roomType;
     int numOfRoom;
@@ -43,19 +43,19 @@ public class Order {
         this.userID = userID;
     }
 
-    public Date getCIDate() {
+    public java.util.Date getCIDate() {
         return CIDate;
     }
 
-    public void setCIDate(Date CIDate) {
+    public void setCIDate(java.util.Date CIDate) {
         this.CIDate = CIDate;
     }
 
-    public Date getCODate() {
+    public java.util.Date getCODate() {
         return CODate;
     }
 
-    public void setCODate(Date CODate) {
+    public void setCODate(java.util.Date CODate) {
         this.CODate = CODate;
     }
 
@@ -83,7 +83,7 @@ public class Order {
         this.numOfRoom = numOfRoom;
     }
 
-    public Order(int orderID, int status, int userID, Date CIDate, Date CODate, 
+    public Order(int orderID, int status, int userID, java.util.Date CIDate, java.util.Date CODate, 
         int hotelID, int roomType, int numOfRoom) {
         this.orderID = orderID;
         this.status = status;
