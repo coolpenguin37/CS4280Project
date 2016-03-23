@@ -117,7 +117,7 @@ public class HotelRoom implements MySQLInit {
     }
 
     public boolean insertToDatabase() {
-        if (HotelRoom.getNumOfRoom(this.getHotelID(), this.getRoomType()) > 0) {
+        if (HotelRoom.getNumOfRoomByID(this.getHotelID(), this.getRoomType()) > 0) {
             return false;
         }
 
