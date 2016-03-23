@@ -13,6 +13,6 @@
     </head>
     <body>
         <form method="POST" 
-        <a href="createAccount">Create Account</a>
+        <a href="newAccount.jsp">Create Account</a>
     </body>
 </html>
