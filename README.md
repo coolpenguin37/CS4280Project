@@ -7,6 +7,7 @@ Write the TODO list.
 - Transfer data between pages (url-rewriting, hidden forms, cookie and session)
 - Session control
 - Synchronization
+
 ## Database
 - User
     * UserID, int
@@ -24,7 +25,7 @@ Write the TODO list.
     * StandardRate, int
     * NumOfRoom, int
     * RoomSize, int
-- Comment
+- Comments
     * CommentID, int
     * OrderID, int
     * Content, varchar(6000)
@@ -38,7 +39,7 @@ Write the TODO list.
 - Manager
     * UserID, int
     * UserType, int
-- Order
+- Orders
     * OrderID, int
     * Status, int
     * UserID, int
