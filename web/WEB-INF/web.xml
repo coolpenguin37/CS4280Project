@@ -30,6 +30,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>newAccount.html</welcome-file>
+        <welcome-file>userLogin.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
