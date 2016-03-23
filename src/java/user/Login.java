@@ -5,47 +5,36 @@
  */
 package user;
 
-import java.sql.*;
-import database.*;
+import java.security.NoSuchAlgorithmException;
+
 /**
  *
- * @author Jianxiong Lin
+ * @author Jianxiong Lin, yduan7
  */
-public class Login implements MySQLInit {
+public class Login {
     private String userID;
     private String password;
     
-    //TODO: HASH THE PASSWORD
     public Login(String userID, String password) {
         this.userID = userID;
         this.password = password; 
     }
     
-    public int login() {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
+    public User login() throws loginException{
         
-        try {
-            Class.forName(SQLDriver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        try {
-            conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            stmt = conn.createStatement();
-            String stmp = new String("SELECT * FROM User WHERE USERID='" + userID + "'");
-            rs = stmt.executeQuery(stmp);
-            
-            while (rs != null && rs.next() != false) {
-                String name = rs.getString("Name");
-                String email = rs.getString("Email");
-                //System.out.println(name + "\n" + email + "\n");
+        if (User.userExist(userID)){
+            User u=User.getUserByUsername(userID);
+            try {password=PasswordHash.hash(password);}
+            catch (NoSuchAlgorithmException e) {}
+            if (password!=null && u.getPassword().equals(password)){
+                return u;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            else {
+                throw new loginException("Password Incorrect! Please check.");
+            }
         }
-        return 0;
+        else {
+            throw new loginException("Username does not exist! Please check.");
+        }
     }
 }
