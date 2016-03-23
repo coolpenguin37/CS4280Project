@@ -17,5 +17,6 @@ public class PasswordHash {
         MessageDigest md= MessageDigest.getInstance("SHA-256");
         md.update(password.getBytes());
         String encryptedPassword=new String(md.digest());
-        return encryptedPassword;}
+        return encryptedPassword;
+    }
 }
