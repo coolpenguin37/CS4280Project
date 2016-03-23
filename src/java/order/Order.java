@@ -6,19 +6,20 @@
 package order;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import database.*;
 
 /**
  *
  * @author Lin Jianxiong
  */
-public class Order {
+public class Order implements MySQLInit {
     int orderID;
     int status;
     int userID;
-    java.util.Date CIDate;
-    java.util.Date CODate;
+    Date CIDate;
+    Date CODate;
     int hotelID;
     int roomType;
     int numOfRoom;
@@ -43,19 +44,19 @@ public class Order {
         this.userID = userID;
     }
 
-    public java.util.Date getCIDate() {
+    public Date getCIDate() {
         return CIDate;
     }
 
-    public void setCIDate(java.util.Date CIDate) {
+    public void setCIDate(Date CIDate) {
         this.CIDate = CIDate;
     }
 
-    public java.util.Date getCODate() {
+    public Date getCODate() {
         return CODate;
     }
 
-    public void setCODate(java.util.Date CODate) {
+    public void setCODate(Date CODate) {
         this.CODate = CODate;
     }
 
@@ -83,7 +84,7 @@ public class Order {
         this.numOfRoom = numOfRoom;
     }
 
-    public Order(int orderID, int status, int userID, java.util.Date CIDate, java.util.Date CODate, 
+    public Order(int orderID, int status, int userID, Date CIDate, Date CODate, 
         int hotelID, int roomType, int numOfRoom) {
         this.orderID = orderID;
         this.status = status;
@@ -157,7 +158,7 @@ public class Order {
             return false;
         }
 
-        return founded;
+        return available;
     }
 
     public boolean insertToDatabase() {
@@ -168,13 +169,13 @@ public class Order {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Order] "
                 + "([Status] [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)");
-            stmt.setInt(1, username);
-            stmt.setInt(2, password);
-            stmt.setDate(3, name);
-            stmt.setDate(4, email);
-            stmt.setInt(5, tel);
-            stmt.setInt(6, isSubscribed);
-            stmt.setInt(7, userType);
+            stmt.setInt(1, status);
+            stmt.setInt(2, userID);
+            stmt.setDate(3, CIDate);
+            stmt.setDate(4, CODate);
+            stmt.setInt(5, hotelID);
+            stmt.setInt(6, roomType);
+            stmt.setInt(7, numOfRoom);
 
             stmt.executeUpdate();
             if (stmt != null) {

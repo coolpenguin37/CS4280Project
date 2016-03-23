@@ -84,8 +84,9 @@ public class createAccount extends HttpServlet {
             out.println("<p>Success!</p>");
             out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");}
             else{
-            out.println("<p>Failed...</p>");
-            out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");} 
+                out.println("<p>Failed...</p>");
+                out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");
+            }
             out.println("</body>");
             out.println("</html>");
         } finally {
