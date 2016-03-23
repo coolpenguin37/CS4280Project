@@ -6,15 +6,20 @@
 package order;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import database.*;
+import hotel.*;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
 
 /**
  *
  * @author Lin Jianxiong
  */
-public class Order implements MySQLInit {
+public class Order implements MySQLInit, OrderStatus {
     int orderID;
     int status;
     int userID;
@@ -96,51 +101,18 @@ public class Order implements MySQLInit {
         this.numOfRoom = numOfRoom;
     }
 
-    // public static boolean orderExist(int orderID) {
-    //     boolean founded = false;
-
-    //     try {
-    //         Class.forName(SQLDriver);
-    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-    //         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Order] WHERE [OrderID] = ?");
-    //         stmt.setInt(1, orderID);
-    //         ResultSet rs = stmt.executeQuery();
-    //         if (rs.next()) {
-    //             founded = true;
-    //         }
-
-    //         if (rs != null) {
-    //             rs.close();
-    //         }
-
-    //         if (stmt != null) {
-    //             stmt.close();
-    //         }
-
-    //         if (conn != null) {
-    //             conn.close();
-    //         }
-    //     } catch (Exception e) {
-    //         return false;
-    //     }
-
-    //     return founded;
-    // }
-
-    public static boolean checkAvailability(Order o) {
-        boolean available = false;
+    public static Order getOrderByOrderID(int orderID) {
+        Order temp = null;
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT COUNT(*) FROM [HotelInfo] WHERE ([HotelInfo.HotelID] = ?) AND "
-            + "([HotelInfo.NumOfRoom] > (SELECT SUM([NumOfRoom]) FROM [Order] WHERE [Order.HotelID] = ?)";
-            PreparedStatement stmt = conn.prepareStatement(strQuery);
-            stmt.setInt(1, o.getHotelID());
-            stmt.setInt(2, o.getHotelID());
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Order] WHERE [OrderID] = ?");
+            stmt.setInt(1, orderID);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next())
-            {
-                available = true;
+            while (rs.next()) {
+                temp = new Order(rs.getInt("OrderID"), rs.getInt("UserID"), 
+                    rs.getInt("Status"), rs.getDate("CIDate"), rs.getDate("CODate"), 
+                    rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getInt("NumOfRoom"));
             }
 
             if (rs != null) {
@@ -155,14 +127,13 @@ public class Order implements MySQLInit {
                 conn.close();
             }
         } catch (Exception e) {
-            return false;
+            return null;
         }
 
-        return available;
+        return temp;
     }
 
     public boolean insertToDatabase() {
-        if (Order.checkAvailability())
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
@@ -187,78 +158,247 @@ public class Order implements MySQLInit {
             }
         } catch (Exception e) {
             return false;
-        }   
-        return true;
-    }
-
-
-
-    public static boolean updateOrder(Order o) {
-        if (!Order.checkAvailability(o)) {
-            return false;
         }
-
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-
-            if (!u.getName().equals(""))
-            {
-                String strQuery = "UPDATE [User] SET [Name] = ? WHERE [userID] = ?";
-                PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, u.getName());
-                stmt.setInt(2, u.getUserID());
-                stmt.executeUpdate();
-                if (stmt != null) {
-                    stmt.close();
+            Statement stmt = conn.Statement("SELECT MAX([OrderID]) FROM [Order]");
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int itmp = rs.getInt("OrderID");
+                DateTime dtCIDate = new DateTime(o.getCIDate());
+                DateTime dtCODate = new DateTime(o.getCODate());
+                int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+                for (int i = 0; i < duration; ++i) {
+                    DateTime currentDate = dtCIDate.plusDays(i);
+                    java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+                    Chris ctmp = new Chris(itmp, hotelID, roomType, numOfRoom, sqlDate);
+                    ctmp.insertToDatabase();
                 }
             }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
-            if (!u.getEmail().equals(""))
-            {
-                String strQuery = "UPDATE [User] SET [Email] = ? WHERE [userID] = ?";
-                PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, u.getEmail());
-                stmt.setInt(2, u.getUserID());
-                stmt.executeUpdate();
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
+    public static ArrayList<Order> getAllOrdersByUserID(int userID) {
+        ArrayList<Order> orderList = new ArrayList<Order>();
 
-            if (!u.getTel().equals(""))
-            {
-                String strQuery = "UPDATE [User] SET [Tel] = ? WHERE [userID] = ?";
-                PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, u.getTel());
-                stmt.setInt(2, u.getUserID());
-                stmt.executeUpdate();
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
+        try {
 
-            if (true)
-            {
-                String strQuery = "UPDATE [User] SET [IsSubscribed] = ? WHERE [userID] = ?";
-                PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setInt(1, u.getIsSubscribed());
-                stmt.setInt(2, u.getUserID());
-                stmt.executeUpdate();
-                if (stmt != null) {
-                    stmt.close();
-                }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return orderList;
+    }
+
+    public static int deleteByOrderID(int orderID) {
+        int cnt = 0;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM [Order] WHERE [OrderID] = ?");
+            stmt.setInt(1, orderID);
+            cnt = stmt.executeUpdate();
+
+            Chris.deleteByOrderID(orderID);
+
+            if (stmt != null) {
+                stmt.close();
             }
 
             if (conn != null) {
                 conn.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return 0;
+        }
+        return cnt;
+    }
+
+    public static int updateStatus(int orderID, int status) {
+        int cnt = 0;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?");
+            stmt.setInt(1, status);
+            stmt.setInt(2, orderID);
+            cnt = stmt.executeUpdate();
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        return cnt;
+    }
+
+    public static boolean checkAvailability(Order o) {
+        boolean available = true;
+        int num = HotelRoom.getNumOfRoomByID(o.getHotelID(), o.getRoomType());
+        if (num == 0) {
             return false;
         }
 
-        return true;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT SUM([NumOfRoom]) FROM [Chris] "
+                + "WHERE [HotelID] = ? AND [RoomType] = ? AND [Date] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, o.getHotelID());
+            stmt.setInt(2, o.getRoomType());
+            DateTime dtCIDate = new DateTime(o.getCIDate());
+            DateTime dtCODate = new DateTime(o.getCODate());
+            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+            for (int i = 0; i < duration; ++i) {
+                DateTime currentDate = dtCIDate.plusDays(i);
+                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+                stmt.setDate(3, sqlDate);
+                ResultSet rs = stmt.executeQuery();
+                if (!rs.next())
+                {
+                    available = false;
+                    break;
+                }
+                int occupied = rs.getInt(1);
+                if (occupied + o.getNumOfRoom() > num) {
+                    available = false;
+                    break;
+                }
+
+                if (rs != null) {
+                    rs.close();
+                }
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return available;
     }
+
+    public boolean updateOrder(Order o) {
+        Order t = Order.getOrderByOrderID(o.getOrderID());
+        Order.deleteByOrderID(o.getOrderID());
+        if (Order.checkAvailability(o)) {
+            o.insertToDatabase();
+            return true;
+        } else {
+            t.insertToDatabase();
+            return false;
+        }
+    }
+
+
+    // public static boolean CancelOrder(int OrderID) {
+    //    try {
+    //        Class.forName(SQLDriver);
+    //        Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+    //    }
+    // }
+
+    // public static boolean validateUpdate(Order o) {
+
+    // }
+
+
+    // public static boolean updateOrder(Order o) {
+    //     if (Order.getOrderByOrderID(o.getOrderID()) == null) {
+    //         return false;
+    //     }
+
+    //     try {
+    //         Class.forName(SQLDriver);
+    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+    //         if (o.getStatus() != 0)
+    //         {
+    //             String strQuery = "UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?";
+    //             PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //             stmt.setInt(1, o.getStatus());
+    //             stmt.setInt(2, o.getOrderID());
+    //             stmt.executeUpdate();
+    //             if (stmt != null) {
+    //                 stmt.close();
+    //             }
+    //         }
+
+    //         if (o.getCIDate() != null)
+    //         {
+    //             String strQuery = "UPDATE [Order] SET [CIDate] = ? WHERE [OrderID] = ?";
+    //             PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //             stmt.setDate(1, o.getCIDate());
+    //             stmt.setInt(2, o.getOrderID());
+    //             stmt.executeUpdate();
+    //             if (stmt != null) {
+    //                 stmt.close();
+    //             }
+    //         }
+
+    //         if (o.getCODate() != 0)
+    //         {
+    //             String strQuery = "UPDATE [Order] SET [CODate] = ? WHERE [OrderID] = ?";
+    //             PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //             stmt.setInt(1, o.getCODate());
+    //             stmt.setInt(2, o.getOrderID());
+    //             stmt.executeUpdate();
+    //             if (stmt != null) {
+    //                 stmt.close();
+    //             }
+    //         }
+
+    //         if (o.getRoomType() != 0)
+    //         {
+    //             String strQuery = "UPDATE [Order] SET [RoomType] = ? WHERE [OrderID] = ?";
+    //             PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //             stmt.setInt(1, o.getRoomType());
+    //             stmt.setInt(2, o.getOrderID());
+    //             stmt.executeUpdate();
+    //             if (stmt != null) {
+    //                 stmt.close();
+    //             }
+    //         }
+
+    //         if (o.getStatus() != 0)
+    //         {
+    //             String strQuery = "UPDATE [Order] SET [Status] = ? WHERE [OrderID] = ?";
+    //             PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //             stmt.setInt(1, o.getStatus());
+    //             stmt.setInt(2, o.getOrderID());
+    //             stmt.executeUpdate();
+    //             if (stmt != null) {
+    //                 stmt.close();
+    //             }
+    //         }
+
+    //         if (conn != null) {
+    //             conn.close();
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
 
 }
