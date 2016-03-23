@@ -1,5 +1,12 @@
+<%-- 
+    Document   : newAccount
+    Created on : Mar 23, 2016, 9:59:54 PM
+    Author     : yduan7
+--%>
 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -21,5 +28,8 @@
         <input type="checkbox" name="subscribe" value="yes" checked>
         <input type="submit" name="Create New Account">
     	</form>
+        <% if(request.getAttribute("result") != null) { %>
+                                    <p style="color:red"><%= request.getAttribute("result") %></p>
+        <% } %>    
     </body>
 </html>
