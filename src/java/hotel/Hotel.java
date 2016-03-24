@@ -77,7 +77,7 @@ public class Hotel implements MySQLInit{
         return hotelList;
     }
 
-    public static ArrayList<Hotel> searchHotel(String hotelName) {
+    public static ArrayList<Hotel> searchHotel(String keyword) {
         if (hotelName.equals("")) {
             return getAllHotel();
         }
@@ -86,8 +86,9 @@ public class Hotel implements MySQLInit{
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] LIKE ?");
-            stmt.setString(1, "%" + hotelName + "%");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([Name] LIKE ?) OR ([Label] LIKE ?)");
+            stmt.setString(1, "%" + keyword + "%");
+            stmt.setString(2, ":%" + keyword + "%:");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
