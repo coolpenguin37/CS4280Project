@@ -89,6 +89,17 @@ public class Order implements MySQLInit, OrderStatus {
         this.numOfRoom = numOfRoom;
     }
 
+    public Order(int status, int userID, Date CIDate, Date CODate,
+            int hotelID, int roomType, int numOfRoom) {
+        this.status = status;
+        this.userID = userID;
+        this.CIDate = CIDate;
+        this.CODate = CODate;
+        this.hotelID = hotelID;
+        this.roomType = roomType;
+        this.numOfRoom = numOfRoom;        
+    }
+    
     public Order(int orderID, int status, int userID, Date CIDate, Date CODate, 
         int hotelID, int roomType, int numOfRoom) {
         this.orderID = orderID;
@@ -322,7 +333,7 @@ public class Order implements MySQLInit, OrderStatus {
 
     public boolean updateOrder(Order o) {
         Order t = Order.getOrderByOrderID(o.getOrderID());
-        Order.deleteByOrderID(o.getOrderID());
+        Order.updateStatus(o.getOrderID(), ABORTED);
         if (Order.checkAvailability(o)) {
             o.insertToDatabase();
             return true;
