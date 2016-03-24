@@ -90,7 +90,7 @@ public class Comment implements MySQLInit {
         return true;
     }
 
-    public ArrayList<Comment> getCommentByHotelName(String name) {
+    public ArrayList<Comment> getCommentByHotelName(String hotelName) {
         ArrayList<Comment> commentList = new ArrayList<Comment>();
         try {
             Class.forName(SQLDriver);
@@ -98,9 +98,9 @@ public class Comment implements MySQLInit {
             String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.HotelID IN (SELECT HotelInfo.HotelID From [HotelInfo] "
-                + "WHERE [Name] = ?";
+                + "WHERE [HotelName] = ?";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
-            stmt.setString(1, name);
+            stmt.setString(1, hotelName);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment temp = new Comment(rs.getInt("CommentID"), rs.getInt("OrderID"),

@@ -25,7 +25,7 @@ import javax.servlet.RequestDispatcher;
  *
  * @author yduan7
  */
-public class createAccount extends HttpServlet {
+public class CreateAccount extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

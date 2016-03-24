@@ -19,7 +19,7 @@ public class Hotel implements MySQLInit{
     String location;
     int isRecommended;
     int starRating;
-    String Label;
+    String label;
 
     public int getHotelID() {
         return hotelID;
@@ -58,15 +58,19 @@ public class Hotel implements MySQLInit{
     }
     
     public String getLabel() {
-        return Label;
+        return label;
     }
     
-    public void setLabel(String Label) {
-        this.Label = Label;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public Hotel(String hotelName, String location, int isRecommended, int starRating, String Label) {
-        
+    public Hotel(String hotelName, String location, int isRecommended, int starRating, String label) {
+        this.hotelName = hotelName;
+        this.location = location;
+        this.isRecommended = isRecommended;
+        this.starRating = starRating;
+        this.label = label;
     }
     
     public static ArrayList<Hotel> getAllHotel() {
@@ -176,12 +180,13 @@ public class Hotel implements MySQLInit{
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelInfo] "
-                + "([Name], [Location], [IsRecommended], [StarRating]) "
-                + "VALUES (?, ?, ?, ?)");
+                + "([Name], [Location], [IsRecommended], [StarRating], [Label]) "
+                + "VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, hotelName);
             stmt.setString(2, location);
             stmt.setInt(3, isRecommended);
             stmt.setInt(4, starRating);
+            stmt.setString(5, label);
 
             stmt.executeUpdate();
             if (stmt != null) {
