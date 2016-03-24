@@ -13,8 +13,8 @@
         <title>Create New Account</title>
     </head>
     <body>
-    	<form method="POST" action="createAccount">
-    	<label>Username:</label>
+        <form method="POST" action="createAccount">
+        <label>Username:</label>
         <input type="text" name="username">
         <br><label>Password:</label>
         <input type="password" name="password">
@@ -27,9 +27,9 @@
         <br><label>Do you want to subscribe in our distribution list?</label>
         <input type="checkbox" name="subscribe" value="yes" checked>
         <input type="submit" name="Create New Account">
-    	</form>
+        </form>
         <% if(request.getAttribute("result") != null) { %>
-                                    <p style="color:red"><%= request.getAttribute("result") %></p>
+        <p style="color:red"><%= request.getAttribute("result") %></p>
         <% } %>    
     </body>
 </html>
