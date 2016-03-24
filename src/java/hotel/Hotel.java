@@ -48,7 +48,40 @@ public class Hotel implements MySQLInit{
         this.starRating = starRating;
     }
 
+    public static ArrayList<Hotel> getAllHotel() {
+        ArrayList<Hotel> hotelList = new ArrayList<Hotel> ();
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelInfo]");
+            while (rs.next()) {
+                temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
+                    rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+                hotelList.add(temp);
+            }
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return hotelList;
+    }
+
     public static ArrayList<Hotel> searchHotel(String hotelName) {
+        if (hotelName.equals("")) {
+            return getAllHotel();
+        }
+ 
         ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
         try {
             Class.forName(SQLDriver);
@@ -57,7 +90,7 @@ public class Hotel implements MySQLInit{
             stmt.setString(1, "%" + hotelName + "%");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
+                Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
                     rs.getInt("IsRecommended"),rs.getInt("StarRating"));
                 hotelList.add(temp);
             }
