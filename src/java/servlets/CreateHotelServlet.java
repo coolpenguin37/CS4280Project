@@ -44,7 +44,7 @@ public class CreateHotelServlet extends HttpServlet {
             out.println("<h1>Servlet CreateHotelServlet at " + request.getContextPath() + "</h1>");
 
             String hotelName = request.getParameter("hotelName");
-            String location = request.getParameter("location");
+            String address = request.getParameter("address");
             int isRecommended = Integer.parseInt(request.getParameter("isRecommended"));
             int starRating = Integer.parseInt(request.getParameter("starRating"));
             String label = request.getParameter("label");
@@ -57,7 +57,7 @@ public class CreateHotelServlet extends HttpServlet {
                 return;
             }
 
-            if (location.isEmpty() || location == null) {
+            if (address.isEmpty() || address == null) {
                 String result = "Invalid hotel address.";
                 request.setAttribute("result", result);
                 RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
@@ -65,7 +65,7 @@ public class CreateHotelServlet extends HttpServlet {
                 return;
             }
 
-            if (!validateInput(hotelName, location)) {
+            if (!validateInput(hotelName, address)) {
                 String result = "The hotel already exists";
                 request.setAttribute("result", result);
                 RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
@@ -73,7 +73,7 @@ public class CreateHotelServlet extends HttpServlet {
                 return;                
             }
             
-            Hotel h = new Hotel(hotelName, location, isRecommended, starRating, label);
+            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, label);
             if (h.insertToDatabase()) {
                 out.println("<p>Yes!<p/>");
                 out.println("<a href=" + request.getContextPath() + ">Continue to add hotel.");
