@@ -37,10 +37,11 @@ Write the TODO list.
     * Score, int
 - HotelInfo
     * HotelID, int
-    * Name, varchar(255)
-    * Location, varchar(255)
+    * HotelName, varchar(255)
+    * Address, varchar(255)
     * IsRecommended, int
     * StarRating, int
+    * Label, varchar(255)
 - Manager
     * UserID, int
     * UserType, int
