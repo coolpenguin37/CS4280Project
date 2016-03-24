@@ -48,13 +48,13 @@ public class Hotel implements MySQLInit{
         this.starRating = starRating;
     }
 
-    public static ArrayList<Hotel> getHotelByName(String hotelName) {
+    public static ArrayList<Hotel> searchHotel(String hotelName) {
         ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] LIKE ?");
-            stmt.setString(1, hotelName + "%");
+            stmt.setString(1, "%" + hotelName + "%");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
