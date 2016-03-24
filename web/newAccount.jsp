@@ -13,7 +13,7 @@
         <title>Create New Account</title>
     </head>
     <body>
-        <form method="POST" action="createAccount">
+        <form method="POST" action="CreateAccount">
         <label>Username:</label>
         <input type="text" name="username">
         <br><label>Password:</label>
