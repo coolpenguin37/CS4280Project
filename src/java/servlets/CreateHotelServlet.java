@@ -45,7 +45,13 @@ public class CreateHotelServlet extends HttpServlet {
 
             String hotelName = request.getParameter("hotelName");
             String address = request.getParameter("address");
-            int isRecommended = Integer.parseInt(request.getParameter("isRecommended"));
+            int isRecommended;
+            if (request.getParameter("isRecommended")==null) {
+                isRecommended=0;
+            }
+            else {
+                isRecommended=1;
+            }
             int starRating = Integer.parseInt(request.getParameter("starRating"));
             String label = request.getParameter("label");
 
@@ -73,13 +79,11 @@ public class CreateHotelServlet extends HttpServlet {
                 return;                
             }
             
-            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, label);
+            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label));
             if (h.insertToDatabase()) {
                 out.println("<p>Yes!<p/>");
-                out.println("<a href=" + request.getContextPath() + ">Continue to add hotel.");
             } else {
                 out.println("<p>No!<p/>");
-                out.println("<a href=" + request.getContextPath() + ">Continue to add hotel.");
             }
             out.println("</html>");
             out.println("</html>");
@@ -127,8 +131,12 @@ public class CreateHotelServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean validateInput(String hotelName, String location) {
-        if (Hotel.hotelExist(hotelName, location)) {
+    private String processLabel(String label) {
+        return label;
+    }
+
+    private boolean validateInput(String hotelName, String address) {
+        if (Hotel.hotelExist(hotelName, address)) {
             return false;
         }
         return true;

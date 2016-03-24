@@ -16,7 +16,7 @@ import database.*;
 public class Hotel implements MySQLInit{
     int hotelID;
     String hotelName;
-    String location;
+    String address;
     int isRecommended;
     int starRating;
     String label;
@@ -33,12 +33,12 @@ public class Hotel implements MySQLInit{
         this.hotelName = hotelName;
     }
     
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
     
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getIsRecommended() {
@@ -65,9 +65,9 @@ public class Hotel implements MySQLInit{
         this.label = label;
     }
 
-    public Hotel(String hotelName, String location, int isRecommended, int starRating, String label) {
+    public Hotel(String hotelName, String address, int isRecommended, int starRating, String label) {
         this.hotelName = hotelName;
-        this.location = location;
+        this.address = address;
         this.isRecommended = isRecommended;
         this.starRating = starRating;
         this.label = label;
@@ -81,7 +81,7 @@ public class Hotel implements MySQLInit{
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelInfo]");
             while (rs.next()) {
-                Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"), 
+                Hotel temp = new Hotel(rs.getString("HotelName"), rs.getString("Address"), 
                     rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
             }
@@ -111,12 +111,12 @@ public class Hotel implements MySQLInit{
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([Name] LIKE ?) OR ([Label] LIKE ?)");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] LIKE ?) OR ([Label] LIKE ?)");
             stmt.setString(1, "%" + keyword + "%");
             stmt.setString(2, ":%" + keyword + "%:");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
+                Hotel temp = new Hotel(rs.getString("HotelName"), rs.getString("Address"),
                     rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
             }
@@ -139,16 +139,18 @@ public class Hotel implements MySQLInit{
         return hotelList;
     }
 
-    public static boolean hotelExist(String hotelName, String location) {
+    public static boolean hotelExist(String hotelName, String address) {
         boolean founded = false;
 
         try {
+            
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([Name] = ?) AND ([Location] = ?)");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] = ?) AND ([Address] = ?)");
             stmt.setString(1, hotelName);
-            stmt.setString(2, location);
+            stmt.setString(2, address);
             ResultSet rs = stmt.executeQuery();
+            
             if (rs.next()) {
                 founded = true;
             }
@@ -165,6 +167,7 @@ public class Hotel implements MySQLInit{
                 conn.close();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -172,7 +175,7 @@ public class Hotel implements MySQLInit{
     }
 
     public boolean insertToDatabase() {
-        if (Hotel.hotelExist(this.getHotelName(), this.getLocation())) {
+        if (Hotel.hotelExist(this.getHotelName(), this.getAddress())) {
             return false;
         }
 
@@ -180,10 +183,10 @@ public class Hotel implements MySQLInit{
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelInfo] "
-                + "([Name], [Location], [IsRecommended], [StarRating], [Label]) "
+                + "([HotelName], [Address], [IsRecommended], [StarRating], [Label]) "
                 + "VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, hotelName);
-            stmt.setString(2, location);
+            stmt.setString(2, address);
             stmt.setInt(3, isRecommended);
             stmt.setInt(4, starRating);
             stmt.setString(5, label);

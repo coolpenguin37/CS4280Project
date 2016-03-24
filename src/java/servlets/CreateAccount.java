@@ -107,22 +107,20 @@ public class CreateAccount extends HttpServlet {
             
             if (request.getParameter("subscribe")==null){
                 isSubscribed=0;
-            }
-            else {
+            } else {
                 isSubscribed=1;
             }
             
             try {
                 password=PasswordHash.hash(password);
-            }
-            catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException e) {
             }
             
             User u=new User(username,password,name,email,telephone,isSubscribed,1);
             if (u.insertToDatabase()) {
-            out.println("<p>Success!</p>");
-            out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");}
-            else{
+                out.println("<p>Success!</p>");
+                out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");
+            } else {
                 out.println("<p>Failed...</p>");
                 out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");
             }
