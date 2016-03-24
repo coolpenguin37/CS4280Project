@@ -17,7 +17,7 @@
         <input type="text" name="hotelName">
         <br>
         <label>Address:</label>
-        <input type="text" name="location"> 
+        <input type="text" name="address"> 
         <br>
         <label>Star Rating:</label>
         <input type="radio" name="starRating" value="1" checked> 1
