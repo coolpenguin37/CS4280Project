@@ -48,17 +48,18 @@ public class Hotel implements MySQLInit{
         this.starRating = starRating;
     }
 
-    public static Hotel getHotelByName(String hotelName) {
-        Hotel temp;
+    public static ArrayList<Hotel> getHotelByName(String hotelName) {
+        ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
-            stmt.setString(1, hotelName);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] LIKE ?");
+            stmt.setString(1, hotelName + "%");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
                     rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+                hotelList.add(temp);
             }
 
             if (rs != null) {
@@ -73,47 +74,47 @@ public class Hotel implements MySQLInit{
                 conn.close();
             }
         } catch (Exception e) {
-            return false;
+            return null;
         }
 
-        return founded;
+        return hotelList;
     }
 
-    public static boolean hotelExist(String hotelName) {
-        boolean founded = false;
+    // public static boolean hotelExist(String hotelName) {
+    //     boolean founded = false;
 
-        try {
-            Class.forName(SQLDriver);
-            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
-            stmt.setString(1, hotelName);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                founded = true;
-            }
+    //     try {
+    //         Class.forName(SQLDriver);
+    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+    //         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
+    //         stmt.setString(1, hotelName);
+    //         ResultSet rs = stmt.executeQuery();
+    //         if (rs.next()) {
+    //             founded = true;
+    //         }
 
-            if (rs != null) {
-                rs.close();
-            }
+    //         if (rs != null) {
+    //             rs.close();
+    //         }
 
-            if (stmt != null) {
-                stmt.close();
-            }
+    //         if (stmt != null) {
+    //             stmt.close();
+    //         }
 
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-            return false;
-        }
+    //         if (conn != null) {
+    //             conn.close();
+    //         }
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
 
-        return founded;
-    }
+    //     return founded;
+    // }
 
     public boolean insertToDatabase() {
-        if (Hotel.hotelExist(this.getHotelName())) {
-            return false;
-        }
+        // if (Hotel.hotelExist(this.getHotelName())) {
+        //     return false;
+        // }
 
         try {
             Class.forName(SQLDriver);
