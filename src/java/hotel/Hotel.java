@@ -19,6 +19,7 @@ public class Hotel implements MySQLInit{
     String location;
     int isRecommended;
     int starRating;
+    String Label;
 
     public int getHotelID() {
         return hotelID;
@@ -47,7 +48,19 @@ public class Hotel implements MySQLInit{
     public void setStarRating(int starRating) {
         this.starRating = starRating;
     }
+    
+    public String getLabel() {
+        return Label;
+    }
+    
+    public void setLabel(String Label) {
+        this.Label = Label;
+    }
 
+    public Hotel(String hotelName, String location, int isRecommended, int starRating, String Label) {
+        
+    }
+    
     public static ArrayList<Hotel> getAllHotel() {
         ArrayList<Hotel> hotelList = new ArrayList<Hotel> ();
         try {
@@ -56,8 +69,8 @@ public class Hotel implements MySQLInit{
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelInfo]");
             while (rs.next()) {
-                temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
-                    rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+                Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"), 
+                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
             }
             if (rs != null) {
@@ -78,7 +91,7 @@ public class Hotel implements MySQLInit{
     }
 
     public static ArrayList<Hotel> searchHotel(String keyword) {
-        if (hotelName.equals("")) {
+        if (keyword.equals("")) {
             return getAllHotel();
         }
  
@@ -92,7 +105,7 @@ public class Hotel implements MySQLInit{
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Hotel temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
-                    rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+                    rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
             }
 

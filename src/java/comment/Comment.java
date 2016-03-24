@@ -5,7 +5,10 @@
  */
 package comment;
 
-import database.*
+import database.*;
+import java.sql.*;
+import java.util.ArrayList;
+
 /**
  *
  * @author Lin Jianxiong
@@ -48,6 +51,19 @@ public class Comment implements MySQLInit {
         this.score = score;
     }
 
+    public Comment(int orderID, String content, int score) {
+        this.orderID = orderID;
+        this.content = content;
+        this.score = score;
+    }
+    
+    public Comment(int commentID, int orderID, String content, int score) {
+        this.commentID = commentID;
+        this.orderID = orderID;
+        this.content = content;
+        this.score = score;
+    }
+    
     public boolean insertToDatabase() {
         try {
             Class.forName(SQLDriver);
@@ -84,7 +100,7 @@ public class Comment implements MySQLInit {
                 + "WHERE Orders.HotelID IN (SELECT HotelInfo.HotelID From [HotelInfo] "
                 + "WHERE [Name] = ?";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
-            stmt.setString(name);
+            stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment temp = new Comment(rs.getInt("CommentID"), rs.getInt("OrderID"),
@@ -107,8 +123,7 @@ public class Comment implements MySQLInit {
             e.printStackTrace();
             return null;
         }
-            return commentList;
-        }
+        return commentList;
     }
 
     public ArrayList<Comment> getCommentByUsername(String username) {
@@ -121,7 +136,7 @@ public class Comment implements MySQLInit {
                 + "WHERE Orders.UserID IN (SELECT [User].UserID From [User] "
                 + "WHERE [Username] = ?";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
-            stmt.setString(username);
+            stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment temp = new Comment(rs.getInt("CommentID"), rs.getInt("OrderID"),
@@ -144,7 +159,6 @@ public class Comment implements MySQLInit {
             e.printStackTrace();
             return null;
         }
-            return commentList;
-        }
+        return commentList;
     }
 }
