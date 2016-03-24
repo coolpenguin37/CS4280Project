@@ -29,6 +29,9 @@
         <label>Do you want to recommend this hotel?</label>
         <input type="checkbox" name="isRecommended" value="yes" checked>
         <br>
+        <label>Label</label>
+        <input type="text" name="label"> 
+        <br>
         <input type="submit" name="Create New Hotel">
         </form>
         <% if(request.getAttribute("result") != null) { %>
