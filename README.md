@@ -5,6 +5,7 @@ This is the project for CS4280.
 ## Workable Function
 - Register Account
 - Login
+- Create New Hotel
 
 ## TODO
 Write the TODO list.
