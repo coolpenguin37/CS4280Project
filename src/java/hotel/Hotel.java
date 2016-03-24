@@ -48,13 +48,44 @@ public class Hotel implements MySQLInit{
         this.starRating = starRating;
     }
 
+    public static Hotel getHotelByName(String hotelName) {
+        Hotel temp;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
+            stmt.setString(1, hotelName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
+                    rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+            }
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return founded;
+    }
+
     public static boolean hotelExist(String hotelName) {
         boolean founded = false;
 
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [HotelName] = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
             stmt.setString(1, hotelName);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -88,7 +119,7 @@ public class Hotel implements MySQLInit{
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelInfo] "
-                + "([HotelName], [Location], [IsRecommended], [StarRating]) "
+                + "([Name], [Location], [IsRecommended], [StarRating]) "
                 + "VALUES (?, ?, ?, ?)");
             stmt.setString(1, hotelName);
             stmt.setString(2, location);
