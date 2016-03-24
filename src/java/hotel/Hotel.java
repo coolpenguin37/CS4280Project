@@ -29,8 +29,16 @@ public class Hotel implements MySQLInit{
         return hotelName;
     }
 
-    public void setHotelName() {
+    public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
+    }
+    
+    public String getLocation() {
+        return location;
+    }
+    
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getIsRecommended() {
@@ -127,14 +135,15 @@ public class Hotel implements MySQLInit{
         return hotelList;
     }
 
-    public static boolean hotelExist(String hotelName) {
+    public static boolean hotelExist(String hotelName, String location) {
         boolean founded = false;
 
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([Name] = ?) AND ([Location] = ?)");
             stmt.setString(1, hotelName);
+            stmt.setString(2, location);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 founded = true;
@@ -159,7 +168,7 @@ public class Hotel implements MySQLInit{
     }
 
     public boolean insertToDatabase() {
-        if (Hotel.hotelExist(this.getHotelName())) {
+        if (Hotel.hotelExist(this.getHotelName(), this.getLocation())) {
             return false;
         }
 
