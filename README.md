@@ -1,6 +1,11 @@
 # CS4280 Project
 ## Introduction
 This is the project for CS4280.
+
+## Workable Function
+- Register Account
+- Login
+
 ## TODO
 Write the TODO list.
 - Add servlets/JSP for existing database interfaces [Login, Create Account, Manager site (check hotel room info)]
