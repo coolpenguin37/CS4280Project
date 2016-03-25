@@ -55,7 +55,7 @@ public class CreateHotelServlet extends HttpServlet {
             int starRating = Integer.parseInt(request.getParameter("starRating"));
             String label = request.getParameter("label");
 
-            if (hotelName.isEmpty() || hotelName == null) {
+            if (hotelName == null || hotelName.isEmpty()) {
                 String result = "Invalid hotel name.";
                 request.setAttribute("result", result);
                 RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
@@ -63,7 +63,7 @@ public class CreateHotelServlet extends HttpServlet {
                 return;
             }
 
-            if (address.isEmpty() || address == null) {
+            if (address == null || address.isEmpty()) {
                 String result = "Invalid hotel address.";
                 request.setAttribute("result", result);
                 RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
