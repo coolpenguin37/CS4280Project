@@ -106,6 +106,18 @@ public class User implements MySQLInit, UserType {
         this.userType = userType;
     }
 
+    public User(int userID, String username, String password, String name,
+        String email, String tel, int isSubscribed, int userType) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.tel = tel;
+        this.isSubscribed = isSubscribed;
+        this.userType = userType;
+    }
+
     public static boolean userExist(String username) {
         boolean founded = false;
 
@@ -181,7 +193,7 @@ public class User implements MySQLInit, UserType {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                    temp = new User(rs.getString("Username"), 
+                    temp = new User(rs.getInt("UserID"), rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Name"), rs.getString("Email"),
                     rs.getString("Tel"), rs.getInt("IsSubscribed"), rs.getInt("UserType"));
             }

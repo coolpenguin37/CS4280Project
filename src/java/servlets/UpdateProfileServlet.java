@@ -51,12 +51,18 @@ public class UpdateProfileServlet extends HttpServlet {
             String newPassword = request.getParameter("newPassword");
             String tel = request.getParameter("tel");
             String email = request.getParameter("email");
-            String isSubscribed = request.getParameter("isSubscribed");
+            int isSubscribed = 0;
+            if (request.getParameter("isSubscribed")==null) {
+                isSubscribed =0 ;
+            }
+            else {
+                isSubscribed = 1;
+            }
 
             if (oldPassword == null || oldPassword.isEmpty()) {
                 String result = "Incorrect Password";
                 request.setAttribute("result", result);
-                RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
+                RequestDispatcher disp1 = request.getRequestDispatcher("MemberInfo.jsp");
                 disp1.forward(request, response);
                 return;
             }
@@ -65,14 +71,38 @@ public class UpdateProfileServlet extends HttpServlet {
                 Login l = new Login(username, oldPassword);
                 User user = l.login();
                 if (user != null) {
-                    if (newPassword != null && !newPassword.isEmpty()) {
-                        if (!validatePassword(oldPassword)) {
-                            
-                        }
+                    if (newPassword != null && !newPassword.isEmpty() && !validatePassword(newPassword)) {
+                        String result = "Invalid New Password.";
+                        request.setAttribute("result", result);
+                        RequestDispatcher disp1 = request.getRequestDispatcher("MemberInfo.jsp");
+                        disp1.forward(request, response);
+                        return;
                     }
+
+                    if (tel != null && !tel.isEmpty() && !validateTel(tel)) {
+                        String result = "Invalid Tel.";
+                        request.setAttribute("result", result);
+                        RequestDispatcher disp1 = request.getRequestDispatcher("MemberInfo.jsp");
+                        disp1.forward(request, response);
+                        return;
+                    }
+
+                    if (email != null && !email.isEmpty() && !validateEmail(email)) {
+                        String result = "Invalid Email.";
+                        request.setAttribute("result", result);
+                        RequestDispatcher disp1 = request.getRequestDispatcher("MemberInfo.jsp");
+                        disp1.forward(request, response);
+                        return;
+                    }
+
+                    //TODOj
+                    User temp = new User(user.getUserID(), )
                 }
             } catch (LoginException e) {
-                
+                String result = e.getMessage();
+                request.setAttribute("result", result);
+                RequestDispatcher disp1 = request.getRequestDispatcher("MemberInfo.jsp");
+                disp1.forward(request, response);
             }
 
 
