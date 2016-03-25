@@ -1,6 +1,12 @@
 # CS4280 Project
 ## Introduction
 This is the project for CS4280.
+
+## Workable Function
+- Register Account
+- Login
+- Create New Hotel
+
 ## TODO
 Write the TODO list.
 - Add servlets/JSP for existing database interfaces [Login, Create Account, Manager site (check hotel room info)]
@@ -32,10 +38,11 @@ Write the TODO list.
     * Score, int
 - HotelInfo
     * HotelID, int
-    * Name, varchar(255)
-    * Location, varchar(255)
+    * HotelName, varchar(255)
+    * Address, varchar(255)
     * IsRecommended, int
     * StarRating, int
+    * Label, varchar(255)
 - Manager
     * UserID, int
     * UserType, int
