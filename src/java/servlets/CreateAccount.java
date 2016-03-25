@@ -10,22 +10,19 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.Object;
 import java.security.NoSuchAlgorithmException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import user.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 
 /**
  *
  * @author yduan7
  */
-public class createAccount extends HttpServlet {
+public class CreateAccount extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,17 +46,16 @@ public class createAccount extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String username=request.getParameter("username");
-            if (username=="" || username==null || !validateUsername(username)) {
-                String result = "Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters";
+            if (username=="" || username==null || !User.validateUsername(username)) {
+                String result = User.USERNAME_ERROR;
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
                return;
             }
             String password=request.getParameter("password");
-            if (password=="" || password==null || !validatePassword(password)) {
-                String result = "Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
-                        + "The lengths should be at least 6 characters. Please check";
+            if (password=="" || password==null || !User.validatePassword(password)) {
+                String result = User.PASSWORD_ERROR;
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
@@ -78,10 +74,10 @@ public class createAccount extends HttpServlet {
                 telephone="";
             }
             else{
-                if (validateTel(request.getParameter("telephone"))) 
+                if (User.validateTel(request.getParameter("telephone"))) 
                     {telephone=request.getParameter("telephone");}
                 else {
-                    String result = "Telephone is not valid. It should contain only numbers. Please check";
+                    String result = User.TEL_ERROR;
                     request.setAttribute("result", result);
                     RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                     disp1.forward(request, response);
@@ -94,10 +90,10 @@ public class createAccount extends HttpServlet {
             }
             else{
                 
-                if (validateEmail(request.getParameter("email"))) 
+                if (User.validateEmail(request.getParameter("email"))) 
                     {email=request.getParameter("email");}
                 else {
-                    String result = "Email is not valid. Please check";
+                    String result =User.EMAIL_ERROR;
                     request.setAttribute("result", result);
                     RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                     disp1.forward(request, response);
@@ -133,41 +129,7 @@ public class createAccount extends HttpServlet {
         }
     }
     
-    private boolean validateEmail(String email) {
-        
-        String email_pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        System.out.println(email);
-        Pattern pattern = Pattern.compile(email_pattern);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-         
-    }
-    //Validate password. The password must contains at least one capital letter, one lowercase letter and one number.
-    //It should be at least 6 characters
-    private boolean validatePassword(String password) {
-        String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{5,}$";
-        Pattern pattern = Pattern.compile(password_pattern);
-        Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
-    }
-    
-    //username can only contain one or more uppercase, lowercase and number.
-    //it should be at least 6 characters
-    private boolean validateUsername(String username) {
-        String username_pattern = "^[a-zA-Z0-9].{5,}$";
-        Pattern pattern = Pattern.compile(username_pattern);
-        Matcher matcher = pattern.matcher(username);
-        return matcher.matches();
-    }
-    
-    //telephone must be one or more numbers
-    private boolean validateTel(String telephone) {
-        String telephone_pattern = "^[0-9]+$";
-        Pattern pattern = Pattern.compile(telephone_pattern);
-        Matcher matcher = pattern.matcher(telephone);
-        return matcher.matches();    
-    }    
+       
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
