@@ -21,7 +21,7 @@ public class Login {
         this.password = password; 
     }
     
-    public User login() throws loginException{
+    public User login() throws LoginException{
         
         if (User.userExist(username)) {
             User u = User.getUserByUsername(username);
@@ -33,10 +33,10 @@ public class Login {
             if (u.getPassword().equals(password)){
                 return u;
             } else {
-                throw new loginException("Password Incorrect! Please check.");
+                throw new LoginException("Password Incorrect! Please check.");
             }
         } else {
-            throw new loginException("Username does not exist! Please check.");
+            throw new LoginException("Username does not exist! Please check.");
         }
     }
 }

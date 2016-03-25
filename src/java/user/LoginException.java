@@ -10,8 +10,8 @@ package user;
  *
  * @author yduan7
  */
-public class loginException extends Exception {
-    public loginException(String message){
+public class LoginException extends Exception {
+    public LoginException(String message){
         super(message);
     }
     
