@@ -49,7 +49,7 @@ public class CreateAccount extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String username=request.getParameter("username");
-            if (username==isEmpty() || username==null || !validateUsername(username)) {
+            if (username==null || username==isEmpty() || !validateUsername(username)) {
                 String result = "Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters";
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
@@ -57,7 +57,7 @@ public class CreateAccount extends HttpServlet {
                return;
             }
             String password=request.getParameter("password");
-            if (password==isEmpty() || password==null || !validatePassword(password)) {
+            if (password==null || password==isEmpty() || !validatePassword(password)) {
                 String result = "Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
                         + "The lengths should be at least 6 characters. Please check";
                 request.setAttribute("result", result);
