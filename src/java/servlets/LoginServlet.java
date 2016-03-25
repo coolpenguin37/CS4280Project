@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet{
                 
             } 
         
-        catch (loginException e) {
+        catch (LoginException e) {
                 String result = e.getMessage();
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("userLogin.jsp");

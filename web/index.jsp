@@ -21,7 +21,7 @@
             <div>
                         <li><a href="index.jsp"><span>Home</span></a></li> 
 
-                        <li><a href="memberInfo.jsp"><span>Member Info</span></a></li>
+                        <li><a href="MemberInfo.jsp"><span>Member Info</span></a></li>
 
                         <li><a href="search.jsp"><span>Search</span></a></li>
 
