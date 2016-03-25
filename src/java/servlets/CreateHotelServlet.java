@@ -47,10 +47,10 @@ public class CreateHotelServlet extends HttpServlet {
             String address = request.getParameter("address");
             int isRecommended;
             if (request.getParameter("isRecommended")==null) {
-                isRecommended=0;
+                isRecommended = 0;
             }
             else {
-                isRecommended=1;
+                isRecommended = 1;
             }
             int starRating = Integer.parseInt(request.getParameter("starRating"));
             String label = request.getParameter("label");
