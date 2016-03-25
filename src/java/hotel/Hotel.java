@@ -16,9 +16,10 @@ import database.*;
 public class Hotel implements MySQLInit{
     int hotelID;
     String hotelName;
-    String location;
+    String address;
     int isRecommended;
     int starRating;
+    String label;
 
     public int getHotelID() {
         return hotelID;
@@ -28,8 +29,16 @@ public class Hotel implements MySQLInit{
         return hotelName;
     }
 
-    public void setHotelName() {
+    public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getIsRecommended() {
@@ -47,18 +56,68 @@ public class Hotel implements MySQLInit{
     public void setStarRating(int starRating) {
         this.starRating = starRating;
     }
+    
+    public String getLabel() {
+        return label;
+    }
+    
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-    public static ArrayList<Hotel> getHotelByName(String hotelName) {
+    public Hotel(String hotelName, String address, int isRecommended, int starRating, String label) {
+        this.hotelName = hotelName;
+        this.address = address;
+        this.isRecommended = isRecommended;
+        this.starRating = starRating;
+        this.label = label;
+    }
+    
+    public static ArrayList<Hotel> getAllHotel() {
+        ArrayList<Hotel> hotelList = new ArrayList<Hotel> ();
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelInfo]");
+            while (rs.next()) {
+                Hotel temp = new Hotel(rs.getString("HotelName"), rs.getString("Address"), 
+                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"));
+                hotelList.add(temp);
+            }
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return hotelList;
+    }
+
+    public static ArrayList<Hotel> searchHotel(String keyword) {
+        if (keyword.equals("")) {
+            return getAllHotel();
+        }
+ 
         ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] LIKE ?");
-            stmt.setString(1, hotelName + "%");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] LIKE ?) OR ([Label] LIKE ?)");
+            stmt.setString(1, "%" + keyword + "%");
+            stmt.setString(2, ":%" + keyword + "%:");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                temp = new Hotel(rs.getString("Name"), rs.getString("Location"),
-                    rs.getInt("IsRecommended"),rs.getInt("StarRating"));
+                Hotel temp = new Hotel(rs.getString("HotelName"), rs.getString("Address"),
+                    rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
             }
 
@@ -80,52 +139,57 @@ public class Hotel implements MySQLInit{
         return hotelList;
     }
 
-    // public static boolean hotelExist(String hotelName) {
-    //     boolean founded = false;
+    public static boolean hotelExist(String hotelName, String address) {
+        boolean founded = false;
 
-    //     try {
-    //         Class.forName(SQLDriver);
-    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-    //         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE [Name] = ?");
-    //         stmt.setString(1, hotelName);
-    //         ResultSet rs = stmt.executeQuery();
-    //         if (rs.next()) {
-    //             founded = true;
-    //         }
+        try {
+            
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] = ?) AND ([Address] = ?)");
+            stmt.setString(1, hotelName);
+            stmt.setString(2, address);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                founded = true;
+            }
 
-    //         if (rs != null) {
-    //             rs.close();
-    //         }
+            if (rs != null) {
+                rs.close();
+            }
 
-    //         if (stmt != null) {
-    //             stmt.close();
-    //         }
+            if (stmt != null) {
+                stmt.close();
+            }
 
-    //         if (conn != null) {
-    //             conn.close();
-    //         }
-    //     } catch (Exception e) {
-    //         return false;
-    //     }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
-    //     return founded;
-    // }
+        return founded;
+    }
 
     public boolean insertToDatabase() {
-        // if (Hotel.hotelExist(this.getHotelName())) {
-        //     return false;
-        // }
+        if (Hotel.hotelExist(this.getHotelName(), this.getAddress())) {
+            return false;
+        }
 
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelInfo] "
-                + "([Name], [Location], [IsRecommended], [StarRating]) "
-                + "VALUES (?, ?, ?, ?)");
+                + "([HotelName], [Address], [IsRecommended], [StarRating], [Label]) "
+                + "VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, hotelName);
-            stmt.setString(2, location);
+            stmt.setString(2, address);
             stmt.setInt(3, isRecommended);
             stmt.setInt(4, starRating);
+            stmt.setString(5, label);
 
             stmt.executeUpdate();
             if (stmt != null) {

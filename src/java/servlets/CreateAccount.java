@@ -46,16 +46,17 @@ public class CreateAccount extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String username=request.getParameter("username");
-            if (username=="" || username==null || !User.validateUsername(username)) {
-                String result = User.USERNAME_ERROR;
+            if (username==null || username.isEmpty() || !validateUsername(username)) {
+                String result = "Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters";
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
                return;
             }
             String password=request.getParameter("password");
-            if (password=="" || password==null || !User.validatePassword(password)) {
-                String result = User.PASSWORD_ERROR;
+            if (password==null || password.isEmpty() || !validatePassword(password)) {
+                String result = "Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
+                        + "The lengths should be at least 6 characters. Please check";
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
                disp1.forward(request, response);
@@ -103,22 +104,20 @@ public class CreateAccount extends HttpServlet {
             
             if (request.getParameter("subscribe")==null){
                 isSubscribed=0;
-            }
-            else {
+            } else {
                 isSubscribed=1;
             }
             
             try {
                 password=PasswordHash.hash(password);
-            }
-            catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException e) {
             }
             
             User u=new User(username,password,name,email,telephone,isSubscribed,1);
             if (u.insertToDatabase()) {
-            out.println("<p>Success!</p>");
-            out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");}
-            else{
+                out.println("<p>Success!</p>");
+                out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");
+            } else {
                 out.println("<p>Failed...</p>");
                 out.println("<a href=" + request.getContextPath()+">Return back to previous page</a>");
             }

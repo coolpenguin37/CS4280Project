@@ -21,24 +21,22 @@ public class Login {
         this.password = password; 
     }
     
-    public User login() throws loginException{
+    public User login() throws LoginException{
         
-        if (User.userExist(username)){
-            User u=User.getUserByUsername(username);
-            try {password=PasswordHash.hash(password);
+        if (User.userExist(username)) {
+            User u = User.getUserByUsername(username);
+            try {
+                password = PasswordHash.hash(password);
+            } catch (NoSuchAlgorithmException e) {
+                return null;
             }
-            catch (NoSuchAlgorithmException e) {
-            }
-            if (Arrays.equals(u.getPassword().getBytes(),password.getBytes())){
-                
+            if (u.getPassword().equals(password)){
                 return u;
+            } else {
+                throw new LoginException("Password Incorrect! Please check.");
             }
-            else {
-                throw new loginException("Password Incorrect! Please check.");
-            }
-        }
-        else {
-            throw new loginException("Username does not exist! Please check.");
+        } else {
+            throw new LoginException("Username does not exist! Please check.");
         }
     }
 }
