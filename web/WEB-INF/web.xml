@@ -14,7 +14,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>createAccount</servlet-name>
-        <servlet-class>servlets.createAccount</servlet-class>
+        <servlet-class>servlets.CreateAccount</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>createAccount</servlet-name>

@@ -8,6 +8,8 @@ package user;
 import java.sql.*;
 import java.util.ArrayList;
 import database.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -23,7 +25,15 @@ public class User implements MySQLInit, UserType {
     String tel;
     int isSubscribed;
     int userType;
-
+    public static final String USERNAME_ERROR="Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters.";
+    public static final String PASSWORD_ERROR="Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
+                        + "The lengths should be at least 6 characters. Please check";
+    public static final String TEL_ERROR="Telephone is not valid. It should contain only numbers. Please check";
+    public static final String EMAIL_ERROR= "Email is not valid. Please check";
+    public static final String NAME_ERROR="";
+    public static final String SUBSCRIBE_ERROR="";
+    public static final String TYPE_ERROR="";
+    
     public int getUserID() {
         return userID;
     }
@@ -351,5 +361,52 @@ public class User implements MySQLInit, UserType {
     public boolean subscriptionStatus()
     {
         return (isSubscribed == 1);
+    }
+    public static boolean validateEmail(String email) {
+        
+        String email_pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        System.out.println(email);
+        Pattern pattern = Pattern.compile(email_pattern);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+         
+    }
+    //Validate password. The password must contains at least one capital letter, one lowercase letter and one number.
+    //It should be at least 6 characters
+    public static boolean validatePassword(String password) {
+        String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{5,}$";
+        Pattern pattern = Pattern.compile(password_pattern);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+    
+    //username can only contain one or more uppercase, lowercase and number.
+    //it should be at least 6 characters
+    public static boolean validateUsername(String username) {
+        String username_pattern = "^[a-zA-Z0-9].{5,}$";
+        Pattern pattern = Pattern.compile(username_pattern);
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
+    }
+    
+    //telephone must be one or more numbers
+    public static boolean validateTel(String telephone) {
+        String telephone_pattern = "^[0-9]+$";
+        Pattern pattern = Pattern.compile(telephone_pattern);
+        Matcher matcher = pattern.matcher(telephone);
+        return matcher.matches();    
+    } 
+    
+    public static boolean validateName(String name){
+        return true;
+    }
+    
+    public static boolean validateIsSubscribed(int isSubscribed){
+        return (isSubscribed==0 || isSubscribed==1);
+    }
+    
+    public static boolean validateType(int type){
+        return (type==0 || type==1 || type==2 || type==3);
     }
 }
