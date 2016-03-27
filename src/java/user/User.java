@@ -193,6 +193,39 @@ public class User implements MySQLInit, UserType {
         return true;
     }
 
+    public static User getUserByUserID(String userID)
+    {
+        User temp=null;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [User] WHERE [UserID] = ?");
+            stmt.setString(1, userID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                    temp = new User(rs.getInt("UserID"), rs.getString("Username"), 
+                    rs.getString("Password"), rs.getString("Name"), rs.getString("Email"),
+                    rs.getString("Tel"), rs.getInt("IsSubscribed"), rs.getInt("UserType"));
+            }
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
+                
+            if(conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return temp;
+    }
+
     public static User getUserByUsername(String username)
     {
         User temp=null;
