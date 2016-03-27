@@ -20,7 +20,7 @@ Write the TODO list.
 
 |UserID|Username|Password|Name|Email|Tel|IsSubscribed|UserType|
 |:----:|:------:|:------:|:--:|:---:|:-:|:----------:|:------:|
-|int|varchar(255)|varchar(255)|varchar(255)|varchar(255)|int|int|
+|int|varchar(255)|varchar(255)|varchar(255)|varchar(255)|varchar(255)|int|int|
 
 ### HotelRoom
 
