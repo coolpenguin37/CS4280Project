@@ -274,15 +274,15 @@ public class User implements MySQLInit, UserType {
                 userList.add(temp);
             }
 
-            if(rs != null) {
+            if (rs != null) {
                 rs.close();
             }
             
-            if(stmt != null) {
+            if (stmt != null) {
                 stmt.close();
             }
 
-            if(conn != null) {
+            if (conn != null) {
                 conn.close();
             }
         } catch (Exception e) {
