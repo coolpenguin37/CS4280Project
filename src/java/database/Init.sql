@@ -24,7 +24,9 @@ CREATE TABLE [Manager]
 UserID int NOT NULL, 
 HotelID int NOT NULL);
 
+DELETE FROM [Manager];
 DBCC CHECKIDENT ([Manager], RESEED, 0);
 INSERT INTO [Manager] VALUES ('1', '2');
 INSERT INTO [Manager] VALUES ('2', '1');
 INSERT INTO [Manager] VALUES ('3', '2');
+SELECT * FROM [Manager];
