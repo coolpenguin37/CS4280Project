@@ -17,3 +17,14 @@ FROM Order INNER JOIN [Comment]
 ON [Order.OrderID] = [Comment.OrderID]
 WHERE [Order.HotelID] IN 
 (SELECT [HotelInfo.HotelID] FROM [HotelInfo] WHERE [HotelName] = ?)
+
+
+CREATE TABLE [Manager] 
+(RID int IDENTITY(1,1) NOT NULL, 
+UserID int NOT NULL, 
+HotelID int NOT NULL);
+
+DBCC CHECKIDENT ([Manager], RESEED, 0);
+INSERT INTO [Manager] VALUES ('1', '2');
+INSERT INTO [Manager] VALUES ('2', '1');
+INSERT INTO [Manager] VALUES ('3', '2');
