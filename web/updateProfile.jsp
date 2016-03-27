@@ -57,7 +57,7 @@
 			<a href="index.jsp">
 				<div><span>Home</span></div>
 			</a>
-			<a href="memberInfo.jsp">
+			<a href="updateProfile.jsp">
 				<div><span>Settings</span></div>
 			</a>
 			<a href="logout.jsp">
@@ -65,7 +65,7 @@
 			</a>
 		<% } %>
                 </nav>
-        <form action="GET" target="_self">
+        <form method="GET" action="_self">
 	<table>
 	<thead>
             <tr>
