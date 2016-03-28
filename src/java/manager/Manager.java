@@ -98,7 +98,7 @@ public class Manager implements MySQLInit {
         return hotelList;
     }
 
-    public static boolean existManager(int userID, int hotelID) {
+    public static boolean managerExist(int userID, int hotelID) {
         boolean founded = false;
 
         try {
