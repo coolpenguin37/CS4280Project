@@ -35,6 +35,12 @@ public class Manager implements MySQLInit {
         this.hotelID = hotelID;
     }
 
+    public Manager(int rID, int userID, int hotelID) {
+        this.rID = rID;
+        this.userID = userID;
+        this.hotelID = hotelID;
+    }
+
     public ArrayList<Manager> getManagerByHotelID(int hotelID) {
         ArrayList<Manager> managerList = new ArrayList<Manager>();
         try {
@@ -45,7 +51,7 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("UserID"), rs.getInt("HotelID"));
+                Manager temp = new Manager(rs.getInt("rID"), rs.getInt("UserID"), rs.getInt("HotelID"));
                 managerList.add(temp);
             }
 
@@ -76,7 +82,7 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("UserID"), rs.getInt("HotelID"));
+                Manager temp = new Manager(rs.getInt("rID"), rs.getInt("UserID"), rs.getInt("HotelID"));
                 managerList.add(temp);
             }
 
