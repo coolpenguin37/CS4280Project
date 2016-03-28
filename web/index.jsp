@@ -57,7 +57,7 @@
 			
 				<div <%= (h.getIsRecommended()==1)?"class='recommended'":"" %> >
 				<h3> <%= h.getHotelName() %> </h3>
-				<h4> <%= h.getLocation() %> </h4>
+				<h4> <%= h.getAddress()%> </h4>
 				<div> <span>Ratings: </span> <span> <%= h.getStarRating() %> Star</span></div>
 				<img src="" alt="">
 				<button>Check Room Availability</button>

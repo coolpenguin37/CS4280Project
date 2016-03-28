@@ -30,8 +30,7 @@ public class Manager implements MySQLInit {
         return hotelID;
     }
 
-    public Manager(int rID, int userID, int hotelID) {
-        this.rID = rID;
+    public Manager(int userID, int hotelID) {
         this.userID = userID;
         this.hotelID = hotelID;
     }
@@ -46,7 +45,7 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+                Manager temp = new Manager(rs.getInt("UserID"), rs.getInt("HotelID"));
                 managerList.add(temp);
             }
 
@@ -67,8 +66,8 @@ public class Manager implements MySQLInit {
         return managerList;
     }
 
-    public ArrayList<Manager> getHotelByUserID(int userID) {
-        ArrayList<Manager> hotelList = new ArrayList<Manager>();
+    public ArrayList<Manager> getManagerByUserID(int userID) {
+        ArrayList<Manager> managerList = new ArrayList<Manager>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
@@ -77,8 +76,8 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
-                hotelList.add(temp);
+                Manager temp = new Manager(rs.getInt("UserID"), rs.getInt("HotelID"));
+                managerList.add(temp);
             }
 
             if (rs != null) {
@@ -95,7 +94,7 @@ public class Manager implements MySQLInit {
         } catch (Exception e) {
             return null;
         }
-        return hotelList;
+        return managerList;
     }
 
     public static boolean managerExist(int userID, int hotelID) {
@@ -131,7 +130,7 @@ public class Manager implements MySQLInit {
     }
 
     public boolean insertToDatabase() {
-        if (Manager.managerExist(this.getUserID(), this.getHotelID())) {
+        if (Manager.existManager(this.getUserID(), this.getHotelID())) {
             return false;
         }
 
