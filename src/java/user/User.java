@@ -128,7 +128,7 @@ public class User implements MySQLInit, UserType {
         this.userType = userType;
     }
 
-    public static boolean userExist(String username) {
+    public static boolean usernameExist(String username) {
         boolean founded = false;
 
         try {
@@ -161,7 +161,7 @@ public class User implements MySQLInit, UserType {
 
     public boolean insertToDatabase() {
         
-        if (User.userExist(this.getUsername())) {
+        if (User.usernameExist(this.getUsername())) {
             return false;
         }
 
