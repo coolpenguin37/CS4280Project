@@ -136,7 +136,7 @@ public class Manager implements MySQLInit {
     }
 
     public boolean insertToDatabase() {
-        if (Manager.existManager(this.getUserID(), this.getHotelID())) {
+        if (Manager.managerExist(this.getUserID(), this.getHotelID())) {
             return false;
         }
 
