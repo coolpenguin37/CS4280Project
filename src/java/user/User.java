@@ -23,8 +23,8 @@ public class User implements MySQLInit, UserType {
     String name;
     String email;
     String tel;
-    int isSubscribed;
-    int userType;
+    int isSubscribed=-1;
+    int userType=-1;
     public static final String USERNAME_ERROR="Username is not valid. It should contain only uppercase, lowercase or number. The length should be at least 6 characters.";
     public static final String PASSWORD_ERROR="Password is not valid. It should contain at least one uppercase, at least one lowercase and at least one number. "
                         + "The lengths should be at least 6 characters. Please check";
@@ -296,6 +296,7 @@ public class User implements MySQLInit, UserType {
     public static boolean updateProfile(User u)
     {
         try {
+            if (u.getUserID()==-1) {return false;}
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
 
@@ -335,7 +336,7 @@ public class User implements MySQLInit, UserType {
                 }
             }
 
-            if (true)
+            if (u.getIsSubscribed()==0 || u.getIsSubscribed()==1)
             {
                 String strQuery = "UPDATE [User] SET [IsSubscribed] = ? WHERE [userID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);

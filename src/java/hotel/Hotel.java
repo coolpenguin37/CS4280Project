@@ -17,8 +17,8 @@ public class Hotel implements MySQLInit{
     int hotelID;
     String hotelName;
     String address;
-    int isRecommended;
-    int starRating;
+    int isRecommended=-1;
+    int starRating=-1;
     String label;
 
     public int getHotelID() {
@@ -202,6 +202,83 @@ public class Hotel implements MySQLInit{
         } catch (Exception e) {
             return false;
         }   
+        return true;
+    }
+    
+    public static boolean updateHotel(Hotel h){
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+            if (!h.getHotelName().equals(""))
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [hotelName] = ? WHERE [hotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, h.getHotelName());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (!h.getAddress().equals(""))
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [Address] = ? WHERE [hotelID] = ?";
+                
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, h.getAddress());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (h.getIsRecommended()==0||h.getIsRecommended()==1)
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [IsRecommended] = ? WHERE [hotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, h.getIsRecommended());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (h.getStarRating()!=-1)
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [StarRating] = ? WHERE [hotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, h.getStarRating());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (!h.getLabel().equals(""))
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [Label] = ? WHERE [hotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, h.getLabel());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 }
