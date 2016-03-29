@@ -20,6 +20,7 @@ import org.joda.time.LocalDate;
  * @author Lin Jianxiong
  */
 public class Order implements MySQLInit, OrderStatus {
+
     int orderID;
     int status;
     int userID;
@@ -89,6 +90,13 @@ public class Order implements MySQLInit, OrderStatus {
         this.numOfRoom = numOfRoom;
     }
 
+    public Order(Date CIDate, Date CODate, int hotelID, int roomType) {
+        this.CIDate = CIDate;
+        this.CODate = CODate;
+        this.hotelID = hotelID;
+        this.roomType = roomType;
+    }
+
     public Order(int status, int userID, Date CIDate, Date CODate,
             int hotelID, int roomType, int numOfRoom) {
         this.status = status;
@@ -97,7 +105,7 @@ public class Order implements MySQLInit, OrderStatus {
         this.CODate = CODate;
         this.hotelID = hotelID;
         this.roomType = roomType;
-        this.numOfRoom = numOfRoom;        
+        this.numOfRoom = numOfRoom;
     }
     
     public Order(int orderID, int status, int userID, Date CIDate, Date CODate, 
@@ -278,11 +286,11 @@ public class Order implements MySQLInit, OrderStatus {
         return cnt;
     }
 
-    public static boolean checkAvailability(Order o) {
-        boolean available = true;
+    public static int getRemainedRoom(Order o) {
+        int remained = Integer.MAX_VALUE;
         int num = HotelRoom.getNumOfRoomByID(o.getHotelID(), o.getRoomType());
         if (num == 0) {
-            return false;
+            return 0;
         }
 
         try {
@@ -301,15 +309,19 @@ public class Order implements MySQLInit, OrderStatus {
                 java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
                 stmt.setDate(3, sqlDate);
                 ResultSet rs = stmt.executeQuery();
+
                 if (!rs.next())
                 {
-                    available = false;
+                    remained = 0;
                     break;
                 }
+
                 int occupied = rs.getInt(1);
-                if (occupied + o.getNumOfRoom() > num) {
-                    available = false;
+                if (occupied >= num) {
+                    remained = 0;
                     break;
+                } else if (num - occupied < remained) {
+                    remained = num - occupied;
                 }
 
                 if (rs != null) {
@@ -325,11 +337,64 @@ public class Order implements MySQLInit, OrderStatus {
                 conn.close();
             }
         } catch (Exception e) {
-            return false;
+            return 0;
         }
 
-        return available;
+        return remained;
     }
+
+    // public static boolean checkAvailability(Order o) {
+    //     boolean available = true;
+    //     int num = HotelRoom.getNumOfRoomByID(o.getHotelID(), o.getRoomType());
+    //     if (num == 0) {
+    //         return false;
+    //     }
+
+    //     try {
+    //         Class.forName(SQLDriver);
+    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+    //         String strQuery = "SELECT SUM([NumOfRoom]) FROM [Chris] "
+    //             + "WHERE [HotelID] = ? AND [RoomType] = ? AND [Date] = ?";
+    //         PreparedStatement stmt = conn.prepareStatement(strQuery);
+    //         stmt.setInt(1, o.getHotelID());
+    //         stmt.setInt(2, o.getRoomType());
+    //         DateTime dtCIDate = new DateTime(o.getCIDate());
+    //         DateTime dtCODate = new DateTime(o.getCODate());
+    //         int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+    //         for (int i = 0; i < duration; ++i) {
+    //             DateTime currentDate = dtCIDate.plusDays(i);
+    //             java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+    //             stmt.setDate(3, sqlDate);
+    //             ResultSet rs = stmt.executeQuery();
+    //             if (!rs.next())
+    //             {
+    //                 available = false;
+    //                 break;
+    //             }
+    //             int occupied = rs.getInt(1);
+    //             if (occupied + o.getNumOfRoom() > num) {
+    //                 available = false;
+    //                 break;
+    //             }
+
+    //             if (rs != null) {
+    //                 rs.close();
+    //             }
+    //         }
+
+    //         if (stmt != null) {
+    //             stmt.close();
+    //         }
+
+    //         if (conn != null) {
+    //             conn.close();
+    //         }
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
+
+    //     return available;
+    // }
 
     public boolean updateOrder(Order o) {
         Order t = Order.getOrderByOrderID(o.getOrderID());
