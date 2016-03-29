@@ -180,6 +180,41 @@ public class HotelRoom implements MySQLInit {
         return roomList;
     }
 
+    public static ArrayList<HotelRoom> getAllRoomsByHotelID(int hotelID) {
+        ArrayList<HotelRoom> roomList = new ArrayList<HotelRoom>();
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT * FROM [HotelRoom] WHERE [HotelID] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, hotelID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
+                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+                roomList.add(temp);
+            }
+
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
+
+            if(conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return roomList;
+    }
+
     public static boolean updateRoom(HotelRoom r)
     {
         try {
