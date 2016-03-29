@@ -96,7 +96,7 @@ public class UpdateProfileServlet extends HttpServlet {
                     }
 
                     //TODOj
-                    User temp = new User(user.getUserID(), )
+                    //User temp = new User(user.getUserID(), )
                 }
             } catch (LoginException e) {
                 String result = e.getMessage();

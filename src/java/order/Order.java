@@ -343,58 +343,58 @@ public class Order implements MySQLInit, OrderStatus {
         return remained;
     }
 
-    // public static boolean checkAvailability(Order o) {
-    //     boolean available = true;
-    //     int num = HotelRoom.getNumOfRoomByID(o.getHotelID(), o.getRoomType());
-    //     if (num == 0) {
-    //         return false;
-    //     }
+    public static boolean checkAvailability(Order o) {
+        boolean available = true;
+        int num = HotelRoom.getNumOfRoomByID(o.getHotelID(), o.getRoomType());
+        if (num == 0) {
+            return false;
+        }
 
-    //     try {
-    //         Class.forName(SQLDriver);
-    //         Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-    //         String strQuery = "SELECT SUM([NumOfRoom]) FROM [Chris] "
-    //             + "WHERE [HotelID] = ? AND [RoomType] = ? AND [Date] = ?";
-    //         PreparedStatement stmt = conn.prepareStatement(strQuery);
-    //         stmt.setInt(1, o.getHotelID());
-    //         stmt.setInt(2, o.getRoomType());
-    //         DateTime dtCIDate = new DateTime(o.getCIDate());
-    //         DateTime dtCODate = new DateTime(o.getCODate());
-    //         int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
-    //         for (int i = 0; i < duration; ++i) {
-    //             DateTime currentDate = dtCIDate.plusDays(i);
-    //             java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
-    //             stmt.setDate(3, sqlDate);
-    //             ResultSet rs = stmt.executeQuery();
-    //             if (!rs.next())
-    //             {
-    //                 available = false;
-    //                 break;
-    //             }
-    //             int occupied = rs.getInt(1);
-    //             if (occupied + o.getNumOfRoom() > num) {
-    //                 available = false;
-    //                 break;
-    //             }
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT SUM([NumOfRoom]) FROM [Chris] "
+                + "WHERE [HotelID] = ? AND [RoomType] = ? AND [Date] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, o.getHotelID());
+            stmt.setInt(2, o.getRoomType());
+            DateTime dtCIDate = new DateTime(o.getCIDate());
+            DateTime dtCODate = new DateTime(o.getCODate());
+            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+            for (int i = 0; i < duration; ++i) {
+                DateTime currentDate = dtCIDate.plusDays(i);
+                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+                stmt.setDate(3, sqlDate);
+                ResultSet rs = stmt.executeQuery();
+                if (!rs.next())
+                {
+                    available = false;
+                    break;
+                }
+                int occupied = rs.getInt(1);
+                if (occupied + o.getNumOfRoom() > num) {
+                    available = false;
+                    break;
+                }
 
-    //             if (rs != null) {
-    //                 rs.close();
-    //             }
-    //         }
+                if (rs != null) {
+                    rs.close();
+                }
+            }
 
-    //         if (stmt != null) {
-    //             stmt.close();
-    //         }
+            if (stmt != null) {
+                stmt.close();
+            }
 
-    //         if (conn != null) {
-    //             conn.close();
-    //         }
-    //     } catch (Exception e) {
-    //         return false;
-    //     }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }
 
-    //     return available;
-    // }
+        return available;
+    }
 
     public boolean updateOrder(Order o) {
         Order t = Order.getOrderByOrderID(o.getOrderID());
