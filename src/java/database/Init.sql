@@ -30,3 +30,23 @@ INSERT INTO [Manager] VALUES ('1', '2');
 INSERT INTO [Manager] VALUES ('2', '1');
 INSERT INTO [Manager] VALUES ('3', '2');
 SELECT * FROM [Manager];
+
+CREATE TABLE [MemberBenefits] 
+(RID int IDENTITY(1,1) NOT NULL, 
+HotelID int NOT NULL,
+CommonUser int NOT NULL,
+PreferredUser int NOT NULL,
+GoldUser int NOT NULL,
+PlantiumUser int NOT NULL,
+WelcomeGift int NOT NULL,
+LateCheckout int NOT NULL,
+Breakfast int NOT NULL,
+RoomUpgrade int NOT NULL,
+);
+
+DELETE FROM [MemberBenefits];
+DBCC CHECKIDENT ([MemberBenefits], RESEED, 0);
+INSERT INTO [MemberBenefits] VALUES (1, 100, 95, 90, 85, 2, 3, 4 ,4);
+INSERT INTO [MemberBenefits] VALUES (2, 100, 100, 90, 90, 3, 3, 4, 4);
+INSERT INTO [MemberBenefits] VALUES (3, 100, 100, 100, 100, 4, 4, 4, 4);
+SELECT * FROM [MemberBenefits];
