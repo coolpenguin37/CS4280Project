@@ -12,6 +12,9 @@ package user;
 public interface UserType {
     static final int GUEST = 0;
     static final int COMMONUSER = 1;
-    static final int MANAGER = 2;
-    static final int CHEIFMANAGER = 3;
+    static final int PREFERREDUSER = 2;
+    static final int GOLDUSER = 3;
+    static final int PLATINUMUSER = 4;
+    static final int MANAGER = 10;
+    static final int CHEIFMANAGER = 100;
 }
