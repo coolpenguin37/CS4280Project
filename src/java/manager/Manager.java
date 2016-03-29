@@ -41,7 +41,7 @@ public class Manager implements MySQLInit {
         this.hotelID = hotelID;
     }
 
-    public ArrayList<Manager> getManagerByHotelID(int hotelID) {
+    public static ArrayList<Manager> getManagerByHotelID(int hotelID) {
         ArrayList<Manager> managerList = new ArrayList<Manager>();
         try {
             Class.forName(SQLDriver);
@@ -72,7 +72,11 @@ public class Manager implements MySQLInit {
         return managerList;
     }
 
-    public ArrayList<Manager> getManagerByUserID(int userID) {
+    public static Manager getManagerByUsername(String username) {
+        return null;
+    }
+
+    public static ArrayList<Manager> getManagerByUserID(int userID) {
         ArrayList<Manager> managerList = new ArrayList<Manager>();
         try {
             Class.forName(SQLDriver);
