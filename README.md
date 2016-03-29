@@ -52,3 +52,9 @@ Write the TODO list.
 |OrderID|Status|UserID|CIDate|CODate|HotelID|RoomType|NumOfRoom|
 |:-----:|:----:|:----:|:----:|:----:|:-----:|:------:|:-------:|
 |int|int|int|datetime|datetime|int|int|int|
+
+### MemberBenefits
+
+|RID|CommonUser|PreferredUser|GoldUser|PlantiumUser|WelcomeGift|LateCheckout|Breakfast|FreeWiFi|
+|:-:|:--------:|:-----------:|:------:|:----------:|:---------:|:----------:|:-------:|:------:|
+|int|int|int|int|int|int|int|int|int|
