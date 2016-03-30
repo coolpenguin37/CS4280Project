@@ -33,6 +33,9 @@
                 <a href="memberInfo.jsp">
                     <div><span>Settings</span></div>
                 </a>
+                <a href="OrderList.jsp">
+                    <div><span>Previous Order</span></div>
+                </a>
                 <a href="logout.jsp">
                     <div><span>Log Out</span></div>
                 </a>

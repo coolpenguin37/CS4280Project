@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet{
                 Login log = new Login(username, password);
                 User user = log.login();
                 if(user!= null){
+                    int userID = user.getUserID();
                     String userName = user.getUsername();
                     String name = user.getName();
                     String userEmail = user.getEmail();
@@ -49,6 +50,7 @@ public class LoginServlet extends HttpServlet{
                     int isSubscribed = user.getIsSubscribed();
                     int userType = user.getUserType();
                     session = request.getSession(true);
+                    session.setAttribute("userID", userID);
                     session.setAttribute("username", userName);
                     session.setAttribute("name", name);
                     session.setAttribute("email", userEmail);
