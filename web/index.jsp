@@ -51,10 +51,10 @@
     
     <% if (session.getAttribute("hotelList") != null) {
         ArrayList<Hotel> hotelList= (ArrayList<Hotel>) session.getAttribute("hotelList");
-        for (int i = 0;i < hotelList.size(); ++i) { 
-            Hotel h=hotelList.get(i);
+        for (int i = 0; i < hotelList.size(); ++i) { 
+            Hotel h = hotelList.get(i);
     %>
-            <div <%= (h.getIsRecommended()==1)?"class='recommended'":"" %> >
+            <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
                 <h3> <%= h.getHotelName() %> </h3>
                 <h4> <%= h.getAddress()%> </h4>
                 <div> 
