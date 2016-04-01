@@ -71,16 +71,17 @@
     <% } %>
 
 
-    <form>
-            <label for="location">Where are you going?</label> <br>
-            <input id="location" type="text" name="location"> <br>
-            <label>When do you plan to travel</label> <br>
-            <label>From:</label><input type="date" name="ciDate"> <br>
-            <label>To:</label><input type="date" name="coDate"> <br>
-            <label for="numRooms">How many rooms do you want to book?</label> <br>
-            <input id="numRooms" type="text" name="numRooms"> <br>
-            <label for="hotelName">Do you have a hotel in mind already?</label> <br>
-            <input id="hotelName" type="text" name="hotelName">
+    <form method="POST" action="SearchServlet" >
+        <label for="location">Where are you going?</label> <br>
+        <input id="location" type="text" name="location"> <br>
+        <label>When do you plan to travel</label> <br>
+        <label>From:</label><input type="date" name="ciDate"> <br>
+        <label>To:</label><input type="date" name="coDate"> <br>
+        <label for="numRooms">How many rooms do you want to book?</label> <br>
+        <input id="numRooms" type="text" name="numRooms"> <br>
+        <label for="hotelName">Do you have a hotel in mind already?</label> <br>
+        <input id="hotelName" type="text" name="hotelName">
+        <p><input type="submit" value="Search"></p>
     </form>
     </body>
 </html>
