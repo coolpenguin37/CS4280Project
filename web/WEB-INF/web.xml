@@ -56,12 +56,16 @@
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/SearchServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckOutRoom</servlet-name>
+        <url-pattern>/CheckOutRoom</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>userLogin.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
