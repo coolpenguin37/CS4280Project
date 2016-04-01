@@ -456,6 +456,9 @@ public class Order implements MySQLInit, OrderStatus {
         }
     }
 
+    public static ArrayList<Order> getOrderlist(String hotelName, String name){
+        return new ArrayList<Order> ();
+    }
 
     // public static boolean CancelOrder(int OrderID) {
     //    try {
