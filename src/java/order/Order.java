@@ -208,6 +208,46 @@ public class Order implements MySQLInit, OrderStatus {
         }
         return true;
     }
+    
+    public static ArrayList<Order> getOrderList(String hotelName, String name) {
+        ArrayList<Order> orderList = new ArrayList<Order>();
+        
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT [OrderID] FROM [Orders] INNER JOIN [User] "
+                + "ON Orders.UserID = [User].UserID "
+                + "WHERE [User].Name = ? AND Orders.HotelID IN "
+                + "(SELECT HotelInfo.HotelID FROM [HotelInfo] "
+                + " WHERE [HotelName] = ?)"
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setString(1, name);
+            stmt.setString(2, hotelName);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Order temp = Order.getOrderByOrderID(rs.getInt("OrderID"));
+                orderList.add(temp);
+            }
+
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
+
+            if(conn != null) {
+                conn.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        return orderList;
+    }
 
     public static ArrayList<Order> getAllOrdersByUserID(int userID) {
         ArrayList<Order> orderList = new ArrayList<Order>();
