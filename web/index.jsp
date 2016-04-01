@@ -94,7 +94,7 @@
         <% } %>
 
 
-    <form method="POST" action="SearchServlet" >
+    <form method="GET" action="_self" >
         <label for="location">Where are you going?</label> <br>
         <input id="location" type="text" name="location"> <br>
         <label>When do you plan to travel</label> <br>
