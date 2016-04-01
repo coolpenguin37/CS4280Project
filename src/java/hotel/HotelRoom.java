@@ -215,6 +215,40 @@ public class HotelRoom implements MySQLInit {
         return roomList;
     }
 
+    public static HotelRoom getHotelRoom(int hotelID, int roomType) {
+        HotelRoom temp = null;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT [NumOfRoom] FROM [HotelRoom] WHERE [HotelID] = ? AND [RoomType] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, hotelID);
+            stmt.setInt(2, roomType);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
+                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+            }
+
+            if(rs != null) {
+                rs.close();
+            }
+            
+            if(stmt != null) {
+                stmt.close();
+            }
+
+            if(conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return temp;
+    }
+    
     public static boolean updateRoom(HotelRoom r)
     {
         try {
