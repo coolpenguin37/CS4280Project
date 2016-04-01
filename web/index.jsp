@@ -15,7 +15,7 @@
     <title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
 </head>
 <body>
-
+    <%! String e;%>
     <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
     <% if (session.getAttribute("name") != null) { %>
         <h2>Hello <%=session.getAttribute("name")%></h2>
@@ -52,26 +52,49 @@
         <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>
     </nav>
     
-    <% if (session.getAttribute("hotelList") != null) {
-        ArrayList<Hotel> hotelList= (ArrayList<Hotel>) session.getAttribute("hotelList");
-        for (int i = 0; i < hotelList.size(); ++i) { 
-            Hotel h = hotelList.get(i);
+        <% if (request.getMethod()=="GET") {
+            ArrayList<Hotel> hotelList;
+            //check if parameters are null. Only hotel name can be null;
+            if (request.getParameter("location")==null) {
+                e="Location is not specified!";
+            }
+            else if (request.getParameter("ciDate")==null){
+                e="Check-in date is not specified!";
+            }
+            else if (request.getParameter("coDate")==null){
+                e="Check-out date is not specified!";
+            }
+            else if (request.getParameter("numRooms")==null){
+                e="Number of rooms to be booked is not specified!";
+            }
+            else{
+                hotelList= Hotel.searchHotel(request.getParameter("location"));
+                if (request.getParameter("hotelName")!=null){
+                     //remove duplicates
+                     hotelList.removeAll(Hotel.searchHotel(request.getParameter("hotelName")));
+                     hotelList.addAll(Hotel.searchHotel(request.getParameter("hotelName")));
+                }
+            
+       
+                for (int i = 0; i < hotelList.size(); ++i) { 
+                    Hotel h = hotelList.get(i);
     %>
-            <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
-                <h3> <%= h.getHotelName() %> </h3>
-                <h4> <%= h.getAddress()%> </h4>
-                <div> 
-                    <span> Ratings: </span>
-                    <span> <%= h.getStarRating() %> Star</span>
-                </div>
-                <img src="" alt="">
-                <button> Check Room Availability </button>
-            </div>
+                    <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
+                        <h3> <%= h.getHotelName() %> </h3>
+                        <h4> <%= h.getAddress()%> </h4>
+                        <div> 
+                            <span> Ratings: </span>
+                            <span> <%= h.getStarRating() %> Star</span>
+                        </div>
+                        <img src="" alt="">
+                        <button> Check Room Availability </button>
+                    </div>
+                <% } %>
+            <% } %>
         <% } %>
-    <% } %>
 
 
-    <form method="POST" action="SearchServlet" >
+    <form method="GET" action="_self" >
         <label for="location">Where are you going?</label> <br>
         <input id="location" type="text" name="location"> <br>
         <label>When do you plan to travel</label> <br>
@@ -83,6 +106,8 @@
         <input id="hotelName" type="text" name="hotelName">
         <p><input type="submit" value="Search"></p>
     </form>
+        <span><%=(e!=null && !e.isEmpty())?e:""%></span>
+        
     </body>
 </html>
 
