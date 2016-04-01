@@ -31,7 +31,7 @@
             ArrayList<Order> orderList = Order.getAllOrdersByUserID(userID);
             if (orderList.size() == 0) {
         %>
-                <p> You don't have any order. </p>
+                <p> You don&#39;t have any order. </p>
         <%
             } else {
                 for (int i = 0; i < orderList.size(); ++i) {
