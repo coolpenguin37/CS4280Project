@@ -219,7 +219,7 @@ public class Order implements MySQLInit, OrderStatus {
                 + "ON Orders.UserID = [User].UserID "
                 + "WHERE [User].Name = ? AND Orders.HotelID IN "
                 + "(SELECT HotelInfo.HotelID FROM [HotelInfo] "
-                + " WHERE [HotelName] = ?)"
+                + " WHERE [HotelName] = ?)";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
             stmt.setString(1, name);
             stmt.setString(2, hotelName);
