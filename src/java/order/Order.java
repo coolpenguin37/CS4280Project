@@ -160,13 +160,14 @@ public class Order implements MySQLInit, OrderStatus {
         return temp;
     }
 
-    public boolean insertToDatabase() {
+    public int insertToDatabase() {
+        int ans = 0;
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Orders] "
                 + "([Status] [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)");
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, status);
             stmt.setInt(2, userID);
             stmt.setDate(3, CIDate);
@@ -175,16 +176,22 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(6, roomType);
             stmt.setInt(7, numOfRoom);
 
-            stmt.executeUpdate();
-            if (stmt != null) {
-                stmt.close();
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                return 0;
             }
 
-            if (conn != null) {
-                conn.close();
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                ans = generatedKeys.getInt(1);
             }
+            else {
+                return 0;
+            }
+                
         } catch (Exception e) {
-            return false;
+            return 0;
         }
         try {
             Class.forName(SQLDriver);
@@ -204,9 +211,9 @@ public class Order implements MySQLInit, OrderStatus {
                 }
             }
         } catch (Exception e) {
-            return false;
+            return 0;
         }
-        return true;
+        return ans;
     }
     
     public static ArrayList<Order> getOrderList(String hotelName, String name) {
