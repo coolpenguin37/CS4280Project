@@ -53,28 +53,37 @@
     </nav>
     
         <% if (request.getMethod()=="GET") {
-            ArrayList<Hotel> hotelList;
+            ArrayList<Hotel> hotelList=new ArrayList<Hotel>();
             //check if parameters are null. Only hotel name can be null;
-            if (request.getParameter("location")==null) {
+            if (request.getParameter("location")==null || request.getParameter("location").isEmpty()) {
                 e="Location is not specified!";
             }
-            else if (request.getParameter("ciDate")==null){
+            else if (request.getParameter("ciDate")==null || request.getParameter("ciDate").isEmpty()){
                 e="Check-in date is not specified!";
             }
-            else if (request.getParameter("coDate")==null){
+            else if (request.getParameter("coDate")==null || request.getParameter("coDate").isEmpty()){
                 e="Check-out date is not specified!";
             }
-            else if (request.getParameter("numRooms")==null){
+            else if (request.getParameter("numRooms")==null || request.getParameter("numRooms").isEmpty()){
                 e="Number of rooms to be booked is not specified!";
             }
             else{
-                hotelList= Hotel.searchHotel(request.getParameter("location"));
-                if (request.getParameter("hotelName")!=null){
-                     //remove duplicates
-                     hotelList.removeAll(Hotel.searchHotel(request.getParameter("hotelName")));
-                     hotelList.addAll(Hotel.searchHotel(request.getParameter("hotelName")));
+                session.setAttribute("ciDate",request.getParameter("ciDate"));
+                session.setAttribute("coDate",request.getParameter("coDate"));
+                session.setAttribute("numRooms", request.getParameter("numRooms"));
+                String location= request.getParameter("location");
+                String[] keywords;
+                //match either space or comma or semicolon
+                if (location.contains(" ") || location.contains(",") || location.contains(";")){
+                    keywords=location.split(" |\\.|;");
                 }
-            
+                else {
+                    keywords=new String[] {location};
+                }
+                for (String keyword: keywords){
+                    hotelList.removeAll(Hotel.searchHotel(keyword));
+                    hotelList.addAll(Hotel.searchHotel(keyword));
+                }           
        
                 for (int i = 0; i < hotelList.size(); ++i) { 
                     Hotel h = hotelList.get(i);
@@ -87,7 +96,7 @@
                             <span> <%= h.getStarRating() %> Star</span>
                         </div>
                         <img src="" alt="">
-                        <button> Check Room Availability </button>
+                        <button onclick="window.location.href=showHotelRoom.jsp"> Check Room Availability </button>
                     </div>
                 <% } %>
             <% } %>
@@ -96,14 +105,12 @@
 
     <form method="GET" action="_self" >
         <label for="location">Where are you going?</label> <br>
-        <input id="location" type="text" name="location"> <br>
+        <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
         <label>When do you plan to travel</label> <br>
         <label>From:</label><input type="date" name="ciDate"> <br>
         <label>To:</label><input type="date" name="coDate"> <br>
         <label for="numRooms">How many rooms do you want to book?</label> <br>
         <input id="numRooms" type="text" name="numRooms"> <br>
-        <label for="hotelName">Do you have a hotel in mind already?</label> <br>
-        <input id="hotelName" type="text" name="hotelName">
         <p><input type="submit" value="Search"></p>
     </form>
         <span><%=(e!=null && !e.isEmpty())?e:""%></span>

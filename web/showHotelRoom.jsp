@@ -3,7 +3,7 @@
     Created on : Mar 25, 2016, 11:54:19 PM
     Author     : yanlind
 --%>
-<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,java.sql.Date"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,java.sql.Date,java.sql.Date"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -40,13 +40,15 @@
         if (session.getAttribute("hotel")!=null) {
             Hotel currentHotel = (Hotel) session.getAttribute("hotel");
             int hotelID = currentHotel.getHotelID();
-            String ciDate = request.getParameter("ciDate");
-            String coDate = request.getParameter("coDate");
+            session.setAttribute("hotelID",hotelID);
+            String ciDate = (String)session.getAttribute("ciDate");
+            String coDate = (String)session.getAttribute("cpDate");
             Date CIDate = java.sql.Date.valueOf(ciDate);
             Date CODate = java.sql.Date.valueOf(coDate);
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
-            for (int i = 0; i < rooms.size(); ++i) {
+            session.setAttribute("rooms",rooms);
+                for (int i = 0; i < rooms.size(); ++i) {
 
                 HotelRoom room = rooms.get(i);
                 //TODO: class method required to map (hotelID, roomType, username) --> rate
@@ -78,9 +80,28 @@
                 <% } else { %>
                         <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
                 <% } %>
-                <button>Book!</button>
+                <button type="submit" onclick="_self" name="bookroom" value="<%=i%>">Book!</button>
             </div>
         <% } %>
-    <%  } %>    
+    <%  } %>
+    <%  if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
+            ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
+            HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
+            int userID=Integer.parseInt((String)session.getAttribute("userID"));
+            Date ciDate= Date.valueOf((String)session.getAttribute("ciDate"));
+            Date coDate= Date.valueOf((String)session.getAttribute("coDate"));
+            int numRooms=Integer.parseInt((String)session.getAttribute("numRooms"));
+            Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
+            if (o.insertToDatabase()){ %>
+                <span> Your order has been submitted successfully! </span>
+                <!--need to return orderID-->
+                <span> Your Order ID is: XXXX </span>
+                <a href="index.jsp">Go back to main page</a>
+            <% }
+            else { %>
+                <span> Failed to order the room...</span>
+                <a href="index.jsp">Go back to main page</a>
+            <% }  
+        } %>
 </body>
 </html>
