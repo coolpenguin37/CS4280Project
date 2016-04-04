@@ -16,5 +16,5 @@ public interface UserType {
     static final int GOLDUSER = 3;
     static final int PLATINUMUSER = 4;
     static final int MANAGER = 10;
-    static final int CHEIFMANAGER = 100;
+    static final int CHIEFMANAGER = 100;
 }

@@ -71,9 +71,15 @@ public class Manager implements MySQLInit {
         }
         return managerList;
     }
-
+    
+    //TODO
     public static Manager getManagerByUsername(String username) {
         return null;
+    }
+    
+    //TODO
+    public static ArrayList<Manager> getAllManagers(){
+        return new ArrayList<Manager>();
     }
 
     public static ArrayList<Manager> getManagerByUserID(int userID) {
