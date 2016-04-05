@@ -8,6 +8,7 @@ package manager;
 import java.sql.*;
 import java.util.ArrayList;
 import database.*;
+import user.User;
 
 /**
  *
@@ -74,7 +75,34 @@ public class Manager implements MySQLInit {
     
     //TODO
     public static Manager getManagerByUsername(String username) {
-        return null;
+        User u = User.getUserByUsername(username);
+        Manager temp = null;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [Manager] WHERE [UserID] = ?");
+            stmt.setInt(1, u.getUserID());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+            }
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return temp;
     }
     
     public static ArrayList<Manager> getAllManagers(){
