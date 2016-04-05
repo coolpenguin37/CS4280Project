@@ -28,6 +28,11 @@
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>servlets.SearchServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckOutRoom</servlet-name>
+        <servlet-class>servlets.CheckOutRoom</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
