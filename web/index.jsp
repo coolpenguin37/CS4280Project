@@ -55,16 +55,16 @@
         <% if (request.getMethod()=="GET") {
             ArrayList<Hotel> hotelList=new ArrayList<Hotel>();
             //check if parameters are null. Only hotel name can be null;
-            if (request.getParameter("location")==null || request.getParameter("location").isEmpty()) {
+            if (request.getParameter("location") == null || request.getParameter("location").isEmpty()) {
                 e="Location is not specified!";
             }
-            else if (request.getParameter("ciDate")==null || request.getParameter("ciDate").isEmpty()){
+            else if (request.getParameter("ciDate") == null || request.getParameter("ciDate").isEmpty()){
                 e="Check-in date is not specified!";
             }
-            else if (request.getParameter("coDate")==null || request.getParameter("coDate").isEmpty()){
+            else if (request.getParameter("coDate") == null || request.getParameter("coDate").isEmpty()){
                 e="Check-out date is not specified!";
             }
-            else if (request.getParameter("numRooms")==null || request.getParameter("numRooms").isEmpty()){
+            else if (request.getParameter("numRooms") == null || request.getParameter("numRooms").isEmpty()){
                 e="Number of rooms to be booked is not specified!";
             }
             else{
@@ -74,11 +74,11 @@
                 String location= request.getParameter("location");
                 String[] keywords;
                 //match either space or comma or semicolon
-                if (location.contains(" ") || location.contains(",") || location.contains(";")){
-                    keywords=location.split(" |\\.|;");
+                if (location.indexOf(" ") == -1 || location.indexOf(",") == -1 || location.indexOf(";") == -1){
+                    keywords = location.split(" |\\.|;");
                 }
                 else {
-                    keywords=new String[] {location};
+                    keywords = new String[] {location};
                 }
                 for (String keyword: keywords){
                     hotelList.removeAll(Hotel.searchHotel(keyword));
@@ -87,7 +87,7 @@
        
                 for (int i = 0; i < hotelList.size(); ++i) { 
                     Hotel h = hotelList.get(i);
-    %>
+        %>
                     <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
                         <h3> <%= h.getHotelName() %> </h3>
                         <h4> <%= h.getAddress()%> </h4>
