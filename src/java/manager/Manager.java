@@ -51,7 +51,7 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("rID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
                 managerList.add(temp);
             }
 
@@ -77,9 +77,34 @@ public class Manager implements MySQLInit {
         return null;
     }
     
-    //TODO
     public static ArrayList<Manager> getAllManagers(){
-        return new ArrayList<Manager>();
+        ArrayList<Manager> managerList = new ArrayList<Manager>();
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM [Manager]");
+
+            while (rs.next()) {
+                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+                managerList.add(temp);
+            }
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return managerList;
     }
 
     public static ArrayList<Manager> getManagerByUserID(int userID) {
@@ -92,7 +117,7 @@ public class Manager implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Manager temp = new Manager(rs.getInt("rID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
                 managerList.add(temp);
             }
 
