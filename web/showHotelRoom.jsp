@@ -92,7 +92,8 @@
             Date coDate= Date.valueOf((String)session.getAttribute("coDate"));
             int numRooms=Integer.parseInt((String)session.getAttribute("numRooms"));
             Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
-            if (o.insertToDatabase()){ %>
+            int orderID = o.insertToDatabase();
+            if (orderID > 0){ %>
                 <span> Your order has been submitted successfully! </span>
                 <!--need to return orderID-->
                 <span> Your Order ID is: XXXX </span>
