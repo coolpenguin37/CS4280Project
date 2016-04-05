@@ -72,8 +72,34 @@ public class Manager implements MySQLInit {
         }
         return managerList;
     }
-    
-    //TODO
+
+    public static boolean removeManager(int userID, int hotelID) {
+        boolean flag = false;
+        try {
+             Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "DELETE FROM [Manager] WHERE [UserID] = ? AND [HotelID] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, userID);
+            stmt.setInt(2, hotelID);
+            int cnt = stmt.executeUpdate();
+            if (cnt > 0) {
+                flag = true;
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return flag;
+        }
+        return flag;
+    }
+
     public static Manager getManagerByUsername(String username) {
         User u = User.getUserByUsername(username);
         Manager temp = null;
