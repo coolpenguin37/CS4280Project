@@ -90,19 +90,19 @@ public class Order implements MySQLInit, OrderStatus {
         this.numOfRoom = numOfRoom;
     }
 
-    public Order(Date CIDate, Date CODate, int hotelID, int roomType) {
-        this.CIDate = CIDate;
-        this.CODate = CODate;
+    public Order(int hotelID, int roomType, Date CIDate, Date CODate) {
         this.hotelID = hotelID;
         this.roomType = roomType;
-    }
-
-    public Order(Date CIDate, Date CODate, int hotelID, int roomType, int numOfRoom) {
         this.CIDate = CIDate;
         this.CODate = CODate;
+    }
+
+    public Order(int hotelID, int roomType, int numOfRoom, Date CIDate, Date CODate) {
         this.hotelID = hotelID;
         this.roomType = roomType;
         this.numOfRoom = numOfRoom;
+        this.CIDate = CIDate;
+        this.CODate = CODate;
     }
 
     public Order(int status, int userID, Date CIDate, Date CODate,
@@ -158,6 +158,27 @@ public class Order implements MySQLInit, OrderStatus {
         }
 
         return temp;
+    }
+
+    public static int getLowestRate(int hotelID, Date CIDate, Date CODate) {
+        ArrayList<HotelRoom> roomList = HotelRoom.getAllRoomsByHotelID(hotelID);
+        int lowestRate = Integer.MAX_VALUE;
+        for (int i = 0; i < roomList.size(); ++i) {
+            HotelRoom e = roomList.get(i);
+            if (e.getStandardRate() >= lowestRate) {
+                continue;
+            }
+            Order o = new Order(hotelID, e.getRoomType(), CIDate, CODate);
+            int remained = Order.getRemainedRoom(o);
+            if (remained > 0) {
+                lowestRate = e.getStandardRate();
+            }
+        }
+        if (lowestRate == Integer.MAX_VALUE) {
+            return -1;
+        } else {
+            return lowestRate;
+        }
     }
 
     public int insertToDatabase() {
