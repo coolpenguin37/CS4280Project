@@ -41,15 +41,13 @@
             Hotel currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
-            String ciDate = (String)session.getAttribute("ciDate");
-            String coDate = (String)session.getAttribute("coDate");
-            Date CIDate = java.sql.Date.valueOf(ciDate);
-            Date CODate = java.sql.Date.valueOf(coDate);
+            
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
             session.setAttribute("rooms",rooms);
                 for (int i = 0; i < rooms.size(); ++i) {
-
+                Date CIDate = (Date)session.getAttribute("ciDate");
+                Date CODate = (Date)session.getAttribute("coDate");
                 HotelRoom room = rooms.get(i);
                 //TODO: class method required to map (hotelID, roomType, username) --> rate
                 //The reason we need to pass username is that for registered user, the rate should be lower
@@ -57,8 +55,9 @@
                 int standardRate = room.getStandardRate();
                 String username = (String) session.getAttribute("username");
                 User u = User.getUserByUsername(username);
-                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
-                int discount = mb.getDiscountByUserType(u.getUserType());
+//                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
+//                int discount = mb.getDiscountByUserType(u.getUserType());
+                int discount=100;
                 int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
                 Order o = new Order(hotelID, room.getRoomType(),CIDate, CODate);
                 int remained = Order.getRemainedRoom(o);
@@ -66,9 +65,12 @@
             
             <div>
                 <h3> <%= room.getRoomName() %> </h3>
-                <h4> <%= room.getStandardRate() %> </h4>
-                <h4> <%= realRate %> </h4>
-                <h4> <%= remained %> </h4>
+                <h4> Standard Rate: $ 
+                    <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                </h4>
+                <h4> You only need to pay: $ 
+                    <span style="color: red;"><%= realRate %></span>
+                </h4>
                 <div> 
                     <span>Size: </span> 
                     <span> <%= room.getRoomSize() %> Square Feet.</span>
@@ -77,10 +79,14 @@
                     <div> <span>Plenty rooms available.</span></div>
                 <% } else if (remained <= 30 && remained>10) { %>
                     <div> <span>Limited rooms available!</span></div>
+                <% } else if (remained<=0){ %>
+                    <div> <span>Sold out...</span></div>
                 <% } else { %>
-                        <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
+                    <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
                 <% } %>
-                <button type="submit" onclick="_self" name="bookroom" value="<%=i%>">Book!</button>
+                <% if (remained>0){ %>
+                    <button type="submit" onclick="_self" name="bookroom" value="<%=i%>">Book!</button>
+                <% } %>
             </div>
         <% } %>
     <%  } %>
