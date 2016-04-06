@@ -15,7 +15,7 @@
     <title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
 </head>
 <body>
-    <%! String e;%>
+    <%! String e="";%>
     <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
     <% if (session.getAttribute("name") != null) { %>
         <h2>Hello <%=session.getAttribute("name")%></h2>
@@ -30,7 +30,7 @@
                 <div><span>Home</span></div>
             </a>
             <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
-                <a href="memberInfo.jsp">
+                <a href="updateProfile.jsp">
                     <div><span>Settings</span></div>
                 </a>
                 <a href="OrderList.jsp">
@@ -52,7 +52,7 @@
         <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>
     </nav>
     
-        <% if (request.getMethod()=="GET") {
+        <% if (request.getMethod()=="POST") {
             ArrayList<Hotel> hotelList=new ArrayList<Hotel>();
             //check if parameters are null. Only hotel name can be null;
             if (request.getParameter("location") == null || request.getParameter("location").isEmpty()) {
@@ -84,7 +84,6 @@
                     hotelList.removeAll(Hotel.searchHotel(keyword));
                     hotelList.addAll(Hotel.searchHotel(keyword));
                 }           
-       
                 for (int i = 0; i < hotelList.size(); ++i) { 
                     Hotel h = hotelList.get(i);
         %>
@@ -96,14 +95,14 @@
                             <span> <%= h.getStarRating() %> Star</span>
                         </div>
                         <img src="" alt="">
-                        <button onclick="window.location.href=showHotelRoom.jsp"> Check Room Availability </button>
+                        <button onclick="window.location.href='showHotelRoom.jsp?currentHotel=<%=h.getHotelID()%>'"> Check Room Availability </button>
                     </div>
                 <% } %>
             <% } %>
         <% } %>
 
 
-    <form method="GET" action="_self" >
+    <form method="POST" action="" >
         <label for="location">Where are you going?</label> <br>
         <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
         <label>When do you plan to travel</label> <br>
