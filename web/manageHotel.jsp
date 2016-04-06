@@ -60,7 +60,7 @@
                         <input type="submit">
                         </form>
                         <br>
-                        <span>Your hotel's current star rating is: <%=starRating%> star(s).</span>
+                        <span>Your hotel&#39;s current star rating is: <%=starRating%> star(s).</span>
                     </div>
 
                     <div>
