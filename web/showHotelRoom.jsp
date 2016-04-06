@@ -37,12 +37,12 @@
     </nav>
     
     <% 
-        if (session.getAttribute("hotel")!=null) {
-            Hotel currentHotel = (Hotel) session.getAttribute("hotel");
+        if (request.getParameter("currentHotel")!=null) {
+            Hotel currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
             String ciDate = (String)session.getAttribute("ciDate");
-            String coDate = (String)session.getAttribute("cpDate");
+            String coDate = (String)session.getAttribute("coDate");
             Date CIDate = java.sql.Date.valueOf(ciDate);
             Date CODate = java.sql.Date.valueOf(coDate);
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
@@ -59,8 +59,8 @@
                 User u = User.getUserByUsername(username);
                 MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
                 int discount = mb.getDiscountByUserType(u.getUserType());
-                int realRate = (int) Math.ceil(standardRate * (discount / 100.0));
-                Order o = new Order(CIDate, CODate, hotelID, room.getRoomType());
+                int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
+                Order o = new Order(hotelID, room.getRoomType(),CIDate, CODate);
                 int remained = Order.getRemainedRoom(o);
     %>
             

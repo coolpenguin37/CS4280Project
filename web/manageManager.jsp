@@ -105,7 +105,7 @@
                         if (request.getParameter("location")!=null){
                             String location=request.getParameter("location");
                             String[] keywords;
-                            if (location.contains(" ") || location.contains(",") || location.contains(";")){
+                            if (location.indexOf(" ")!=-1 || location.indexOf(",")!=-1 || location.indexOf(";")!=-1){
                                keywords=location.split(" |\\,|;");
                             }
                             else {

@@ -22,8 +22,8 @@ public class Login {
     }
     
     public User login() throws LoginException{
-        
         if (User.usernameExist(username)) {
+            
             User u = User.getUserByUsername(username);
             try {
                 password = PasswordHash.hash(password);
