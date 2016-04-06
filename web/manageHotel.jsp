@@ -36,7 +36,8 @@
                 <% String username=(String)session.getAttribute("username"); %>
                     <% //TODO: we need a static method that takes a String (username) and return the manager
                        //with that name %>
-                    Manager m=new Manager.getManagerByUserID(username);
+                    <% Manager m=new Manager.getManagerByUsername(username); %>
+                    
                     <% //TODO: we need another static method that takes a String (hotelID) and return the hotel
                         //with that ID %>
                     <% h= Hotel.getHotelByID(m.getHotelID());
@@ -70,7 +71,7 @@
  
                 
                 <%}%>
-                
+              <%}%>  
             
     </body>
 </html>
