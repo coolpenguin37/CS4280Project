@@ -36,9 +36,9 @@ Write the TODO list.
 
 ### HotelInfo
 
-|HotelID|HotelName|Address|IsRecommended|StarRating|Label|
-|:-----:|:-------:|:-----:|:-----------:|:--------:|:---:|
-|int|varchar(255)|varchar(255)|int|int|varchar(255)|
+|HotelID|HotelName|Address|IsRecommended|StarRating|Label|Intro|
+|:-----:|:-------:|:-----:|:-----------:|:--------:|:---:|:---:|
+|int|varchar(255)|varchar(255)|int|int|varchar(255)|varchar(6000)|
 
 
 ### Manager
