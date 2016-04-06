@@ -14,15 +14,17 @@
 	<title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
 </head>
 <body>
-        <%! int isSuccess=0;
-            String name;
+        <% 
+            int isSuccess=0;
+            String errorMessage="";
+            String name; 
             String userEmail;
             String userTel;
             int isSubscribed;
-            String errorMessage;%>
-	<% if(session.getAttribute("username")==null) { %>
+	if(session.getAttribute("username")==null) { %>
 		<h1>You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
-	<% } else { 
+	<% } 
+            else { 
             if (request.getParameter("name")!=null ||
                 request.getParameter("userEmail")!=null ||
                 request.getParameter("userTel")!=null ||
@@ -30,14 +32,30 @@
                 name=request.getParameter("name");
                 userEmail=request.getParameter("userEmail");
                 userTel=request.getParameter("userTel");
-                isSubscribed=Integer.parseInt(request.getParameter("isSubscribed"));
-                User u=new User((String)session.getAttribute("username"),"",name,
-                userEmail,userTel,isSubscribed,(Integer)session.getAttribute("type"));
-                if (!User.validateName(name)) {errorMessage=User.NAME_ERROR;}
+                if (request.getParameter("isSubscribed")==null) {
+                    isSubscribed=-1;
+                }
+                else {
+                    isSubscribed=Integer.parseInt(request.getParameter("isSubscribed"));
+                }
+                User u=new User((String)session.getAttribute("username"),"",name,userEmail,userTel,isSubscribed,(Integer)session.getAttribute("type"));
+                if (!User.validateName(name)) {
+                    errorMessage=User.NAME_ERROR;
+                }
                 if (!User.validateEmail(userEmail)) {errorMessage=User.EMAIL_ERROR;}
                 if (!User.validateTel(userTel)) {errorMessage=User.TEL_ERROR;}
                 if (!User.validateIsSubscribed(isSubscribed)) {errorMessage=User.SUBSCRIBE_ERROR;}
-                isSuccess=(User.updateProfile(u))?1:0;}
+                if (errorMessage.isEmpty()){
+                    isSuccess=(User.updateProfile(u))?1:-1;}
+                else {
+                    isSuccess=-1;}
+                if (isSuccess==1){
+                    session.setAttribute("name",u.getName());
+                    session.setAttribute("userEmail",u.getEmail());
+                    session.setAttribute("userTel",u.getTel());
+                    session.setAttribute("isSubscribed",u.getIsSubscribed());
+                }
+            }
             else {
                 name=(String)session.getAttribute("name");
                 userEmail=(String)session.getAttribute("userEmail");
@@ -49,7 +67,7 @@
 		
 		<h2>Hello <%=name%>. Update your profile here:</h2>
                 <nav>
-		<% if (name!=null) { %>
+		<% if (name==null) { %>
 			<a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
 			<a href="userLogin.jsp"><div><span>Login</span></div></a>
 		<% }
@@ -65,7 +83,7 @@
 			</a>
 		<% } %>
                 </nav>
-        <form method="GET" action="_self">
+        <form method="POST" action="">
 	<table>
 	<thead>
             <tr>
@@ -91,7 +109,9 @@
             <tr>
                 <td>Subscribe to our email list</td>
                 <td>
+                    <span>Yes</span>
                     <input type="checkbox" name="isSubscribed" value="1" <%= (isSubscribed==1)?"checked":"" %>>
+                    <span>No</span>
                     <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==1)?"":"checked" %>>
                 </td>
             </tr> 
@@ -106,9 +126,9 @@
             </table>
                 <% if (isSuccess==1) { %>
                 <span> Your profile has been updated successfully! </span>
-                <% } else if (isSuccess==-1) { %>
-                <span> Your profile cannot be updated... </span>
-                <span><%=errorMessage%></span>
+                <% } else if (isSuccess==-1){ %>
+                    <span> Your profile cannot be updated... </span>
+                    <span><%=errorMessage%></span>
                 <% } %>
             </form>
 	<% } %>

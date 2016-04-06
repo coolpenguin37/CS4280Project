@@ -19,14 +19,14 @@
     <% } %>
     
     <nav>
-        <% if (session.getAttribute("name")!=null) { %>
+        <a href="index.jsp">
+                <div><span>Home</span></div>
+            </a>
+        <% if (session.getAttribute("name")==null) { %>
             <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
             <a href="userLogin.jsp"><div><span>Login</span></div></a>
         <% }
         else { %>
-            <a href="index.jsp">
-                <div><span>Home</span></div>
-            </a>
             <a href="memberInfo.jsp">
                 <div><span>Settings</span></div>
             </a>

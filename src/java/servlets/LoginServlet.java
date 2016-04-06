@@ -53,8 +53,8 @@ public class LoginServlet extends HttpServlet{
                     session.setAttribute("userID", userID);
                     session.setAttribute("username", userName);
                     session.setAttribute("name", name);
-                    session.setAttribute("email", userEmail);
-                    session.setAttribute("tel",userTel);
+                    session.setAttribute("userEmail", userEmail);
+                    session.setAttribute("userTel",userTel);
                     session.setAttribute("isSubscribed", isSubscribed);
                     session.setAttribute("type", userType);
                     response.sendRedirect("index.jsp");

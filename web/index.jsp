@@ -15,7 +15,7 @@
     <title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
 </head>
 <body>
-    <%! String e="";%>
+    <% String e="";%>
     <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
     <% if (session.getAttribute("name") != null) { %>
         <h2>Hello <%=session.getAttribute("name")%></h2>
@@ -27,24 +27,24 @@
             <a href="userLogin.jsp"><div><span>Login</span></div></a>
         <% } else { %>
             <a href="index.jsp">
-                <span>Home</span>
+                <div><span>Home</span></div>
             </a>
             <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
                 <a href="updateProfile.jsp">
-                    <span>Settings</span>
+                    <div><span>Settings</span></div>
                 </a>
                 <a href="OrderList.jsp">
-                    <span>Previous Order</span>
+                    <div><span>Previous Order</span></div>
                 </a>
                 <a href="logout.jsp">
-                    <span>Log Out</span>
+                    <div><span>Log Out</span></div>
                 </a>
             <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
                 <a href="manageHotel.jsp">
-                    <span>Manage Hotel</span>
+                    <div><span>Manage Hotel</span></div>
                 </a>
                 <a href="logout.jsp">
-                    <span>Log Out</span>
+                    <div><span>Log Out</span></div>
                 </a>
             <% } %>
         <% } %>
@@ -119,7 +119,9 @@
         <input id="numRooms" type="text" name="numRooms"> <br>
         <p><input type="submit" value="Search"></p>
     </form>
-        <span><%=(e!=null && !e.isEmpty())?e:""%></span>
+        <% if (e!=null && !e.isEmpty()){ %>
+            <span><%=e%></span>
+        <% } %>
         
     </body>
 </html>

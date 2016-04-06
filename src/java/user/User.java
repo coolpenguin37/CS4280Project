@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 
 public class User implements MySQLInit, UserType {
-    int userID;
+    int userID=-1;
     String username;
     String password;
     String name;
@@ -34,6 +34,9 @@ public class User implements MySQLInit, UserType {
     public static final String SUBSCRIBE_ERROR="";
     public static final String TYPE_ERROR="";
     
+    public void setUserID(int userID) {
+        this.userID=userID;
+    }
     public int getUserID() {
         return userID;
     }
@@ -296,7 +299,14 @@ public class User implements MySQLInit, UserType {
     public static boolean updateProfile(User u)
     {
         try {
-            if (u.getUserID()==-1) {return false;}
+            if (u.getUserID()==-1) {
+                if (u.getUsername()!=null && !u.getUsername().isEmpty()){
+                    u.setUserID((User.getUserByUsername(u.getUsername()).getUserID()));
+                }
+                else{
+                    return false;
+                }
+            }
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
 
@@ -445,7 +455,7 @@ public class User implements MySQLInit, UserType {
     } 
     
     public static boolean validateName(String name){
-        return true;
+        return (name!=null && !name.isEmpty());
     }
     
     public static boolean validateIsSubscribed(int isSubscribed){
