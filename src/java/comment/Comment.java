@@ -50,6 +50,12 @@ public class Comment implements MySQLInit {
     public void setScore(int score) {
         this.score = score;
     }
+    
+    public Comment(int orderID, int score) {
+        this.orderID = orderID;
+        this.content = "";
+        this.score = score;
+    }
 
     public Comment(int orderID, String content, int score) {
         this.orderID = orderID;
