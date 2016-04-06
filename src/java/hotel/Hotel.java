@@ -156,7 +156,7 @@ public class Hotel implements MySQLInit{
             stmt.setString(1, "%" + keyword + "%");
             stmt.setString(2, "%:" + keyword + ";%");
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Hotel temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"),
                     rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"));
                 hotelList.add(temp);
