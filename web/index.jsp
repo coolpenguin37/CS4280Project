@@ -5,7 +5,8 @@
     Author     : siruzhang2,yduan7
 --%>
 
-<%@page import="java.util.ArrayList,hotel.*,user.*,java.sql.Date,order.*"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -71,6 +72,16 @@
                 
                 Date CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
                 Date CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
+                if (CIDate.after(CODate)){
+                    e="Check-in date cannot be after check-out date!";
+                }
+                else if (CIDate.before(DateTime.now().withTime(0, 0, 0, 0).toDate())){
+                    e="Check-in date cannot be before today!";
+                }
+                else if (CODate.after(DateTime.now().withTime(0, 0, 0, 0).plusDays(90).toDate())){
+                    e="Check-out date cannot exceed 90 days later!";
+                }
+                else {
                 session.setAttribute("ciDate",CIDate);
                 session.setAttribute("coDate",CODate);
                 session.setAttribute("numRooms", request.getParameter("numRooms"));
@@ -109,6 +120,7 @@
                 <% } %>
             <% } %>
         <% } %>
+    <%  }  %>
 
 
     <form method="POST" action="" >

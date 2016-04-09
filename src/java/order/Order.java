@@ -33,7 +33,11 @@ public class Order implements MySQLInit, OrderStatus {
     public int getOrderID() {
         return orderID;
     }
-
+    
+    public void setOrderID(int orderID) {
+        this.orderID=orderID;
+    }
+    
     public int getStatus() {
         return status;
     }
