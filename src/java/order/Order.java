@@ -187,7 +187,7 @@ public class Order implements MySQLInit, OrderStatus {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Orders] "
-                + "([Status] [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
+                + "([Status], [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, status);
             stmt.setInt(2, userID);
@@ -197,11 +197,11 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(6, roomType);
             stmt.setInt(7, numOfRoom);
 
-            int affectedRows = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            if (affectedRows == 0) {
-                return 0;
-            }
+//            if (affectedRows == 0) {
+//                return 0;
+//            }
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -220,7 +220,7 @@ public class Order implements MySQLInit, OrderStatus {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT MAX([OrderID]) FROM [Orders]");
             if (rs.next()) {
-                int itmp = rs.getInt("OrderID");
+                int itmp = rs.getInt(1);
                 DateTime dtCIDate = new DateTime(CIDate);
                 DateTime dtCODate = new DateTime(CODate);
                 int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
