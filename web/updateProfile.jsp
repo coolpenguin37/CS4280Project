@@ -42,9 +42,12 @@
                 if (!User.validateName(name)) {
                     errorMessage=User.NAME_ERROR;
                 }
-                if (!User.validateEmail(userEmail)) {errorMessage=User.EMAIL_ERROR;}
-                if (!User.validateTel(userTel)) {errorMessage=User.TEL_ERROR;}
-                if (!User.validateIsSubscribed(isSubscribed)) {errorMessage=User.SUBSCRIBE_ERROR;}
+                if (!User.validateEmail(userEmail)) {
+                    errorMessage=User.EMAIL_ERROR;
+                }
+                if (!User.validateTel(userTel)) {
+                    errorMessage=User.TEL_ERROR;
+                }
                 if (errorMessage.isEmpty()){
                     isSuccess=(User.updateProfile(u))?1:-1;}
                 else {
@@ -53,7 +56,14 @@
                     session.setAttribute("name",u.getName());
                     session.setAttribute("userEmail",u.getEmail());
                     session.setAttribute("userTel",u.getTel());
-                    session.setAttribute("isSubscribed",u.getIsSubscribed());
+                    if (isSubscribed!=-1){session.setAttribute("isSubscribed",u.getIsSubscribed());}
+                    else {isSubscribed=(Integer)session.getAttribute("isSubscribed");}
+                }
+                else {
+                    name=(String)session.getAttribute("name");
+                    userEmail=(String)session.getAttribute("userEmail");
+                    userTel=(String)session.getAttribute("userTel");
+                    isSubscribed=(Integer)session.getAttribute("isSubscribed");
                 }
             }
             else {
@@ -112,7 +122,7 @@
                     <span>Yes</span>
                     <input type="checkbox" name="isSubscribed" value="1" <%= (isSubscribed==1)?"checked":"" %>>
                     <span>No</span>
-                    <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==1)?"":"checked" %>>
+                    <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==0)?"checked":"" %>>
                 </td>
             </tr> 
             <tr>

@@ -84,6 +84,7 @@
                     keywords = new String[] {location};
                 }
                 for (String keyword: keywords){
+                    if (keyword.equals(" ") || keyword.equals(",") || keyword.equals(";")) {continue;}
                     ArrayList<Hotel> hotels=Hotel.searchHotel(keyword);
                     for (Hotel h: hotels){
                         hotelIDList.remove(Integer.valueOf(h.getHotelID()));
@@ -102,7 +103,8 @@
                             <span> <%= h.getStarRating() %> Star</span>
                         </div>
                         <img src="" alt="">
-                        <button onclick="window.location.href='showHotelRoom.jsp?currentHotel=<%=h.getHotelID()%>'"> Check Room Availability </button>
+                        <form method="POST" action="showHotelRoom.jsp">
+                            <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
                     </div>
                 <% } %>
             <% } %>

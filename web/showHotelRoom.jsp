@@ -61,6 +61,7 @@
                 int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
                 Order o = new Order(hotelID, room.getRoomType(),CIDate, CODate);
                 int remained = Order.getRemainedRoom(o);
+                int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
     %>
             
             <div>
@@ -69,7 +70,11 @@
                     <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
                 </h4>
                 <h4> You only need to pay: $ 
-                    <span style="color: red;"><%= realRate %></span>
+                    <span style="color: red;"><%= realRate %> for each room</span>
+                </h4>
+                <h4> And 
+                    <span style="color: red; font-weight: bold;"><%=realRate*numRooms%></span> 
+                    in total 
                 </h4>
                 <div> 
                     <span>Size: </span> 
@@ -85,7 +90,9 @@
                     <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
                 <% } %>
                 <% if (remained>0){ %>
-                    <button type="submit" onclick="_self" name="bookroom" value="<%=i%>">Book!</button>
+                    <form method="POST" action="">
+                        <button type="submit" name="bookroom" value="<%=i%>">Book!</button>
+                    </form>
                 <% } %>
             </div>
         <% } %>
@@ -93,16 +100,15 @@
     <%  if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
             ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
             HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
-            int userID=Integer.parseInt((String)session.getAttribute("userID"));
-            Date ciDate= Date.valueOf((String)session.getAttribute("ciDate"));
-            Date coDate= Date.valueOf((String)session.getAttribute("coDate"));
-            int numRooms=Integer.parseInt((String)session.getAttribute("numRooms"));
+            int userID=(Integer)session.getAttribute("userID");
+            Date ciDate= (Date)session.getAttribute("ciDate");
+            Date coDate= (Date)session.getAttribute("coDate");
             Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
             int orderID = o.insertToDatabase();
             if (orderID > 0){ %>
                 <span> Your order has been submitted successfully! </span>
                 <!--need to return orderID-->
-                <span> Your Order ID is: XXXX </span>
+                <span> Your Order ID is: <%=orderID%> </span>
                 <a href="index.jsp">Go back to main page</a>
             <% }
             else { %>
