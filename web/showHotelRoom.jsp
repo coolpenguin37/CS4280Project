@@ -100,6 +100,7 @@
     <%  if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
             ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
             HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
+            int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
             int userID=(Integer)session.getAttribute("userID");
             Date ciDate= (Date)session.getAttribute("ciDate");
             Date coDate= (Date)session.getAttribute("coDate");
