@@ -161,7 +161,7 @@ public class User implements MySQLInit, UserType {
 
         return founded;
     }
-
+    
     public boolean insertToDatabase() {
         
         if (User.usernameExist(this.getUsername())) {

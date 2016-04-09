@@ -3,7 +3,7 @@
     Created on : Mar 25, 2016, 11:54:19 PM
     Author     : yanlind
 --%>
-<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,java.sql.Date,java.sql.Date"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,java.sql.Date,java.sql.Date,org.joda.time.DateTime,org.joda.time.Days,org.joda.time.LocalDate,java.security.SecureRandom;"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -27,7 +27,7 @@
             <a href="userLogin.jsp"><div><span>Login</span></div></a>
         <% }
         else { %>
-            <a href="memberInfo.jsp">
+            <a href="updateProfile.jsp">
                 <div><span>Settings</span></div>
             </a>
             <a href="logout.jsp">
@@ -45,9 +45,10 @@
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
             session.setAttribute("rooms",rooms);
+            Date CIDate = (Date)session.getAttribute("ciDate");
+            Date CODate = (Date)session.getAttribute("coDate");
+            int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
                 for (int i = 0; i < rooms.size(); ++i) {
-                Date CIDate = (Date)session.getAttribute("ciDate");
-                Date CODate = (Date)session.getAttribute("coDate");
                 HotelRoom room = rooms.get(i);
                 //TODO: class method required to map (hotelID, roomType, username) --> rate
                 //The reason we need to pass username is that for registered user, the rate should be lower
@@ -72,8 +73,8 @@
                 <h4> You only need to pay: $ 
                     <span style="color: red;"><%= realRate %> for each room</span>
                 </h4>
-                <h4> And 
-                    <span style="color: red; font-weight: bold;"><%=realRate*numRooms%></span> 
+                <h4> Total: $
+                    <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
                     in total 
                 </h4>
                 <div> 
@@ -101,15 +102,38 @@
             ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
             HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
             int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
-            int userID=(Integer)session.getAttribute("userID");
+            int userID;
+            if (session.getAttribute("userID")==null){
+                SecureRandom rn=new SecureRandom();
+                int maximum=99999999;
+                int minimum=10000000;
+                int n = maximum - minimum + 1;
+                int randomNum =  minimum + rn.nextInt() % n;
+                while (User.usernameExist(Integer.toString(randomNum))){
+                    randomNum = minimum + rn.nextInt() % n;
+                }
+                int random_password=minimum + rn.nextInt() % n;
+                User u=new User(Integer.toString(randomNum),Integer.toString(random_password),Integer.toString(randomNum));
+                u.insertToDatabase();
+                u=User.getUserByUsername(Integer.toString(randomNum));
+                userID=u.getUserID();
+                session.setAttribute("userID",userID);
+            }
+            else {
+                userID=(Integer)session.getAttribute("userID");
+            }
             Date ciDate= (Date)session.getAttribute("ciDate");
             Date coDate= (Date)session.getAttribute("coDate");
             Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
             int orderID = o.insertToDatabase();
-            if (orderID > 0){ %>
+            if (orderID > 0){ 
+                o.setOrderID(orderID);
+                session.setAttribute("orderToPay",o);
+    %>
+            
                 <span> Your order has been submitted successfully! </span>
-                <!--need to return orderID-->
                 <span> Your Order ID is: <%=orderID%> </span>
+                <a href="Payment">Pay now</a>
                 <a href="index.jsp">Go back to main page</a>
             <% }
             else { %>

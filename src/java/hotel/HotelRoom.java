@@ -220,7 +220,7 @@ public class HotelRoom implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT [NumOfRoom] FROM [HotelRoom] WHERE [HotelID] = ? AND [RoomType] = ?";
+            String strQuery = "SELECT * FROM [HotelRoom] WHERE [HotelID] = ? AND [RoomType] = ?";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
             stmt.setInt(1, hotelID);
             stmt.setInt(2, roomType);
