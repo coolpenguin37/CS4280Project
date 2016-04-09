@@ -32,7 +32,10 @@
         <servlet-name>CheckOutRoom</servlet-name>
         <servlet-class>servlets.CheckOutRoom</servlet-class>
     </servlet>
-    
+    <servlet>
+        <servlet-name>Payment</servlet-name>
+        <servlet-class>servlets.Payment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -64,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>CheckOutRoom</servlet-name>
         <url-pattern>/CheckOutRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Payment</servlet-name>
+        <url-pattern>/Payment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

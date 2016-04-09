@@ -30,7 +30,7 @@ public class User implements MySQLInit, UserType {
                         + "The lengths should be at least 6 characters. Please check";
     public static final String TEL_ERROR="Telephone is not valid. It should contain only numbers. Please check";
     public static final String EMAIL_ERROR= "Email is not valid. Please check";
-    public static final String NAME_ERROR="";
+    public static final String NAME_ERROR="Name cannot be empty!";
     public static final String SUBSCRIBE_ERROR="";
     public static final String TYPE_ERROR="";
     

@@ -52,7 +52,12 @@ public class LoginServlet extends HttpServlet{
                     session = request.getSession(true);
                     session.setAttribute("userID", userID);
                     session.setAttribute("username", userName);
-                    session.setAttribute("name", name);
+                    if (name.isEmpty()) {
+                        session.setAttribute("name",username);
+                    }
+                    else {
+                        session.setAttribute("name", name);
+                    }
                     session.setAttribute("userEmail", userEmail);
                     session.setAttribute("userTel",userTel);
                     session.setAttribute("isSubscribed", isSubscribed);
