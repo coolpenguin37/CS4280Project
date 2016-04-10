@@ -19,21 +19,35 @@
     <% } %>
     
     <nav>
-        <a href="index.jsp">
-                <div><span>Home</span></div>
-            </a>
-        <% if (session.getAttribute("name")==null) { %>
+        <% if (session.getAttribute("name") == null) { %>
             <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
             <a href="userLogin.jsp"><div><span>Login</span></div></a>
-        <% }
-        else { %>
-            <a href="updateProfile.jsp">
-                <div><span>Settings</span></div>
+            <a href="manageOrder.jsp"><div><span>Manage your order</span></div></a>
+        <% } else { %>
+            <a href="index.jsp">
+                <div><span>Home</span></div>
             </a>
-            <a href="logout.jsp">
-                <div><span>Log Out</span></div>
-            </a>
+            <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
+                <a href="updateProfile.jsp">
+                    <div><span>Settings</span></div>
+                </a>
+                <a href="manageOrder.jsp">
+                    <div><span>Manage your order</span></div>
+                </a>
+                <a href="logout.jsp">
+                    <div><span>Log Out</span></div>
+                </a>
+            <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
+                <a href="manageHotel.jsp">
+                    <div><span>Manage Hotel</span></div>
+                </a>
+                <a href="logout.jsp">
+                    <div><span>Log Out</span></div>
+                </a>
+            <% } %>
         <% } %>
+<!--        <h2> <%= session.getAttribute("type") %> </h2>
+        <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>-->
     </nav>
     
     <% 
@@ -98,48 +112,83 @@
             </div>
         <% } %>
     <%  } %>
-    <%  if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
+    <%  boolean hasLoggedIn=false;
+        int random_password=0;
+        int randomNum=0;
+        if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
             ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
             HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
-            int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
-            int userID;
-            if (session.getAttribute("userID")==null){
-                SecureRandom rn=new SecureRandom();
-                int maximum=99999999;
-                int minimum=10000000;
-                int n = maximum - minimum + 1;
-                int randomNum =  minimum + rn.nextInt() % n;
-                while (User.usernameExist(Integer.toString(randomNum))){
-                    randomNum = minimum + rn.nextInt() % n;
+            int orderID;
+            if (session.getAttribute("orderToModify")!=null){
+                Order o=(Order)session.getAttribute("orderToModify");
+                o.setRoomType(room.getRoomType());
+                if (o.updateOrder(o)){ %>
+                    <p> Your room type has been successfully modified! </p>
+                    <form method="POST" action="Payment">
+                        <button type="submit">Pay now</button>
+                    </form>
+                    <a href="index.jsp">Go back to main page</a>
+                    
+                <%
+                    return;
                 }
-                int random_password=minimum + rn.nextInt() % n;
-                User u=new User(Integer.toString(randomNum),Integer.toString(random_password),Integer.toString(randomNum));
-                u.insertToDatabase();
-                u=User.getUserByUsername(Integer.toString(randomNum));
-                userID=u.getUserID();
-                session.setAttribute("userID",userID);
+                else { %>
+                    <span> Failed to order the room...</span>
+                    <a href="index.jsp">Go back to main page</a>
+                <%
+                    return;
+                }
             }
             else {
-                userID=(Integer)session.getAttribute("userID");
+                int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
+                int userID;
+                if (session.getAttribute("userID")==null){
+                    hasLoggedIn=false;
+                    SecureRandom rn=new SecureRandom();
+                    int maximum=99999999;
+                    int minimum=10000000;
+                    int n = maximum - minimum + 1;
+                    randomNum =  minimum + (rn.nextInt() % n);
+                    while (User.usernameExist(Integer.toString(randomNum))){
+                        randomNum = minimum + (rn.nextInt() % n);
+                    }
+                    random_password=minimum + (rn.nextInt() % n);
+                    User u=new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
+                    u.insertToDatabase();
+                    u=User.getUserByUsername(Integer.toString(randomNum));
+                    userID=u.getUserID();
+    //                request.setAttribute("userID",userID);
+                }
+                else {
+                    userID=(Integer)session.getAttribute("userID");
+                    hasLoggedIn=true;
+                }
+                Date ciDate= (Date)session.getAttribute("ciDate");
+                Date coDate= (Date)session.getAttribute("coDate");
+                Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
+                orderID = o.insertToDatabase();
+                if (orderID > 0){ 
+                    o.setOrderID(orderID);
+                    session.setAttribute("orderToPay",o);
+        %>
+
+                    <span> Your order has been submitted successfully! </span>
+
+                    <% if (!hasLoggedIn) { %>
+                        <p>You are not logged in. Please remember your Order ID and Pin below in order to manage your order later.</p>
+                        <span> Your Order ID is: <%=randomNum%> </span>
+                        <p>Pin: <%=random_password%></p>
+                    <%} %>
+                    <form method="POST" action="Payment">
+                        <button type="submit">Pay now</button>
+                    </form>
+                    <a href="index.jsp">Go back to main page</a>
+                <% }
+                else { %>
+                    <span> Failed to order the room...</span>
+                    <a href="index.jsp">Go back to main page</a>
+                <% }  
             }
-            Date ciDate= (Date)session.getAttribute("ciDate");
-            Date coDate= (Date)session.getAttribute("coDate");
-            Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
-            int orderID = o.insertToDatabase();
-            if (orderID > 0){ 
-                o.setOrderID(orderID);
-                session.setAttribute("orderToPay",o);
-    %>
-            
-                <span> Your order has been submitted successfully! </span>
-                <span> Your Order ID is: <%=orderID%> </span>
-                <a href="Payment">Pay now</a>
-                <a href="index.jsp">Go back to main page</a>
-            <% }
-            else { %>
-                <span> Failed to order the room...</span>
-                <a href="index.jsp">Go back to main page</a>
-            <% }  
-        } %>
+        }%>
 </body>
 </html>
