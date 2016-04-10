@@ -26,6 +26,7 @@
         <% if (session.getAttribute("name") == null) { %>
             <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
             <a href="userLogin.jsp"><div><span>Login</span></div></a>
+            <a href="manageOrder.jsp"><div><span>Manage your order</span></div></a>
         <% } else { %>
             <a href="index.jsp">
                 <div><span>Home</span></div>
@@ -34,8 +35,8 @@
                 <a href="updateProfile.jsp">
                     <div><span>Settings</span></div>
                 </a>
-                <a href="OrderList.jsp">
-                    <div><span>Previous Order</span></div>
+                <a href="manageOrder.jsp">
+                    <div><span>Manage your order</span></div>
                 </a>
                 <a href="logout.jsp">
                     <div><span>Log Out</span></div>
@@ -82,42 +83,42 @@
                     e="Check-out date cannot exceed 90 days later!";
                 }
                 else {
-                session.setAttribute("ciDate",CIDate);
-                session.setAttribute("coDate",CODate);
-                session.setAttribute("numRooms", request.getParameter("numRooms"));
-                String location= request.getParameter("location");
-                String[] keywords;
-                //match either space or comma or semicolon
-                if (location.indexOf(" ") == -1 || location.indexOf(",") == -1 || location.indexOf(";") == -1){
-                    keywords = location.split(" |\\,|;");
-                }
-                else {
-                    keywords = new String[] {location};
-                }
-                for (String keyword: keywords){
-                    if (keyword.equals(" ") || keyword.equals(",") || keyword.equals(";")) {continue;}
-                    ArrayList<Hotel> hotels=Hotel.searchHotel(keyword);
-                    for (Hotel h: hotels){
-                        hotelIDList.remove(Integer.valueOf(h.getHotelID()));
-                        hotelIDList.add(Integer.valueOf(h.getHotelID()));
+                    session.setAttribute("ciDate",CIDate);
+                    session.setAttribute("coDate",CODate);
+                    session.setAttribute("numRooms", request.getParameter("numRooms"));
+                    String location= request.getParameter("location");
+                    String[] keywords;
+                    //match either space or comma or semicolon
+                    if (location.indexOf(" ") == -1 || location.indexOf(",") == -1 || location.indexOf(";") == -1){
+                        keywords = location.split(" |\\,|;");
                     }
-                }           
-                for (int i = 0; i < hotelIDList.size(); ++i) { 
-                    Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
-        %>
-                    <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
-                        <h3> <%= h.getHotelName() %> </h3>
-                        <h4> <%= h.getAddress()%> </h4>
-                        <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)%></h3>
-                        <div> 
-                            <span> Ratings: </span>
-                            <span> <%= h.getStarRating() %> Star</span>
+                    else {
+                        keywords = new String[] {location};
+                    }
+                    for (String keyword: keywords){
+                        if (keyword.equals(" ") || keyword.equals(",") || keyword.equals(";")) {continue;}
+                        ArrayList<Hotel> hotels=Hotel.searchHotel(keyword);
+                        for (Hotel h: hotels){
+                            hotelIDList.remove(Integer.valueOf(h.getHotelID()));
+                            hotelIDList.add(Integer.valueOf(h.getHotelID()));
+                        }
+                    }           
+                    for (int i = 0; i < hotelIDList.size(); ++i) { 
+                        Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
+            %>
+                        <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
+                            <h3> <%= h.getHotelName() %> </h3>
+                            <h4> <%= h.getAddress()%> </h4>
+                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)%></h3>
+                            <div> 
+                                <span> Ratings: </span>
+                                <span> <%= h.getStarRating() %> Star</span>
+                            </div>
+                            <img src="" alt="">
+                            <form method="POST" action="showHotelRoom.jsp">
+                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
                         </div>
-                        <img src="" alt="">
-                        <form method="POST" action="showHotelRoom.jsp">
-                            <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
-                    </div>
-                <% } %>
+                    <% } %>
             <% } %>
         <% } %>
     <%  }  %>
@@ -130,7 +131,7 @@
         <label>From:</label><input type="date" name="ciDate"> <br>
         <label>To:</label><input type="date" name="coDate"> <br>
         <label for="numRooms">How many rooms do you want to book?</label>
-        <input id="numRooms" type="text" name="numRooms"> <br>
+        <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
         <p><input type="submit" value="Search"></p>
     </form>
         <% if (e!=null && !e.isEmpty()){ %>
