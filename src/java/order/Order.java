@@ -21,14 +21,14 @@ import org.joda.time.LocalDate;
  */
 public class Order implements MySQLInit, OrderStatus {
 
-    int orderID;
-    int status;
-    int userID;
-    Date CIDate;
-    Date CODate;
-    int hotelID;
-    int roomType;
-    int numOfRoom;
+    private int orderID;
+    private int status;
+    private int userID;
+    private Date CIDate;
+    private Date CODate;
+    private int hotelID;
+    private int roomType;
+    private int numOfRoom;
 
     public int getOrderID() {
         return orderID;
@@ -93,7 +93,9 @@ public class Order implements MySQLInit, OrderStatus {
     public void setNumOfRoom(int numOfRoom) {
         this.numOfRoom = numOfRoom;
     }
-
+    
+    public Order(){
+    }
     public Order(int hotelID, int roomType, Date CIDate, Date CODate) {
         this.hotelID = hotelID;
         this.roomType = roomType;
