@@ -14,15 +14,19 @@ import database.*;
  * @author Lin Jianxiong
  */
 public class Hotel implements MySQLInit{
-    int hotelID;
-    String hotelName;
-    String address;
-    int isRecommended=-1;
-    int starRating=-1;
-    String label;
+    private int hotelID;
+    private String hotelName;
+    private String address;
+    private int isRecommended=-1;
+    private int starRating=-1;
+    private String label;
 
     public int getHotelID() {
         return hotelID;
+    }
+    
+    public void setHotelID(int hotelID) {
+        this.hotelID=hotelID;
     }
 
     public String getHotelName() {

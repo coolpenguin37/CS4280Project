@@ -7,72 +7,64 @@
 <%@page import="java.lang.String, user.*,hotel.*,manager.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Hypnos--Manage Hotel</title>
-    </head>
-    <body>
-        <%! Hotel h;%>
-        <jsp:include page="nav.jsp"></jsp:include>
-        <% if(session.getAttribute("username")==null) { %>
-		<h1>You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
-	<% } else {
-            if (request.getParameter("isRecommended")!=null){
-                  if (!(session.getAttribute("hotel_to_manage")==null)){
-                      h=(Hotel)session.getAttribute("hotel_to_manage");
-                      if (request.getParameter("isRecommended")=="yes"){
-                         h.setIsRecommended(1);
-                      }
-                        else if (request.getParameter("isRecommend")=="no"){
-                        h.setIsRecommended(0);
-                            }
-                      //TODO: updateHotel with the same hotelID
-                      Hotel.updateHotel(h);
-                    }
-            } else { %>
+<html lang="en">
+<head>
+  <title>Bootstrap Case</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+  <script>
+//        $.fn.editable.defaults.mode='inline';
+    $(document).ready(function() {
+        $('#username').editable({
+            type: 'text',
+            pk: 1,
+            url: 'manageHotel.jsp',
+            title: 'Enter username'
+        });
+    });
+
         
-                <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
-                <h2>Hello <%=session.getAttribute("name")%>. Manage your hotel:</h2>
-                <% String username=(String)session.getAttribute("username"); %>
-                    <% //TODO: we need a static method that takes a String (username) and return the manager
-                       //with that name %>
-                    <% Manager m=new Manager.getManagerByUsername(username); %>
-                    
-                    <% //TODO: we need another static method that takes a String (hotelID) and return the hotel
-                        //with that ID %>
-                    <% h= Hotel.getHotelByID(m.getHotelID());
-                       session.setAttribute("hotel_to_manage", h);
-                       String hotelName=h.getHotelName();
-                       String address=h.getAddress();
-                       int isRecommended=h.getIsRecommended();
-                       int starRating=h.getStarRating(); %>
+  </script>
+</head>
+<body>
 
-                    <div>
-                        <h3> <%=hotelName%></h3>
-                        <% //TODO: a popup box with a input textbox %>
-                        <button>Update</button>
-                        <h4> <%=address%> </h4>
-                        <% //TODO: a popup box with a input textbox %>
-                        <button>Update</button>
-                        <form method="get" action="_self">
-                        <input type="checkbox" name="isRecommended" value="yes" <%=(isRecommended==1)?"checked":""%>>
-                        <input type="checkbox" name="isRecommended" value="no" <%=(isRecommended==0)?"checked":""%>>
-                        <input type="submit">
-                        </form>
-                        <br>
-                        <span>Your hotel&#39;s current star rating is: <%=starRating%> star(s).</span>
-                    </div>
+<div class="container">
+    <% if (request.getParameter("1")!=null){
+        response.setStatus(200);
+    }%>
+  <h2>Hotel and Room Management System (HRMS)</h2>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Hotel Information</a></li>
+    <li><a data-toggle="tab" href="#menu1">Room Information</a></li>
+    <li><a data-toggle="tab" href="#menu2">Manage Orders</a></li>
+    <li><a data-toggle="tab" href="#menu3">Report</a></li>
+  </ul>
 
-                    <div>
-                        <span> View the room availability at </span> <input type="date" name="room_availability_date"> <button>Check</button>
-                    </div>
-                    
-                    <button onclick="window.location.href =/CheckOutRoom">Check Out Room</button>
- 
-                
-                <%}%>
-              <%}%>  
-            
-    </body>
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <h3>Hotel Information</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <a href="#" id="username">superuser</a>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Room Information</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Manage Orders</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Report</h3>
+      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>
