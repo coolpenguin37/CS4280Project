@@ -14,6 +14,7 @@
     <title>User Login</title>
 </head>
 <body>
+    <jsp:include page="nav.jsp"></jsp:include>
     <div>
         <div id="content">
             <form method="POST" action="LoginServlet">

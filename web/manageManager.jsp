@@ -13,6 +13,7 @@
         <title>Hypnos</title>
     </head>
     <body>
+        <jsp:include page="nav.jsp"></jsp:include>
         <h1>Manage Managers</h1>
         <% 
             if (request.getParameter("action")!=null){

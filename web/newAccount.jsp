@@ -13,6 +13,7 @@
         <title>Create New Account</title>
     </head>
     <body>
+        <jsp:include page="nav.jsp"></jsp:include>
         <form method="POST" action="CreateAccount">
         <label>Username:</label>
         <input type="text" name="username">

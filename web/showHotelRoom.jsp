@@ -18,37 +18,7 @@
         <h2>Hello <%=session.getAttribute("name")%> </h2>
     <% } %>
     
-    <nav>
-        <% if (session.getAttribute("name") == null) { %>
-            <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
-            <a href="userLogin.jsp"><div><span>Login</span></div></a>
-            <a href="manageOrder.jsp"><div><span>Manage your order</span></div></a>
-        <% } else { %>
-            <a href="index.jsp">
-                <div><span>Home</span></div>
-            </a>
-            <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
-                <a href="updateProfile.jsp">
-                    <div><span>Settings</span></div>
-                </a>
-                <a href="manageOrder.jsp">
-                    <div><span>Manage your order</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
-                <a href="manageHotel.jsp">
-                    <div><span>Manage Hotel</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } %>
-        <% } %>
-<!--        <h2> <%= session.getAttribute("type") %> </h2>
-        <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>-->
-    </nav>
+    <jsp:include page="nav.jsp"></jsp:include>
     
     <% 
         if (request.getParameter("currentHotel")!=null) {
@@ -70,9 +40,15 @@
                 int standardRate = room.getStandardRate();
                 String username = (String) session.getAttribute("username");
                 User u = User.getUserByUsername(username);
-//                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
-//                int discount = mb.getDiscountByUserType(u.getUserType());
-                int discount=100;
+                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
+                int discount;
+                //See whether is guest
+                if (u==null || u.getUserType()<1){
+                    discount=100;
+                }
+                else {
+                    discount = mb.getDiscountByUserType(u.getUserType());
+                }
                 int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
                 Order o = new Order(hotelID, room.getRoomType(),CIDate, CODate);
                 int remained = Order.getRemainedRoom(o);
@@ -148,11 +124,11 @@
                     int maximum=99999999;
                     int minimum=10000000;
                     int n = maximum - minimum + 1;
-                    randomNum =  minimum + (rn.nextInt() % n);
+                    randomNum =  minimum + Math.abs(rn.nextInt() % n);
                     while (User.usernameExist(Integer.toString(randomNum))){
-                        randomNum = minimum + (rn.nextInt() % n);
+                        randomNum = minimum + Math.abs(rn.nextInt() % n);
                     }
-                    random_password=minimum + (rn.nextInt() % n);
+                    random_password=minimum + Math.abs(rn.nextInt() % n);
                     User u=new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
                     u.insertToDatabase();
                     u=User.getUserByUsername(Integer.toString(randomNum));

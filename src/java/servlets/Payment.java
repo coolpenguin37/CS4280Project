@@ -53,11 +53,27 @@ public class Payment extends HttpServlet {
                 int numDays = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
                 HotelRoom rm = HotelRoom.getHotelRoom(o.getHotelID(),o.getRoomType());
                 int standardRate=rm.getStandardRate();
-                int discount=100;
-                int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
-                int numRooms=o.getNumOfRoom();
-                User u=User.getUserByUserID((Integer)session.getAttribute("userID"));
+                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(o.getHotelID());
+                int discount;
+                User u;
+                if (session.getAttribute("userID")==null){
+                    discount=100;
+                    u=new User("null","null","");
+                }
+                else {
+                    u=User.getUserByUserID((Integer)session.getAttribute("userID"));
+                    if (u==null || u.getUserType()<1){
+                        discount=100;
+                    }
+                    else {
+                        discount = mb.getDiscountByUserType(u.getUserType());
+                    }
+                }
+
+                //See whether is guest
                 
+                int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
+                int numRooms=o.getNumOfRoom();               
                 out.println("<form action='confirm.jsp' method='POST'>");
                 out.println("<fieldset>");
                 out.println("<legend>Personal Information</legend>");
@@ -66,11 +82,11 @@ public class Payment extends HttpServlet {
                 out.println("<label>Name:</label>");
                 out.println("<input type='text' name='clientName' value="+u.getName()+">");
                 out.println("<label>E-mail Address:</label>");
-                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+")>");
+                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+">");
                 out.println("<label>Retype Your E-mail Address:</label>");
                 out.println("<input type='text' name='clientRetypeEmail'>");
                 out.println("<label>Phone:</label>");
-                out.println("<input type='text' name='clientPhone' value="+u.getTel()+")>");
+                out.println("<input type='text' name='clientPhone' value="+u.getTel()+">");
                 out.println("</fieldset>");
                 out.println("<h2>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
                 out.println("<fieldset>");
@@ -88,7 +104,8 @@ public class Payment extends HttpServlet {
                 out.println("</body>");
                 out.println("</html>");
         }
-        catch (Exception e){}
+        catch (Exception e){
+        }
         finally {
             out.close();
         }

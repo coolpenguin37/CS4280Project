@@ -73,26 +73,9 @@
                 isSubscribed=(Integer)session.getAttribute("isSubscribed");
             } %>
                 
-                <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
-		
-		<h2>Hello <%=name%>. Update your profile here:</h2>
-                <nav>
-		<% if (name==null) { %>
-			<a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
-			<a href="userLogin.jsp"><div><span>Login</span></div></a>
-		<% }
-		else { %>
-			<a href="index.jsp">
-				<div><span>Home</span></div>
-			</a>
-			<a href="updateProfile.jsp">
-				<div><span>Settings</span></div>
-			</a>
-			<a href="logout.jsp">
-				<div><span>Log Out</span></div>
-			</a>
-		<% } %>
-                </nav>
+        <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
+        <h2>Hello <%=name%>. Update your profile here:</h2>
+        <jsp:include page="nav.jsp"></jsp:include>
         <form method="POST" action="">
 	<table>
 	<thead>

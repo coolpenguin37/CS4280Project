@@ -14,6 +14,7 @@
     </head>
     <body>
         <%! Hotel h;%>
+        <jsp:include page="nav.jsp"></jsp:include>
         <% if(session.getAttribute("username")==null) { %>
 		<h1>You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
 	<% } else {

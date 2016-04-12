@@ -21,14 +21,6 @@
         <servlet-class>servlets.UpdateProfileServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BookingServlet</servlet-name>
-        <servlet-class>servlets.BookingServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>servlets.SearchServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CheckOutRoom</servlet-name>
         <servlet-class>servlets.CheckOutRoom</servlet-class>
     </servlet>
@@ -55,14 +47,6 @@
     <servlet-mapping>
         <servlet-name>UpdateProfileServlet</servlet-name>
         <url-pattern>/UpdateProfileServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>BookingServlet</servlet-name>
-        <url-pattern>/BookingServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SearchServlet</servlet-name>
-        <url-pattern>/SearchServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CheckOutRoom</servlet-name>

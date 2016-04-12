@@ -22,37 +22,7 @@
         <h2>Hello <%=session.getAttribute("name")%></h2>
     <% } %>
     
-    <nav>
-        <% if (session.getAttribute("name") == null) { %>
-            <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
-            <a href="userLogin.jsp"><div><span>Login</span></div></a>
-            <a href="manageOrder.jsp"><div><span>Manage your order</span></div></a>
-        <% } else { %>
-            <a href="index.jsp">
-                <div><span>Home</span></div>
-            </a>
-            <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
-                <a href="updateProfile.jsp">
-                    <div><span>Settings</span></div>
-                </a>
-                <a href="manageOrder.jsp">
-                    <div><span>Manage your order</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
-                <a href="manageHotel.jsp">
-                    <div><span>Manage Hotel</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } %>
-        <% } %>
-<!--        <h2> <%= session.getAttribute("type") %> </h2>
-        <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>-->
-    </nav>
+    <jsp:include page="nav.jsp"></jsp:include>
     
         <% if (request.getMethod()=="POST") {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
@@ -73,14 +43,18 @@
                 
                 Date CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
                 Date CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
+                DateTime CIDateDT=new DateTime(CIDate);
                 if (CIDate.after(CODate)){
                     e="Check-in date cannot be after check-out date!";
                 }
                 else if (CIDate.before(DateTime.now().withTime(0, 0, 0, 0).toDate())){
                     e="Check-in date cannot be before today!";
                 }
-                else if (CODate.after(DateTime.now().withTime(0, 0, 0, 0).plusDays(90).toDate())){
-                    e="Check-out date cannot exceed 90 days later!";
+                else if (!CODate.after(CIDateDT.withTime(0,0,0,0).toDate())){
+                    e="Check-out date must be at least 1 day after check-in date!";
+                }
+                else if (CODate.after(DateTime.now().withTime(0, 0, 0, 0).plusDays(180).toDate())){
+                    e="Check-out date cannot exceed 180 days later!";
                 }
                 else {
                     session.setAttribute("ciDate",CIDate);
