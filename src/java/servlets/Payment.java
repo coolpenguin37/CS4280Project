@@ -18,6 +18,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import order.*;
 import org.joda.time.DateTime;
+import user.*;
 /**
  *
  * @author yduan7
@@ -55,8 +56,23 @@ public class Payment extends HttpServlet {
                 int discount=100;
                 int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
                 int numRooms=o.getNumOfRoom();
-                out.println("<h2>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
+                User u=User.getUserByUserID((Integer)session.getAttribute("userID"));
+                
                 out.println("<form action='confirm.jsp' method='POST'>");
+                out.println("<fieldset>");
+                out.println("<legend>Personal Information</legend>");
+                out.println("<label>Title:</label>");
+                out.println("<input type='text' name='clientTitle'>");
+                out.println("<label>Name:</label>");
+                out.println("<input type='text' name='clientName' value="+u.getName()+">");
+                out.println("<label>E-mail Address:</label>");
+                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+")>");
+                out.println("<label>Retype Your E-mail Address:</label>");
+                out.println("<input type='text' name='clientRetypeEmail'>");
+                out.println("<label>Phone:</label>");
+                out.println("<input type='text' name='clientPhone' value="+u.getTel()+")>");
+                out.println("</fieldset>");
+                out.println("<h2>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
                 out.println("<fieldset>");
                 out.println("<legend>Credit Card Information</legend>");
                 out.println("<label>Credit Card Number:</label>");
