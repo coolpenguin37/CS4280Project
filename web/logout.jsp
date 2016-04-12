@@ -13,6 +13,7 @@
     </head>
     <body>  
         <% session.invalidate();%>
+        <jsp:include page="nav.jsp"></jsp:include>
             <p>You have logged out successfully!</p>
         <% response.sendRedirect("userLogin.jsp");%>
     </body>

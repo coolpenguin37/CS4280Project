@@ -14,37 +14,7 @@
         <title>Previous Order</title>
     </head>
     <body>
-        <nav>
-        <% if (session.getAttribute("name") == null) { %>
-            <a href="newAccount.jsp"><div><span>Create New Account</span></div></a>
-            <a href="userLogin.jsp"><div><span>Login</span></div></a>
-            <a href="manageOrder.jsp"><div><span>Manage your order</span></div></a>
-        <% } else { %>
-            <a href="index.jsp">
-                <div><span>Home</span></div>
-            </a>
-            <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
-                <a href="updateProfile.jsp">
-                    <div><span>Settings</span></div>
-                </a>
-                <a href="manageOrder.jsp">
-                    <div><span>Manage your order</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
-                <a href="manageHotel.jsp">
-                    <div><span>Manage Hotel</span></div>
-                </a>
-                <a href="logout.jsp">
-                    <div><span>Log Out</span></div>
-                </a>
-            <% } %>
-        <% } %>
-<!--        <h2> <%= session.getAttribute("type") %> </h2>
-        <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>-->
-    </nav>
+        <jsp:include page="nav.jsp"></jsp:include>
         <%! private String getOrderStatus(Order o){
                 switch (o.getStatus()){
                     case 1: return "Not paid";

@@ -8,6 +8,7 @@ package hotel;
 import java.sql.*;
 import java.util.ArrayList;
 import database.*;
+import user.UserType;
 
 /**
  *
@@ -125,7 +126,15 @@ public class MemberBenefits implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [MemberBenefits] WHERE [HotelID] = ?");
+            String benefit;
+            switch (userType){
+                case UserType.COMMONUSER:benefit="CommonUser";break;
+                case UserType.GOLDUSER:benefit="GoldUser";break;
+                case UserType.PREFERREDUSER:benefit="PreferredUser";break;
+                case UserType.PLATINUMUSER:benefit="PlaitiumUser";break;
+                default:benefit="CommonUser";break;
+            }    
+            PreparedStatement stmt = conn.prepareStatement("SELECT " + benefit + " FROM [MemberBenefits] WHERE [HotelID] = ?");
             stmt.setInt(1, hotelID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
