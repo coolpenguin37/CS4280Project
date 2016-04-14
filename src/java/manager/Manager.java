@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import database.*;
 import user.User;
+import hotel.*;
 
 /**
  *
@@ -29,6 +30,10 @@ public class Manager implements MySQLInit {
 
     public int getHotelID() {
         return hotelID;
+    }
+    
+    public Hotel getHotel(){
+        return Hotel.getHotelByID(hotelID);
     }
 
     public Manager(int userID, int hotelID) {
