@@ -21,22 +21,7 @@
   <script src="bootstrap_switch/dist/js/bootstrap-switch.js"></script>
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
-  <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-  <script>
-    $.fn.editable.defaults.mode='inline';
-    $(document).ready(function() {
-        $('#hotelName').editable({
-            type: 'text',
-            pk: hotelName,
-            url: '',
-        });
-    });
-
-    function init(){
-        $("#isRecommended").bootstrapSwitch();
-    }
-    
+   <script>
     function retrieveData(o,i){
         alert("hello")
         $.ajax({
@@ -49,15 +34,26 @@
                 alert(data)
 //                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
-                    $("#"+key).html(value);
+                    $("#"+key).html(value)
+                    
+                    $('#'+key).editable({
+                        type: 'text',
+                        pk: key,
+                        success: function(response,newValue){
+                            $("#"+key).html(newValue)
+                            alert($("#"+key).text())
+                        }
+                    });
                 })
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
+                    var roomID=value.hotelID
                     var roomName="<h3>"+value.roomName+"</h3>"
-                    var roomSize="<h4>"+value.roomSize+"</h4>"
-                    var standardRate="<h4>"+value.standardRate+"</h4>"
-                    var numOfRoom="<h4>"+value.numOfRoom+"</h4>"
-                    var priceTable="<table>\n\
+                    var roomSize="<h4> Room Size: <span class='rate'>"+value.roomSize+"</span> ft.</h4>"
+                    var rate=value.standardRate
+                    var standardRate="<h4> Standard Rate: $"+value.standardRate+"</h4>"
+                    var numOfRoom="<h4> Number of Rooms: "+value.numOfRoom+"</h4>"
+                    var priceTable="<div class='container'><table class='table table-hover'>\n\
             <thead>\n\
             <th>User Type</th>\n\
             <th>Discount</th>\n\
@@ -65,21 +61,32 @@
             </thead>\n\
             <tbody>\n\ "
                     $.each(data.discountList,function(key,value){
-//                        if (key.toString().toUpperCase().search("USER")===-1) return false;
-                        priceTable+="<td>"+key+"</td>"
-                        priceTable+="<td>"+value/100+"</td>"
-                        priceTable+="<td>"+parseInt("standardRate")*parseInt("value")/100+"</td>"
+                        if (key.toString().toUpperCase().search("USER")!=-1) {
+                            priceTable+="<td>"+key.toString().substr(0,1).toUpperCase()+key.toString().substr(1,key.toString().length-5)+" User"+"</td>"
+                            priceTable+="<td><a href='#' class='discount' data-pk="+roomID+"key.toString()>"+value+"</a>%"+"</td>"
+                            priceTable+="<td>"+rate*value/100+"</td></tr>"
+                        }
                     })
-                    priceTable+="</tbody></table>"
+                    priceTable+="</tbody></table></div>"
                     var img=$("<img></img")
                     var newDiv=($("<div>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(priceTable).append(img))
                     $("#room-information").append(newDiv)
+                    $('.discount').editable({
+                        type: 'text',
+                        success: function(response,newValue){
+                            $(this).parent().next().html(Math.floor(newValue/100*$(".rate").text()))
+                            alert(Math.floor($(this).closest('.rate').text()/100))
+                        }
+                    });
                 })
+                
+        
             },
             error: function(xhr,ajaxOptions,thrownError){
                 alert(xhr.status+"\n"+thrownError);
             }
-        })}
+        })
+        }
 //                
                 
 //            },
@@ -92,8 +99,17 @@
 //                
 //            };
 //        };)
+    function init(){
+        $("#isRecommended").bootstrapSwitch();
+    }
     window.onload=init;
+    
+    function refreshCSS(){
+        var i,a,s;a=document.getElementsByTagName('link');for(i=0;i<a.length;i++){s=a[i];if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href) {var h=s.href.replace(/(&|%5C?)forceReload=\d+/,'');s.href=h+(h.indexOf('?')>=0?'&':'?')+'forceReload='+(new Date().valueOf())}}
+    };
   </script>
+
+   
 </head>
 <body>
 
@@ -120,9 +136,9 @@
   <div class="tab-content">
     <div id="hotel-information" class="tab-pane fade in active">
       <h2>Hotel Information</h2>
-      <h3><a href="#" id="hotelName" data-pk="hotelName" data-type="text">${currentHotel.hotelName}</a></h3>
-      <h4><a href="#" id="address" data-pk="address" data-type="text">${currentHotel.address}</a></h4>
-      <div><a href="#" id="information" data-pk="information" data-type="text-area"></a></div>
+      <h3><a href="#" id="hotelName"></a></h3>
+      <h4><a href="#" id="address"></a></h4>
+      <div><a href="#" id="information" data-type="text-area"></a></div>
       <img>
       <input id="isRecommended" type="checkbox" ${currentHotel.isRecommended?"checked":""} data-on-color="success">
       <button onclick="sendData(this)">Update</button>
@@ -144,6 +160,13 @@
     </div>
   </div>
 </div>
-
+  <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+  <script>
+    $.fn.editable.defaults.mode='inline';
+    
+    </script>
+ 
 </body>
+ 
 </html>
