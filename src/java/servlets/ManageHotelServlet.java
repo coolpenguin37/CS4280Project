@@ -35,7 +35,8 @@ public class ManageHotelServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         try {
             HttpSession session=request.getSession();
@@ -49,7 +50,8 @@ public class ManageHotelServlet extends HttpServlet {
                 String discountList=g.toJson(MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()));
                 String roomInfo=g.toJson(hrs,ArrayList.class);
                 response.setContentType("application/json");
-                out.print("{'hotelInfo':"+hotelInfo+",'roomInfo:"+roomInfo+",discountList:"+discountList+"}");
+                String finalString="{\"hotelInfo\":"+hotelInfo+",\"roomInfo\":"+roomInfo+",\"discountList\":"+discountList+"}";
+                out.print(finalString);
             }
             else{
                 session.setAttribute("managers",Manager.getManagerByUserID((Integer)session.getAttribute("userID")));
