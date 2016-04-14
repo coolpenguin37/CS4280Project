@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="java.lang.String, user.*,hotel.*,manager.*,java.util.ArrayList"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +16,11 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link href="/bootstrap_switch/docs/css/highlight.css" rel="stylesheet">
-  <link href="/bootstrap_switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+  <link href="bootstrap_switch/docs/css/highlight.css" rel="stylesheet">
+  <link href="bootstrap_switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+  <script src="bootstrap_switch/dist/js/bootstrap-switch.js"></script>
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
-  <link href="/bootstrap_switch/docs/css/main.css" rel="stylesheet">
+  <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
   <script>
@@ -36,19 +37,20 @@
         $("#isRecommended").bootstrapSwitch();
     }
     
-    function retrieveData(i){
+    function retrieveData(o,i){
+        alert("hello")
         $.ajax({
             type:"POST",
-            url:"manageHotelServlet",
+            url:"ManageHotelServlet",
             data:{"indexAtArrayListManager":i},
-            datatype:"json",
-
-            success: function(data,textStatus,jqXHR){
-                //for hotelInfo
+            dataType:"json",
+            
+            success: function(data){
+                alert(data)
+//                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
                     $("#"+key).html(value);
-                });
-                
+                })
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomName="<h3>"+value.roomName+"</h3>"
@@ -63,30 +65,34 @@
             </thead>\n\
             <tbody>\n\ "
                     $.each(data.discountList,function(key,value){
+//                        if (key.toString().toUpperCase().search("USER")===-1) return false;
                         priceTable+="<td>"+key+"</td>"
                         priceTable+="<td>"+value/100+"</td>"
-                        priceTable+="<td>"+standardRate*value/100+"</td>"
+                        priceTable+="<td>"+parseInt("standardRate")*parseInt("value")/100+"</td>"
                     })
                     priceTable+="</tbody></table>"
                     var img=$("<img></img")
                     var newDiv=($("<div>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(priceTable).append(img))
                     $("#room-information").append(newDiv)
                 })
+            },
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
+            }
+        })}
+//                
                 
-            },
-            error: function(jqXHR,taxtStatus, errorThrown){
-                console.log("Something bad happened " + textStatus);
-                $("#ajaxResponse").html(jqXHR.responseText);
-            },
-            
-            beforeSend: function(jqXHR, settings){
-                $("#chooseHotel").html(${managers[i].hotel.hotelName};)
-            };
-        };)
-    }
-    
+//            },
+//            error: function(jqXHR,taxtStatus, errorThrown){
+//                console.log("Something bad happened " + textStatus);
+//                $("#ajaxResponse").html(jqXHR.responseText);
+//            },
+//            
+//            beforeSend: function(jqXHR, settings){
+//                
+//            };
+//        };)
     window.onload=init;
-        
   </script>
 </head>
 <body>
@@ -95,20 +101,20 @@
 
   <h2>Hotel and Room Management System (HRMS)</h2>
   
-  <div>
+  <div class="dropdown">
     <button id="chooseHotel" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Hotel...<span class="caret"></span></button>
     <ul id="hotel-selection" class="dropdown-menu">
         <c:forEach items="${managers}" var="manager" varStatus="theCount">
-            <li onclick="$('#chooseHotel').html=this.html;window.location.href='ManageHotelServlet?indexAtArrayListManager='+theCount.index"><c:out value="${manager.hotel.hotelName}" /></li>
+            <li onclick='retrieveData(this,${theCount.index})'><a href="#"><c:out value="${manager.hotel.hotelName}" /></a></li>
         </c:forEach>
     </ul>
   </div>
   
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Hotel Information</a></li>
-    <li><a data-toggle="tab" href="#menu1">Room Information</a></li>
-    <li><a data-toggle="tab" href="#menu2">Manage Orders</a></li>
-    <li><a data-toggle="tab" href="#menu3">Report</a></li>
+    <li class="active"><a data-toggle="tab" href="#hotel-information">Hotel Information</a></li>
+    <li><a data-toggle="tab" href="#room-information">Room Information</a></li>
+    <li><a data-toggle="tab" href="#manage-orders">Manage Orders</a></li>
+    <li><a data-toggle="tab" href="#report">Report</a></li>
   </ul>
 
   <div class="tab-content">
