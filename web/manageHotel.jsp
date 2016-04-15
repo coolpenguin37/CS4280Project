@@ -47,12 +47,13 @@
                 })
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
-                    var roomID=value.hotelID
-                    var roomName="<h3>"+value.roomName+"</h3>"
-                    var roomSize="<h4> Room Size: <span class='rate'>"+value.roomSize+"</span> ft.</h4>"
+                    var roomID=value.roomType
+                    var hotelID=value.hotelID
+                    var roomName="<h3><a href='#' class='roomName' data-pk=roomName_"+hotelID+"_"+roomID+">"+value.roomName+"</a></h3>"
+                    var roomSize="<h4> Room Size: <a href='#' class='roomSize' data-pk=roomSize_"+hotelID+"_"+roomID+">"+value.roomSize+"</a> ft.</h4>"
+                    var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-pk=rate_"+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
                     var rate=value.standardRate
-                    var standardRate="<h4> Standard Rate: $"+value.standardRate+"</h4>"
-                    var numOfRoom="<h4> Number of Rooms: "+value.numOfRoom+"</h4>"
+                    var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-pk=numOfRoom_"+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
                     var priceTable="<div class='container'><table class='table table-hover'>\n\
             <thead>\n\
             <th>User Type</th>\n\
@@ -63,21 +64,71 @@
                     $.each(data.discountList,function(key,value){
                         if (key.toString().toUpperCase().search("USER")!=-1) {
                             priceTable+="<td>"+key.toString().substr(0,1).toUpperCase()+key.toString().substr(1,key.toString().length-5)+" User"+"</td>"
-                            priceTable+="<td><a href='#' class='discount' data-pk="+roomID+"key.toString()>"+value+"</a>%"+"</td>"
-                            priceTable+="<td>"+rate*value/100+"</td></tr>"
+                            priceTable+="<td><a href='#' class='discount' data-pk=discount_"+hotelID+"_"+roomID+"_"+key.toString()+">"+value+"</a>%"+"</td>"
+                            priceTable+="<td class='price'>"+rate*value/100+"</td></tr>"
                         }
                     })
                     priceTable+="</tbody></table></div>"
                     var img=$("<img></img")
-                    var newDiv=($("<div>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(priceTable).append(img))
-                    $("#room-information").append(newDiv)
+                    var newDiv=($("<div class='roomInfo'>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(priceTable).append(img))
+                    $("#room-information").append(newDiv) 
                     $('.discount').editable({
                         type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                            else if (value<=0 || value>100){
+                                return "The value must greater than 0 and less or equal to 100!"
+                            }
+                        },
                         success: function(response,newValue){
-                            $(this).parent().next().html(Math.floor(newValue/100*$(".rate").text()))
-                            alert(Math.floor($(this).closest('.rate').text()/100))
+                            $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))
+                            
                         }
                     });
+                    $('.roomName').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                        }
+                    });
+                    
+                    $('.numOfRoom,.roomSize').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                        }
+                    });
+                    
+                    $('.rate').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                        },
+                        success: function(response,newValue){
+                            $.each($(this).closest('.roomInfo').find('.price'),function(index,value){
+                                $(value).text($(value).closest('tr').find('.discount').text()*newValue/100)
+                            })
+                        }
+                    });
+                    
+                    
                 })
                 
         
@@ -107,6 +158,86 @@
     function refreshCSS(){
         var i,a,s;a=document.getElementsByTagName('link');for(i=0;i<a.length;i++){s=a[i];if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href) {var h=s.href.replace(/(&|%5C?)forceReload=\d+/,'');s.href=h+(h.indexOf('?')>=0?'&':'?')+'forceReload='+(new Date().valueOf())}}
     };
+    
+    function addNewRoom(){
+        var div=$('div[class="roomInfo"]:last')
+        var newDiv=$(div).clone()
+        var allALink=$(newDiv).find('a[data-pk]')
+        $.each(allALink,function(index,value){
+            
+            dataPKList=$(this).attr("data-pk").split("_")
+            if (dataPKList[0]=="discount"){
+                $(this).attr("data-pk",dataPKList[0]+"_"+dataPKList[1]+"_0_"+dataPKList[3])
+            }
+            else {
+                $(this).attr("data-pk",dataPKList[0]+"_"+dataPKList[1]+"_0")
+            }
+        })
+        $("#room-information").append(newDiv)
+        $('.discount').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                            else if (value<=0 || value>100){
+                                return "The value must greater than 0 and less or equal to 100!"
+                            }
+                        },
+                        success: function(response,newValue){
+                            $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))
+                            
+                        }
+                    });
+                    $('.roomName').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                        }
+                    });
+                    
+                    $('.numOfRoom,.roomSize').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                        }
+                    });
+                    
+                    $('.rate').editable({
+                        type: 'text',
+                        validate: function(value) {
+                            if($.trim(value) == '') {
+                                return 'This field is required';
+                            }
+                            if(!$.isNumeric(value)){
+                                return 'Please input a number!'
+                            }
+                        },
+                        success: function(response,newValue){
+                            $.each($(this).closest('.roomInfo').find('.price'),function(index,value){
+                                $(value).text($(value).closest('tr').find('.discount').text()*newValue/100)
+                            })
+                        }
+                    });
+        $('html, body').animate({
+            scrollTop: $(newDiv).offset().top
+        }, 1000);
+    }
+        
+        
+        
+        
+
   </script>
 
    
@@ -147,7 +278,7 @@
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>
-      <button type="button" class="btn btn-default">Add <span class="glyphicon glyphicon-plus"></span></button>
+      <button type="button" class="btn btn-default" onclick="addNewRoom()">Add <span class="glyphicon glyphicon-plus"></span></button>
       <button type="button" class="btn btn-default">Remove All</button>
     </div>
     <div id="manage-orders" class="tab-pane fade">
