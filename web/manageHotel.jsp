@@ -23,7 +23,6 @@
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
    <script>
     function retrieveData(o,i){
-        alert("hello")
         $.ajax({
             type:"POST",
             url:"ManageHotelServlet",
@@ -31,29 +30,38 @@
             dataType:"json",
             
             success: function(data){
-                alert(data)
+                $("#isRecommended").attr("name",data.hotelInfo.hotelID)
 //                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
-                    $("#"+key).html(value)
-                    
+                    if (key=="isRecommended") {
+                        $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
+                    }
+                    else {
+                        $("#"+key).html(value)
+                    }
+
                     $('#'+key).editable({
                         type: 'text',
-                        pk: key,
+                        pk: data.hotelInfo.hotelID,
+                        url: 'ManageHotelServlet',
                         success: function(response,newValue){
-                            $("#"+key).html(newValue)
-                            alert($("#"+key).text())
+                            if (response.status=="error") {return response.msg}
+                        },
+                        error: function(){
+                            alert("no")
                         }
+                        
                     });
                 })
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomID=value.roomType
                     var hotelID=value.hotelID
-                    var roomName="<h3><a href='#' class='roomName' data-pk=roomName_"+hotelID+"_"+roomID+">"+value.roomName+"</a></h3>"
-                    var roomSize="<h4> Room Size: <a href='#' class='roomSize' data-pk=roomSize_"+hotelID+"_"+roomID+">"+value.roomSize+"</a> ft.</h4>"
-                    var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-pk=rate_"+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
+                    var roomName="<h3><a href='#' class='roomName' data-name='roomName' data-pk="+hotelID+"_"+roomID+">"+value.roomName+"</a></h3>"
+                    var roomSize="<h4> Room Size: <a href='#' class='roomSize' data-name='roomName' data-pk="+hotelID+"_"+roomID+">"+value.roomSize+"</a> ft.</h4>"
+                    var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-name='standardRate' data-pk="+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
                     var rate=value.standardRate
-                    var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-pk=numOfRoom_"+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
+                    var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-name='numOfRoom' data-pk="+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
                     var priceTable="<div class='container'><table class='table table-hover'>\n\
             <thead>\n\
             <th>User Type</th>\n\
@@ -64,7 +72,7 @@
                     $.each(data.discountList,function(key,value){
                         if (key.toString().toUpperCase().search("USER")!=-1) {
                             priceTable+="<td>"+key.toString().substr(0,1).toUpperCase()+key.toString().substr(1,key.toString().length-5)+" User"+"</td>"
-                            priceTable+="<td><a href='#' class='discount' data-pk=discount_"+hotelID+"_"+roomID+"_"+key.toString()+">"+value+"</a>%"+"</td>"
+                            priceTable+="<td><a href='#' class='discount' name='discount_"+key.toString()+"' data-pk="+hotelID+"_"+roomID+"_"+">"+value+"</a>%"+"</td>"
                             priceTable+="<td class='price'>"+rate*value/100+"</td></tr>"
                         }
                     })
@@ -74,6 +82,7 @@
                     $("#room-information").append(newDiv) 
                     $('.discount').editable({
                         type: 'text',
+                        url: 'ManageHotelServlet',
                         validate: function(value) {
                             if($.trim(value) == '') {
                                 return 'This field is required';
@@ -89,9 +98,11 @@
                             $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))
                             
                         }
+                        
                     });
                     $('.roomName').editable({
                         type: 'text',
+                        url: 'ManageHotelServlet',
                         validate: function(value) {
                             if($.trim(value) == '') {
                                 return 'This field is required';
@@ -101,6 +112,7 @@
                     
                     $('.numOfRoom,.roomSize').editable({
                         type: 'text',
+                        url: 'ManageHotelServlet',
                         validate: function(value) {
                             if($.trim(value) == '') {
                                 return 'This field is required';
@@ -113,6 +125,7 @@
                     
                     $('.rate').editable({
                         type: 'text',
+                        url: 'ManageHotelServlet',
                         validate: function(value) {
                             if($.trim(value) == '') {
                                 return 'This field is required';
@@ -125,6 +138,9 @@
                             $.each($(this).closest('.roomInfo').find('.price'),function(index,value){
                                 $(value).text($(value).closest('tr').find('.discount').text()*newValue/100)
                             })
+                        },
+                        error: function(response){
+                            alert("123")
                         }
                     });
                     
@@ -166,11 +182,11 @@
         $.each(allALink,function(index,value){
             
             dataPKList=$(this).attr("data-pk").split("_")
-            if (dataPKList[0]=="discount"){
-                $(this).attr("data-pk",dataPKList[0]+"_"+dataPKList[1]+"_0_"+dataPKList[3])
+            if (dataPKList.length==1){
+                $(this).attr("data-pk",dataPKList[0])
             }
             else {
-                $(this).attr("data-pk",dataPKList[0]+"_"+dataPKList[1]+"_0")
+                $(this).attr("data-pk",dataPKList[0]+"_0")
             }
         })
         $("#room-information").append(newDiv)
@@ -233,9 +249,7 @@
             scrollTop: $(newDiv).offset().top
         }, 1000);
     }
-        
-        
-        
+
         
 
   </script>
@@ -271,10 +285,7 @@
       <h4><a href="#" id="address"></a></h4>
       <div><a href="#" id="information" data-type="text-area"></a></div>
       <img>
-      <input id="isRecommended" type="checkbox" ${currentHotel.isRecommended?"checked":""} data-on-color="success">
-      <button onclick="sendData(this)">Update</button>
-      <button onclick="resetEverything(this)">Reset</button>
-      
+      <input id="isRecommended" type="checkbox" data-on-color="success">
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>
@@ -295,7 +306,21 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
   <script>
     $.fn.editable.defaults.mode='inline';
-    
+     $("#isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {
+            $.ajax({
+                
+                type:"POST",
+                url:"ManageHotelServlet",
+                data:{"pk":$(this).attr("name"),"name":"isRecommended","value":state},
+                dataType:"json",
+                
+                success:function(response){
+                },
+                error: function(xhr,ajaxOptions,thrownError){
+                    alert(xhr.status+"\n"+thrownError);
+                }
+            })
+        })
     </script>
  
 </body>

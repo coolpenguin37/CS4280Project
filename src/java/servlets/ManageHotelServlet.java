@@ -18,6 +18,8 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import hotel.*;
+import java.util.Set;
+import org.json.simple.*;
 /**
  *
  * @author yanlind
@@ -52,6 +54,121 @@ public class ManageHotelServlet extends HttpServlet {
                 response.setContentType("application/json");
                 String finalString="{\"hotelInfo\":"+hotelInfo+",\"roomInfo\":"+roomInfo+",\"discountList\":"+discountList+"}";
                 out.print(finalString);
+            }
+            else if(request.getParameter("pk")!=null){
+                int hotelID, roomType;
+                if (request.getParameter("pk").indexOf("_")!=-1){
+                    hotelID=Integer.parseInt(request.getParameter("pk").split("_")[0]);
+                    roomType=Integer.parseInt(request.getParameter("pk").split("_")[1]);
+                    JSONObject obj=new JSONObject();
+                    
+                    if (request.getParameter("name")==null){
+                        obj.put("status", "error");
+                        obj.put("msg", "name must be supplied!");
+                        out.print(obj);
+                    }
+                    else {
+                        
+                        String command=request.getParameter("name");
+                        String result=request.getParameter("value");
+                        HotelRoom r;
+                        if (roomType==0){
+                            //TODO: how to insert a new room?
+                            r=new HotelRoom(hotelID,roomType,"");
+                        }
+                        else {
+                           r=HotelRoom.getHotelRoom(hotelID,roomType);
+                        }
+                        
+                        if (command.indexOf("Name")!=-1){
+                            r.setRoomName(result);   
+                        }
+                        else if(command.indexOf("Size")!=-1){
+                            r.setRoomSize(Integer.parseInt(result));   
+                        }
+                        
+                        else if(command.indexOf("Rate")!=-1){
+                            r.setStandardRate(Integer.parseInt(result));
+                            
+                        }
+                        else if(command.indexOf("numOfRoom")!=-1){
+                           
+                            r.setNumOfRoom(Integer.parseInt(result));
+                            //check if valid
+                        }
+//                        else if(command.indexOf("discount")!=-1){
+//                            MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(hotelID);
+//                            //update discount
+//                        }
+                        if (roomType==0){
+                           if (!r.insertToDatabase()){
+                              
+                              obj.put("status", "error");
+                              obj.put("msg", "Cannot update hotel room!");
+                           }
+                           else{
+                              obj.put("status", "correct");
+                              obj.put("msg", "Nice");
+                              
+                           }
+                        }
+                        else{
+                            if (!HotelRoom.updateRoom(r)){
+                               obj.put("status", "error");
+                               obj.put("msg", "Cannot update hotel room!");
+                               
+                            }
+                            else{
+                               obj.put("status", "correct");
+                               obj.put("msg", "Nice");
+                            }
+                        }  
+                        out.print(obj);
+                    }
+                }
+                else {
+                    hotelID=Integer.parseInt(request.getParameter("pk"));
+                
+                    if (request.getParameter("name")==null){
+                        JSONObject obj=new JSONObject();
+                        obj.put("status", "error");
+                        obj.put("msg", "name must be supplied!");
+                        out.print(obj);
+                    }
+                    else {
+                        String command=request.getParameter("name");
+                        Hotel h=Hotel.getHotelByID(hotelID);
+                        if (command.indexOf("Name")!=-1){
+                            h.setHotelName(request.getParameter("value"));
+                        }
+                        else if (command.indexOf("address")!=-1){
+                            h.setAddress(request.getParameter("value"));
+                        }
+    //                    else if(command.indexOf("infomration")!=-1){
+    //                        h.setInformation(request.getParameter("value"));
+    //                    }
+                        else if (command.indexOf("isRecommended")!=-1){
+                            if (request.getParameter("value").equals("true")){
+                                h.setIsRecommended(1);
+                            }
+                            else{
+                                h.setIsRecommended(0);
+                            }
+                        }
+                        if (!Hotel.updateHotel(h)){
+                            JSONObject obj=new JSONObject();
+                            obj.put("status", "error");
+                            obj.put("msg", "Cannot update hotel!");
+                            out.print(obj);
+                        }
+                        else{
+                        JSONObject obj=new JSONObject();
+                        obj.put("status", "correct");
+                        obj.put("msg", "Nice");
+                        out.print(obj);
+                        }
+                    }
+                }
             }
             else{
                 session.setAttribute("managers",Manager.getManagerByUserID((Integer)session.getAttribute("userID")));
