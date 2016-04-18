@@ -78,22 +78,25 @@ public class Hotel implements MySQLInit{
         this.intro = intro;
     }
 
-    public Hotel(String hotelName, String address, int isRecommended, int starRating, String label) {
+    public Hotel(String hotelName, String address, int isRecommended, int starRating, String label, String intro) {
         this.hotelName = hotelName;
         this.address = address;
         this.isRecommended = isRecommended;
         this.starRating = starRating;
         this.label = label;
+        this.intro = intro;
     }
 
     public Hotel(int hotelID, String hotelName, String address, int isRecommended, 
-        int starRating, String label) {
+        int starRating, String label, String intro) {
         this.hotelID = hotelID;
         this.hotelName = hotelName;
         this.address = address;
         this.isRecommended = isRecommended;
         this.starRating = starRating;
         this.label = label;
+        this.intro = intro;
+
     }
 
     public static Hotel getHotelByID(int hotelID) {
@@ -107,7 +110,7 @@ public class Hotel implements MySQLInit{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"), 
-                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"));
+                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"), rs.getString("Intro"));
             }
 
             if (rs != null) {
@@ -136,7 +139,7 @@ public class Hotel implements MySQLInit{
             ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelInfo]");
             while (rs.next()) {
                 Hotel temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"), 
-                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"));
+                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"), rs.getString("Intro"));
                 hotelList.add(temp);
             }
             if (rs != null) {
@@ -171,7 +174,7 @@ public class Hotel implements MySQLInit{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Hotel temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"),
-                    rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"));
+                    rs.getInt("IsRecommended"),rs.getInt("StarRating"), rs.getString("Label"), rs.getString("Intro"));
                 hotelList.add(temp);
             }
 
@@ -237,13 +240,14 @@ public class Hotel implements MySQLInit{
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelInfo] "
-                + "([HotelName], [Address], [IsRecommended], [StarRating], [Label]) "
-                + "VALUES (?, ?, ?, ?, ?)");
+                + "([HotelName], [Address], [IsRecommended], [StarRating], [Label], [Intro]) "
+                + "VALUES (?, ?, ?, ?, ?, ?)");
             stmt.setString(1, hotelName);
             stmt.setString(2, address);
             stmt.setInt(3, isRecommended);
             stmt.setInt(4, starRating);
             stmt.setString(5, label);
+            stmt.setString(6, intro);
 
             stmt.executeUpdate();
             if (stmt != null) {
