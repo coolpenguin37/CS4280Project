@@ -151,6 +151,21 @@ public class Order implements MySQLInit, OrderStatus {
     }
 
     public Order(int status, int userID, Date CIDate, Date CODate,
+            int hotelID, int roomType, int numOfRoom) {
+        this.status = status;
+        this.userID = userID;
+        this.CIDate = CIDate;
+        this.CODate = CODate;
+        this.hotelID = hotelID;
+        this.roomType = roomType;
+        this.numOfRoom = numOfRoom;
+        this.name = "";
+        this.email = "";
+        this.phone = "";
+        this.price = 0;
+    }
+    
+    public Order(int status, int userID, Date CIDate, Date CODate,
             int hotelID, int roomType, int numOfRoom, String name, String email, String phone, int price) {
         this.status = status;
         this.userID = userID;
