@@ -33,7 +33,40 @@ public class Order implements MySQLInit, OrderStatus {
     private String email;
     private String phone;
     private int price;
+    private String roomName="";
+    private String statusDescription="";
+    
+    public String getStatusDescription(){
+        switch (status){
+            case (OrderStatus.ABORTED):statusDescription="Order cancelled";break;
+            case (OrderStatus.COMPLETED):statusDescription="Checked-out and completed";break;
+            case (OrderStatus.HOLDING):statusDescription="Order currently modifying";break;
+            case (OrderStatus.ONGOING):statusDescription="Order unpaid";break;
+            case (OrderStatus.PROCESSING):statusDescription="Order paid";break;
+            case (OrderStatus.STAYING):statusDescription="Checked-in already";break;
+            default:statusDescription="";
+        }
+        return statusDescription;
+    }
+    
+    public void setStatusDescription(String statusDescription){
+        this.statusDescription=statusDescription;
+    }
 
+    public String getRoomName(){
+        HotelRoom hr=HotelRoom.getHotelRoom(hotelID, roomType);
+        if (hr!=null){
+            roomName=hr.getRoomName();
+        }
+        else {
+            roomName="";
+        }
+        return roomName;
+    }
+    
+    public void setRoomName(String roomName){
+        this.roomName=roomName;
+    }
     public int getOrderID() {
         return orderID;
     }
@@ -205,10 +238,13 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(1, orderID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                temp = new Order(rs.getInt("OrderID"), rs.getInt("UserID"), rs.getInt("Status"), 
+                temp = new Order(rs.getInt("OrderID"),  rs.getInt("Status"), rs.getInt("UserID"),
                     rs.getDate("CIDate"), rs.getDate("CODate"), rs.getInt("HotelID"), 
                     rs.getInt("RoomType"), rs.getInt("NumOfRoom"), rs.getString("Name"), 
                     rs.getString("Email"), rs.getString("Phone"), rs.getInt("Price"));
+                //set roomName field
+                temp.getRoomName();
+                temp.getStatusDescription();
             }
 
             if (rs != null) {
