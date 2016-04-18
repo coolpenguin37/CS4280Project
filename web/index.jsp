@@ -12,17 +12,25 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
+    <link rel =" stylesheet" href =" css/all.css">
+    <link rel =" stylesheet" href ="css/nav.css">
+    <div id = "title_bar_home">
+         <% String e="";%>
+        <% if (session.getAttribute("name") != null) { %>
+            <p id = "login_promot" >Hello <%=session.getAttribute("name")%></p>
+        <% } %>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Hypnos</title>
+        <h1 id = "title" >Hypnos</h1>
+        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+        <jsp:include page="nav.jsp"></jsp:include>
+    </div>
 </head>
 <body>
-    <% String e="";%>
-    <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
-    <% if (session.getAttribute("name") != null) { %>
-        <h2>Hello <%=session.getAttribute("name")%></h2>
-    <% } %>
+    <div class =" container">
+   
     
-    <jsp:include page="nav.jsp"></jsp:include>
+    
     
         <% if (request.getMethod()=="POST") {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
@@ -91,27 +99,28 @@
                             <img src="" alt="">
                             <form method="POST" action="showHotelRoom.jsp">
                                 <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
+                            </form>
                         </div>
                     <% } %>
             <% } %>
         <% } %>
     <%  }  %>
-
-
-    <form method="POST" action="" >
-        <label for="location">Where are you going?</label>
-        <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
-        <label>When do you plan to travel</label> <br>
-        <label>From:</label><input type="date" name="ciDate"> <br>
-        <label>To:</label><input type="date" name="coDate"> <br>
-        <label for="numRooms">How many rooms do you want to book?</label>
-        <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
-        <p><input type="submit" value="Search"></p>
-    </form>
-        <% if (e!=null && !e.isEmpty()){ %>
-            <span><%=e%></span>
-        <% } %>
-        
+    <div class ="content">
+       <form method="POST" action="">
+            <label for="location">Where are you going?</label>
+            <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
+            <label>When do you plan to travel</label> <br>
+            <label>From:</label><input type="date" name="ciDate"> <br>
+            <label>To:</label><input type="date" name="coDate"> <br>
+            <label for="numRooms">How many rooms do you want to book?</label>
+            <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
+            <p class = "submit" ><input type="submit" value="Search"></p>
+        </form>
+            <% if (e!=null && !e.isEmpty()){ %>
+                <span><%=e%></span>
+            <% } %>
+    </div>
+    </div>
     </body>
 </html>
 

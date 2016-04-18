@@ -1,0 +1,19 @@
+.menu a {
+  color: #281f1d;
+  font-weight: bond;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border-bottom: 1px solid #90d7ec;
+  border-top: 1px solid #90d7ec;
+  line-height: 40px;
+  padding: 0 70px;
+  filter: none;
+}
+
+.menu a:hover{
+  color: #009ad6;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}

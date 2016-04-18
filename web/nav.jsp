@@ -13,7 +13,7 @@
         <title></title>
     </head>
     <body>
-        <nav>
+        <nav class = "menu">
         <% if (session.getAttribute("name") == null) { %>
             <ul>
                 <li><a href="index.jsp">Home</a></li>
