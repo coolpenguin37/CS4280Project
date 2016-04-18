@@ -15,16 +15,52 @@ import user.UserType;
  * @author Lin Jianxiong
  */
 public class MemberBenefits implements MySQLInit {
-    int rID;
-    int hotelID;
-    int commonUser;
-    int preferredUser;
-    int goldUser;
-    int plantiumUser;
-    int welcomeGift;
-    int lateCheckout;
-    int breakfast;
-    int freeWiFi;
+    int rID = -1;
+    int hotelID = -1;
+    int commonUser = -1;
+    int preferredUser = -1;
+    int goldUser = -1;
+    int plantiumUser = -1;
+    int welcomeGift = -1;
+    int lateCheckout = -1;
+    int breakfast = -1;
+    int freeWiFi = -1;
+
+    public int getHotelID() {
+        return getHotelID;
+    }
+
+    public int getCommonUser() {
+        return commonUser;
+    }
+
+    public int getPreferredUser() {
+        return preferredUser;
+    }
+
+    public int getGoldUser() {
+        return goldUser;
+    }
+
+    public int getPlantiumUser() {
+        return plantiumUser;
+    }
+
+    public int getWelcomeGift() {
+        return welcomeGift;
+    }
+
+    public int getLateCheckout() {
+        return lateCheckout;
+    }
+    
+    public int getBreakfast() {
+        return breakfast;
+    }
+
+    public int getFreeWiFi() {
+        return freeWiFi;
+    }
 
     public MemberBenefits(int hotelID, int commonUser, int preferredUser, int goldUser,
         int plantiumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
@@ -83,7 +119,7 @@ public class MemberBenefits implements MySQLInit {
             return false;
         }   
         return true;
-    } 
+    }
 
     public static MemberBenefits getMemberBenefitsByHotelID(int hotelID) {
         MemberBenefits temp=null;
@@ -116,6 +152,119 @@ public class MemberBenefits implements MySQLInit {
         }
 
         return temp;
+    }
+
+    public static boolean updateMemberBenefits(MemberBenefits mb)
+    {
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+            if (mb.getCommonUser() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [CommonUser] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getCommonUser());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getPreferredUser() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [PreferredUser] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getPreferredUser());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getGoldUser() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [GoldUser] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getGoldUser());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getPlantiumUser() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [PlantiumUser] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getPlantiumUser());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getWelcomeGift() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [WelcomeGift] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getWelcomeGift());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getLateCheckout() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [LateCheckout] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getLateCheckout());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getBreakfast() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [Breakfast] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getBreakfast());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (mb.getFreeWiFi() != -1)
+            {
+                String strQuery = "UPDATE [MemberBenefits] SET [FreeWiFi] = ? WHERE [HotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, mb.getFreeWiFi());
+                stmt.setInt(2, mb.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public int getDiscountByUserType(int userType) {
