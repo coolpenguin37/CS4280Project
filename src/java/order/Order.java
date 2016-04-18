@@ -41,8 +41,8 @@ public class Order implements MySQLInit, OrderStatus {
             case (OrderStatus.ABORTED):statusDescription="Order cancelled";break;
             case (OrderStatus.COMPLETED):statusDescription="Checked-out and completed";break;
             case (OrderStatus.HOLDING):statusDescription="Order currently modifying";break;
-            case (OrderStatus.ONGOING):statusDescription="Order unpaid";break;
-            case (OrderStatus.PROCESSING):statusDescription="Order paid";break;
+            case (OrderStatus.ONGOING):statusDescription="Order paid";break;
+            case (OrderStatus.PROCESSING):statusDescription="Order unpaid";break;
             case (OrderStatus.STAYING):statusDescription="Checked-in already";break;
             default:statusDescription="";
         }

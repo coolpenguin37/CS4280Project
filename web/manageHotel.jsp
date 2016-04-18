@@ -28,10 +28,14 @@
             type:"POST",
             url:"ManageHotelServlet",
             data:{"checkInOrder":orderID},
-            dataType:"json",
+            dataType:"text",
             
             success:function(data){
-                $(".col-md-12").append("<p>Success!</p>")
+                $(".col-md-12").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> This alert box could indicate a successful or positive action.</div>")
+            },
+            
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
             }
         })
     }
@@ -40,9 +44,10 @@
         $('.fa').remove()
     }
     function checkOrder(o){
+        $('.col-md-12').remove()
         $("#search_by_order_id_div").append("<i class='fa fa-spinner fa-pulse fa-fw margin-bottom'></i>")
-
-            $.ajax({
+        
+            setTimeout(function(){$.ajax({
             type:"POST",
             url:"ManageHotelServlet",
             data:{"orderIDToManage":o.value},
@@ -70,7 +75,7 @@
                 orderInformation.append(idNumber).append(status).append(CIDate)
                         .append(CODate).append(roomName).append(numOfRoom).append(name)
                         .append(email).append(phone).append(price);
-                if (data.statusDescription.toString().indexOf("Order unpaid")>-1){
+                if (data.statusDescription.toString().indexOf("Order paid")>-1){
                     orderInformation.append("<button type='button' class='btn btn-default' onclick='checkInOrder("+data.orderID+")'>Check In</button>")
                 }
                 
@@ -87,7 +92,7 @@
             error: function(xhr,ajaxOptions,thrownError){
                 alert(xhr.status+"\n"+thrownError);
             }
-        })
+        })},1000)
     }
     function retrieveData(o,i){
         $.ajax({
