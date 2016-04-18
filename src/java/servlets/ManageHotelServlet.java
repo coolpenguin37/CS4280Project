@@ -43,19 +43,41 @@ public class ManageHotelServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             HttpSession session=request.getSession();
-            if (request.getParameter("orderIDToManage")!=null){
-                int orderID=Integer.parseInt(request.getParameter("orderIDToManage"));
+            if (request.getParameter("checkInOrder")!=null){
+                int orderID=Integer.parseInt(request.getParameter("checkInOrder"));
+                Order.updateStatus(orderID,OrderStatus.STAYING);
+                return;
+            }
+            else if (request.getParameter("orderIDToManage")!=null){
+                int orderID=Integer.parseInt(request.getParameter("orderIDToManage"));                
                 JSONObject obj=new JSONObject();
                 Order o=Order.getOrderByOrderID(orderID);
                 if (o==null){
                     obj.put("status", "error");
                     obj.put("msg", "Order with this ID cannot be found!");
                     out.print(obj);
+                    return;
+                }
+                int userID=(Integer)session.getAttribute("userID");
+                
+                boolean isManager=false;
+                for (Manager m:Manager.getManagerByUserID(userID)){
+                    if (m.getHotelID()==o.getHotelID()){
+                        isManager=true;
+                    }
+                }                
+                
+                if (!isManager){
+                    obj.put("status", "error");
+                    obj.put("msg", "This order is not under the hotel you manage!");
+                    out.print(obj); 
+                    return;
                 }
                 else {
-                    obj.put("status", "error");
-                    obj.put("msg", "Order with this ID cannot be found!");
-                    out.print(obj);
+                    Gson g=new Gson();
+                    String orderInfo=g.toJson(o);
+                    out.print(orderInfo);
+                    return;
                 }
             }
             else if (request.getParameter("indexAtArrayListManager")!=null){
@@ -154,6 +176,7 @@ public class ManageHotelServlet extends HttpServlet {
                     else {
                         String command=request.getParameter("name");
                         Hotel h=Hotel.getHotelByID(hotelID);
+                        JSONObject obj=new JSONObject();
                         if (command.indexOf("Name")!=-1){
                             h.setHotelName(request.getParameter("value"));
                         }
@@ -172,13 +195,11 @@ public class ManageHotelServlet extends HttpServlet {
                             }
                         }
                         if (!Hotel.updateHotel(h)){
-                            JSONObject obj=new JSONObject();
                             obj.put("status", "error");
                             obj.put("msg", "Cannot update hotel!");
                             out.print(obj);
                         }
                         else{
-                        JSONObject obj=new JSONObject();
                         obj.put("status", "correct");
                         obj.put("msg", "Nice");
                         out.print(obj);
