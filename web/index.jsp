@@ -105,8 +105,9 @@
             <% } %>
         <% } %>
     <%  }  %>
-    <div class ="content">
-       <form method="POST" action="">
+    <div class =" content"
+       <form method="POST" action="" class = "form_content">
+           <p class = "subtitle">SEARCH THE HOTEL<p>
             <label for="location">Where are you going?</label>
             <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
             <label>When do you plan to travel</label> <br>

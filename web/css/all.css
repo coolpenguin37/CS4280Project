@@ -7,21 +7,55 @@
 }
 
 body{
-        color: #281f1d;
         background-color: #afdfe4;
 }
 
+label {
+    font-size: 20px;
+    display: inline;
+    display: inline-block;
+    text-align: left;
+}
+
+input[type="submit"], input[type="button"]  {
+        font-family: Georgia;
+        color: #FFFFFF;
+        font-weight: bold;  
+        border-radius: 5px;
+        padding: 3px 13px;
+        margin: 0px 10px;
+        background: -moz-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #85d8da), color-stop(50%, #59bfc1), color-stop(51%, #4bb4b6), color-stop(100%, #68cbcd));
+        background: -webkit-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -o-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -ms-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: linear-gradient(to bottom, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
+        border: 1px solid #4bb4b6;
+        filter: none;
+        
+}
 .content{
         background-color:#90d7ec;
         width: 100%;  
-        position:fixed;
-        margin:auto;
-        left:0;
-        right:0;
-        top:410px;
-        background: rgba()
+        position:relative;
+        color: #145b7d;
+
 }
 
+.subtitle{
+        font-family: Georgia;
+        font-size: 25px;
+        font-style: Italic;
+        text-align: center;
+}
+.form_content{
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #90d7ec;
+    width: 60%;
+    
+}
 #login_promot{
     font-size: 15px;
     font-family: Georgia;  
@@ -48,16 +82,10 @@ nav{
     left: 850px;
     font-size: 20px;
     font-family: Georgia;
-    color: #90d7ec;
+    color: #145b7d;
 }
 
-form{
-    text-align: center;
-    border-radius: 5px;
-    border: 2px solid #90d7ec;
-    width: 60%;
-    display: inline;
-}
+
 fieldset {
 	margin: 2%;
 	text-align: center;
@@ -72,8 +100,3 @@ legend {
         color: #007c7e;
 }
 
-label {
-	display: inline-block;
-	width: 300px;
-	text-align: left;
-}
