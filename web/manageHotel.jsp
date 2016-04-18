@@ -21,31 +21,71 @@
   <script src="bootstrap_switch/dist/js/bootstrap-switch.js"></script>
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
    <script>
+    function checkInOrder(orderID){
+        $.ajax({
+            type:"POST",
+            url:"ManageHotelServlet",
+            data:{"checkInOrder":orderID},
+            dataType:"json",
+            
+            success:function(data){
+                $(".col-md-12").append("<p>Success!</p>")
+            }
+        })
+    }
     function clearErr(){
         $('.alert').remove()
+        $('.fa').remove()
     }
     function checkOrder(o){
-        
-        $.ajax({
+        $("#search_by_order_id_div").append("<i class='fa fa-spinner fa-pulse fa-fw margin-bottom'></i>")
+
+            $.ajax({
             type:"POST",
             url:"ManageHotelServlet",
             data:{"orderIDToManage":o.value},
             dataType:"json",
             
             success: function(data){
-                
                 if (data.status=="error"){
                     clearErr()
                     $("#manage-orders").append("<div><span class='alert alert-danger'><strong>Error!</strong> " + data.msg + "</span></div>")
+                    return
                 }
+                $('.fa').remove()
+                $('.col-md-12').remove()
+                var orderInformation=$("<div class='col-md-12'>")
+                var idNumber=$("<h4> Order ID: "+data.orderID+"</h4>")
+                var status=$("<p> Status: "+data.statusDescription+"</p>")
+                var CIDate=$("<p> Check-in Date: "+data.CIDate+"</p>")
+                var CODate=$("<p> Check-out Date: "+data.CODate+"</p>")
+                var roomName=$("<p> Room Name: "+data.roomName+"</p>")
+                var numOfRoom=$("<p> Number of rooms booked: "+data.numOfRoom+"</p>")
+                var name=$("<p> Client Name: "+data.name+"</p>")
+                var email=$("<p> Client Email: "+data.email+"</p>")
+                var phone=$("<p> Client Phone: "+data.phone+"</p>")
+                var price=$("<p> Price of the offer: "+data.price+"</p>")
+                orderInformation.append(idNumber).append(status).append(CIDate)
+                        .append(CODate).append(roomName).append(numOfRoom).append(name)
+                        .append(email).append(phone).append(price);
+                if (data.statusDescription.toString().indexOf("Order unpaid")>-1){
+                    orderInformation.append("<button type='button' class='btn btn-default' onclick='checkInOrder("+data.orderID+")'>Check In</button>")
+                }
+                
+                $("#manage-orders").append(orderInformation);
             },
             
             beforeSend:function(){
                 if (!($.isNumeric(o.value)) || Math.floor(o.value) != o.value){
                     clearErr()
                     $("#manage-orders").append("<div><span class='alert alert-warning'><strong>Warning!</strong> Order ID must be a number!</span></div>")
+                    return false;
                 }
+            },
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
             }
         })
     }
@@ -61,6 +101,7 @@
 //                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
                     if (key=="isRecommended") {
+                        $("#isRecommended").bootstrapSwitch("disabled",false)
                         $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
                     }
                     else {
@@ -81,7 +122,7 @@
                     });
                 })
                 $("#isRecommended").attr("name",data.hotelInfo.hotelID)
-                $("#isRecommended").bootstrapSwitch("disabled",false)
+                
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomID=value.roomType
@@ -169,7 +210,6 @@
                             })
                         },
                         error: function(response){
-                            alert("123")
                         }
                     });
                     
@@ -288,7 +328,6 @@
 <body>
 
 <div class="container">
-
   <h2>Hotel and Room Management System (HRMS)</h2>
   
   <div class="dropdown">
@@ -323,9 +362,11 @@
     </div>
     <div id="manage-orders" class="tab-pane fade">
       <h3>Manage Orders</h3>
-      <div class="col-xs-4">
-          <h4><label for="input_orderID">Search by order ID</label></h4>
-          <input type="text" class="form-control" id="input_orderID" placeholder="Type in Order ID..." onblur="checkOrder(this)">
+      <h4><label for="input_orderID">Search by order ID</label></h4>
+      <div id="search_by_order_id_div">
+      <div class="col-xs-4" >
+          <input type="text" class="form-control" id="input_orderID" placeholder="Type in Order ID..." onclick='clearErr()' onblur="checkOrder(this)">
+      </div>
       </div>
     </div>
     <div id="report" class="tab-pane fade">
@@ -349,7 +390,6 @@
                 success:function(response){
                 },
                 error: function(xhr,ajaxOptions,thrownError){
-                    alert(xhr.status+"\n"+thrownError);
                 }
             })
         })
