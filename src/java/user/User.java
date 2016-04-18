@@ -312,7 +312,7 @@ public class User implements MySQLInit, UserType {
 
             if (!u.getName().equals(""))
             {
-                String strQuery = "UPDATE [User] SET [Name] = ? WHERE [userID] = ?";
+                String strQuery = "UPDATE [User] SET [Name] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getName());
                 stmt.setInt(2, u.getUserID());
@@ -324,7 +324,7 @@ public class User implements MySQLInit, UserType {
 
             if (!u.getEmail().equals(""))
             {
-                String strQuery = "UPDATE [User] SET [Email] = ? WHERE [userID] = ?";
+                String strQuery = "UPDATE [User] SET [Email] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getEmail());
                 stmt.setInt(2, u.getUserID());
@@ -336,7 +336,7 @@ public class User implements MySQLInit, UserType {
 
             if (!u.getTel().equals(""))
             {
-                String strQuery = "UPDATE [User] SET [Tel] = ? WHERE [userID] = ?";
+                String strQuery = "UPDATE [User] SET [Tel] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getTel());
                 stmt.setInt(2, u.getUserID());
@@ -348,7 +348,7 @@ public class User implements MySQLInit, UserType {
 
             if (u.getIsSubscribed()==0 || u.getIsSubscribed()==1)
             {
-                String strQuery = "UPDATE [User] SET [IsSubscribed] = ? WHERE [userID] = ?";
+                String strQuery = "UPDATE [User] SET [IsSubscribed] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setInt(1, u.getIsSubscribed());
                 stmt.setInt(2, u.getUserID());
