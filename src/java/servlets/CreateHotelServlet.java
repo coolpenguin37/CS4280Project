@@ -54,6 +54,7 @@ public class CreateHotelServlet extends HttpServlet {
             }
             int starRating = Integer.parseInt(request.getParameter("starRating"));
             String label = request.getParameter("label");
+            String intro = request.getParameter("intro");
 
             if (hotelName == null || hotelName.isEmpty()) {
                 String result = "Invalid hotel name.";
@@ -79,7 +80,7 @@ public class CreateHotelServlet extends HttpServlet {
                 return;                
             }
             
-            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label));
+            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label), intro);
             if (h.insertToDatabase()) {
                 out.println("<p>Yes!<p/>");
             } else {
