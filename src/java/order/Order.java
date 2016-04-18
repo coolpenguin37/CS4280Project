@@ -29,6 +29,10 @@ public class Order implements MySQLInit, OrderStatus {
     private int hotelID;
     private int roomType;
     private int numOfRoom;
+    private String name;
+    private String email;
+    private String phone;
+    private int price;
 
     public int getOrderID() {
         return orderID;
@@ -94,8 +98,43 @@ public class Order implements MySQLInit, OrderStatus {
         this.numOfRoom = numOfRoom;
     }
     
-    public Order(){
+    public int getPrice() {
+        return price;
     }
+    
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+    
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    
+    public Order(){
+        
+    }
+    
     public Order(int hotelID, int roomType, Date CIDate, Date CODate) {
         this.hotelID = hotelID;
         this.roomType = roomType;
@@ -112,7 +151,7 @@ public class Order implements MySQLInit, OrderStatus {
     }
 
     public Order(int status, int userID, Date CIDate, Date CODate,
-            int hotelID, int roomType, int numOfRoom) {
+            int hotelID, int roomType, int numOfRoom, String name, String email, String phone, int price) {
         this.status = status;
         this.userID = userID;
         this.CIDate = CIDate;
@@ -120,10 +159,14 @@ public class Order implements MySQLInit, OrderStatus {
         this.hotelID = hotelID;
         this.roomType = roomType;
         this.numOfRoom = numOfRoom;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.price = price;
     }
     
     public Order(int orderID, int status, int userID, Date CIDate, Date CODate, 
-        int hotelID, int roomType, int numOfRoom) {
+        int hotelID, int roomType, int numOfRoom, String name, String email, String phone, int price) {
         this.orderID = orderID;
         this.status = status;
         this.userID = userID;
@@ -132,6 +175,10 @@ public class Order implements MySQLInit, OrderStatus {
         this.hotelID = hotelID;
         this.roomType = roomType;
         this.numOfRoom = numOfRoom;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.price = price;
     }
 
     public static Order getOrderByOrderID(int orderID) {
@@ -143,9 +190,10 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(1, orderID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                temp = new Order(rs.getInt("OrderID"), rs.getInt("UserID"), 
-                    rs.getInt("Status"), rs.getDate("CIDate"), rs.getDate("CODate"), 
-                    rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getInt("NumOfRoom"));
+                temp = new Order(rs.getInt("OrderID"), rs.getInt("UserID"), rs.getInt("Status"), 
+                    rs.getDate("CIDate"), rs.getDate("CODate"), rs.getInt("HotelID"), 
+                    rs.getInt("RoomType"), rs.getInt("NumOfRoom"), rs.getString("Name"), 
+                    rs.getString("Email"), rs.getString("Phone"), rs.getInt("Price"));
             }
 
             if (rs != null) {
@@ -193,8 +241,8 @@ public class Order implements MySQLInit, OrderStatus {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Orders] "
-                + "([Status], [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom]) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                + "([Status], [UserID], [CIDate], [CODate], [HotelID], [RoomType], [NumOfRoom], [Name], [Email], [Phone], [Price]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, status);
             stmt.setInt(2, userID);
             stmt.setDate(3, CIDate);
@@ -202,6 +250,10 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(5, hotelID);
             stmt.setInt(6, roomType);
             stmt.setInt(7, numOfRoom);
+            stmt.setString(8, name);
+            stmt.setString(9, email);
+            stmt.setString(10, phone);
+            stmt.setInt(11, price);
 
             stmt.executeUpdate();
 
@@ -293,9 +345,10 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Order temp = new Order(rs.getInt("OrderID"), rs.getInt("status"),
-                    rs.getInt("UserID"), rs.getDate("CIDate"), rs.getDate("CODate"), 
-                    rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getInt("NumOfRoom"));
+                Order temp = new Order(rs.getInt("OrderID"), rs.getInt("status"), rs.getInt("UserID"), 
+                    rs.getDate("CIDate"), rs.getDate("CODate"), rs.getInt("HotelID"), 
+                    rs.getInt("RoomType"), rs.getInt("NumOfRoom"), rs.getString("Name"),
+                    rs.getString("Email"), rs.getString("Phone"), rs.getInt("Price"));
                 orderList.add(temp);
             }
 
