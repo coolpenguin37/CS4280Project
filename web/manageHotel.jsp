@@ -22,6 +22,33 @@
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
    <script>
+    function clearErr(){
+        $('.alert').remove()
+    }
+    function checkOrder(o){
+        
+        $.ajax({
+            type:"POST",
+            url:"ManageHotelServlet",
+            data:{"orderIDToManage":o.value},
+            dataType:"json",
+            
+            success: function(data){
+                
+                if (data.status=="error"){
+                    clearErr()
+                    $("#manage-orders").append("<div><span class='alert alert-danger'><strong>Error!</strong> " + data.msg + "</span></div>")
+                }
+            },
+            
+            beforeSend:function(){
+                if (!($.isNumeric(o.value)) || Math.floor(o.value) != o.value){
+                    clearErr()
+                    $("#manage-orders").append("<div><span class='alert alert-warning'><strong>Warning!</strong> Order ID must be a number!</span></div>")
+                }
+            }
+        })
+    }
     function retrieveData(o,i){
         $.ajax({
             type:"POST",
@@ -30,7 +57,7 @@
             dataType:"json",
             
             success: function(data){
-                $("#isRecommended").attr("name",data.hotelInfo.hotelID)
+                
 //                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
                     if (key=="isRecommended") {
@@ -53,6 +80,8 @@
                         
                     });
                 })
+                $("#isRecommended").attr("name",data.hotelInfo.hotelID)
+                $("#isRecommended").bootstrapSwitch("disabled",false)
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomID=value.roomType
@@ -167,7 +196,7 @@
 //            };
 //        };)
     function init(){
-        $("#isRecommended").bootstrapSwitch();
+        $("#isRecommended").bootstrapSwitch("disabled",true)
     }
     window.onload=init;
     
@@ -285,7 +314,7 @@
       <h4><a href="#" id="address"></a></h4>
       <div><a href="#" id="information" data-type="text-area"></a></div>
       <img>
-      <input id="isRecommended" type="checkbox" data-on-color="success">
+      <h3><span class="label label-default">Recommend:</span> <input id="isRecommended" type="checkbox" data-on-color="success"></h3>
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>
@@ -294,7 +323,10 @@
     </div>
     <div id="manage-orders" class="tab-pane fade">
       <h3>Manage Orders</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+      <div class="col-xs-4">
+          <h4><label for="input_orderID">Search by order ID</label></h4>
+          <input type="text" class="form-control" id="input_orderID" placeholder="Type in Order ID..." onblur="checkOrder(this)">
+      </div>
     </div>
     <div id="report" class="tab-pane fade">
       <h3>Report</h3>
