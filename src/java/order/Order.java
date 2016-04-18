@@ -582,17 +582,69 @@ public class Order implements MySQLInit, OrderStatus {
         return available;
     }
 
-    public boolean updateOrder(Order o) {
-        Order t = Order.getOrderByOrderID(o.getOrderID());
-        Order.updateStatus(o.getOrderID(), ABORTED);
-        if (Order.checkAvailability(o)) {
-            o.insertToDatabase();
-            return true;
+    public boolean mergeOrder(Order a, Order b) {
+        int newHotelID = a.getHotelID();
+        int newRoomType = a.getRoomType();
+        Date newCIDate;
+        Date newCODate;
+        int newNumOfRoom;
+        
+        if (a.getCIDate().compareTo(b.getCIDate()) < 0) {
+            newCIDate = a.getCIDate();
         } else {
-            t.insertToDatabase();
+            newCIDate = b.getCIDate();
+        }
+
+        if (a.getCODate().compareTo(b.getCODate()) > 0) {
+            newCODate = a.getCODate();
+        } else {
+            newCODate = b.getCODate();
+        }
+
+        if (a.getNumOfRoom() > b.getNumOfRoom()) {
+            newNumOfRoom = a.getNumOfRoom();
+        } else {
+            newNumOfRoom = b.getNumOfRoom();
+        }
+
+        Order o = new Order(newHotelID, newRoomType, newNumOfRoom, newCIDate, newCODate);
+        if (!checkAvailability(o)) {
             return false;
+        } else {
+            return true;
         }
     }
+
+    public Order tryUpdateOrder(Order a, Order b) {
+        
+        if (a.getRoomType() != b.getRoomType()) {
+            if (Order.checkAvailability(b)) {
+                return b;
+            } else {
+                return null;
+            }
+        }
+        
+        if (mergeOrder(a, b)) {
+            return b;
+        } else {
+            return null;
+        }
+
+
+    }
+
+    // public boolean updateOrder(Order o) {
+    //     Order t = Order.getOrderByOrderID(o.getOrderID());
+    //     Order.updateStatus(o.getOrderID(), ABORTED);
+    //     if (Order.checkAvailability(o)) {
+    //         o.insertToDatabase();
+    //         return true;
+    //     } else {
+    //         t.insertToDatabase();
+    //         return false;
+    //     }
+    // }
 
     public static ArrayList<Order> getOrderlist(String hotelName, String name){
         return new ArrayList<Order> ();
