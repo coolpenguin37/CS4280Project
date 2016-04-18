@@ -27,7 +27,7 @@ public class MemberBenefits implements MySQLInit {
     int freeWiFi = -1;
 
     public int getHotelID() {
-        return getHotelID;
+        return hotelID;
     }
 
     public int getCommonUser() {
@@ -164,7 +164,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [CommonUser] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getCommonUser());
+                stmt.setInt(1, mb.getCommonUser());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -176,7 +176,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [PreferredUser] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getPreferredUser());
+                stmt.setInt(1, mb.getPreferredUser());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -188,7 +188,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [GoldUser] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getGoldUser());
+                stmt.setInt(1, mb.getGoldUser());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -200,7 +200,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [PlantiumUser] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getPlantiumUser());
+                stmt.setInt(1, mb.getPlantiumUser());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -212,7 +212,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [WelcomeGift] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getWelcomeGift());
+                stmt.setInt(1, mb.getWelcomeGift());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -224,7 +224,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [LateCheckout] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getLateCheckout());
+                stmt.setInt(1, mb.getLateCheckout());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -236,7 +236,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [Breakfast] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getBreakfast());
+                stmt.setInt(1, mb.getBreakfast());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
@@ -248,7 +248,7 @@ public class MemberBenefits implements MySQLInit {
             {
                 String strQuery = "UPDATE [MemberBenefits] SET [FreeWiFi] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setString(1, mb.getFreeWiFi());
+                stmt.setInt(1, mb.getFreeWiFi());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {
