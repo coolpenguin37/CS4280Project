@@ -1,0 +1,79 @@
+#title_bar_home {
+    background-image: url('../image/background.jpg');
+    background-position: 50% 50%;
+    width: 100%;
+    height: 400px;
+    background-size: cover;    
+}
+
+body{
+        color: #281f1d;
+        background-color: #afdfe4;
+}
+
+.content{
+        background-color:#90d7ec;
+        width: 100%;  
+        position:fixed;
+        margin:auto;
+        left:0;
+        right:0;
+        top:410px;
+        background: rgba()
+}
+
+#login_promot{
+    font-size: 15px;
+    font-family: Georgia;  
+}
+#title{
+    font-family: Georgia;
+    position: absolute;
+    top: 100px;
+    left: 250px;
+    font-size: 50px;
+}
+#intro{
+    font-family: Georgia;
+    position: absolute;
+    top: 200px;
+    left: 150px;
+    width: 800px;
+    font-size: 20px;
+    font-style: italic;
+}
+nav{
+    position: absolute;
+    top: 100px;
+    left: 850px;
+    font-size: 20px;
+    font-family: Georgia;
+    color: #90d7ec;
+}
+
+form{
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #90d7ec;
+    width: 60%;
+    display: inline;
+}
+fieldset {
+	margin: 2%;
+	text-align: center;
+        border-radius: 5px;
+        border: 2px solid #007c7e;
+        width: 60%;
+        display: inline;
+}
+
+legend {
+        font-weight: bold;
+        color: #007c7e;
+}
+
+label {
+	display: inline-block;
+	width: 300px;
+	text-align: left;
+}
