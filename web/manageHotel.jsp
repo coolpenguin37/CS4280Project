@@ -151,7 +151,7 @@
                     $.each(data.discountList,function(key,value){
                         if (key.toString().toUpperCase().search("USER")!=-1) {
                             priceTable+="<td>"+key.toString().substr(0,1).toUpperCase()+key.toString().substr(1,key.toString().length-5)+" User"+"</td>"
-                            priceTable+="<td><a href='#' class='discount' name='discount_"+key.toString()+"' data-pk="+hotelID+"_"+roomID+"_"+">"+value+"</a>%"+"</td>"
+                            priceTable+="<td><a href='#' class='discount' data-name='discount_"+key.toString()+"' name='discount_"+key.toString()+"' data-pk="+hotelID+"_"+roomID+"_"+">"+value+"</a>%"+"</td>"
                             priceTable+="<td class='price'>"+rate*value/100+"</td></tr>"
                         }
                     })
@@ -171,6 +171,9 @@
                             }
                             else if (value<=0 || value>100){
                                 return "The value must greater than 0 and less or equal to 100!"
+                            }
+                            else if (Math.floor(value)!=value){
+                                return "The value must be an integer!"
                             }
                         },
                         success: function(response,newValue){
