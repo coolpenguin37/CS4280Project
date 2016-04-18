@@ -48,6 +48,11 @@ public class ManageHotelServlet extends HttpServlet {
                 Order.updateStatus(orderID,OrderStatus.STAYING);
                 return;
             }
+            else if (request.getParameter("checkOutOrder")!=null){
+                int orderID=Integer.parseInt(request.getParameter("checkOutOrder"));
+                Order.updateStatus(orderID,OrderStatus.COMPLETED);
+                return;
+            }
             else if (request.getParameter("orderIDToManage")!=null){
                 int orderID=Integer.parseInt(request.getParameter("orderIDToManage"));                
                 JSONObject obj=new JSONObject();
@@ -134,10 +139,26 @@ public class ManageHotelServlet extends HttpServlet {
                             r.setNumOfRoom(Integer.parseInt(result));
                             //check if valid
                         }
-//                        else if(command.indexOf("discount")!=-1){
-//                            MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(hotelID);
-//                            //update discount
-//                        }
+                        else if(command.indexOf("discount")!=-1){
+                            MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);  
+                            MemberBenefits newMB;
+                            if (command.indexOf("commonUser")!=-1){
+                                newMB=new MemberBenefits(mb.getHotelID(),Integer.parseInt(result),-1,-1,-1,-1,-1,-1,-1);
+                            }
+                            else if (command.indexOf("preferredUser")!=-1){
+                                newMB=new MemberBenefits(mb.getHotelID(),-1,Integer.parseInt(result),-1,-1,-1,-1,-1,-1);
+                            }
+                            else if (command.indexOf("goldUser")!=-1){
+                                newMB=new MemberBenefits(mb.getHotelID(),-1,-1,Integer.parseInt(result),-1,-1,-1,-1,-1);
+                            }
+                            else {
+                                newMB=new MemberBenefits(mb.getHotelID(),-1,-1,-1,Integer.parseInt(result),-1,-1,-1,-1);
+                            }
+                            if (!MemberBenefits.updateMemberBenefits(newMB)){
+                                obj.put("status", "error");
+                                obj.put("msg", "Cannot update member benefit!");
+                            }
+                        }
                         if (roomType==0){
                            if (!r.insertToDatabase()){
                               

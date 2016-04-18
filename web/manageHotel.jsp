@@ -23,11 +23,13 @@
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
    <script>
-    function checkInOrder(orderID){
+    function modifyOrderStatus(command,orderID){
+        var values={}
+        values[command]=orderID
         $.ajax({
             type:"POST",
             url:"ManageHotelServlet",
-            data:{"checkInOrder":orderID},
+            data:values,
             dataType:"text",
             
             success:function(data){
@@ -76,7 +78,10 @@
                         .append(CODate).append(roomName).append(numOfRoom).append(name)
                         .append(email).append(phone).append(price);
                 if (data.statusDescription.toString().indexOf("Order paid")>-1){
-                    orderInformation.append("<button type='button' class='btn btn-default' onclick='checkInOrder("+data.orderID+")'>Check In</button>")
+                    orderInformation.append("<button type='button' class='btn btn-default' onclick='modifyOrderStatus(\"checkInOrder\","+data.orderID+")'>Check In</button>")
+                }
+                else if (data.statusDescription.toString().indexOf("Checked-in")>-1){
+                    orderInformation.append("<button type='button' class='btn btn-default' onclick='modifyOrderStatus(\"checkOutOrder\","+data.orderID+")'>Check Out</button>")
                 }
                 
                 $("#manage-orders").append(orderInformation);
@@ -114,7 +119,6 @@
                     }
 
                     $('#'+key).editable({
-                        type: 'text',
                         pk: data.hotelInfo.hotelID,
                         url: 'ManageHotelServlet',
                         success: function(response,newValue){
@@ -170,8 +174,12 @@
                             }
                         },
                         success: function(response,newValue){
-                            $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))
-                            
+                            var name=$(this).attr("name")
+                            var atags=$('a[name="'+name+'"]')
+                            $.each(atags,function(){
+                              $(this).editable('setValue',newValue)
+                              $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))  
+                          })
                         }
                         
                     });
@@ -264,24 +272,6 @@
             }
         })
         $("#room-information").append(newDiv)
-        $('.discount').editable({
-                        type: 'text',
-                        validate: function(value) {
-                            if($.trim(value) == '') {
-                                return 'This field is required';
-                            }
-                            if(!$.isNumeric(value)){
-                                return 'Please input a number!'
-                            }
-                            else if (value<=0 || value>100){
-                                return "The value must greater than 0 and less or equal to 100!"
-                            }
-                        },
-                        success: function(response,newValue){
-                            $(this).parent().next().html(Math.round($(this).closest('.roomInfo').find('.rate').text()*newValue/100))
-                            
-                        }
-                    });
                     $('.roomName').editable({
                         type: 'text',
                         validate: function(value) {
@@ -354,16 +344,15 @@
   <div class="tab-content">
     <div id="hotel-information" class="tab-pane fade in active">
       <h2>Hotel Information</h2>
-      <h3><a href="#" id="hotelName"></a></h3>
-      <h4><a href="#" id="address"></a></h4>
-      <div><a href="#" id="information" data-type="text-area"></a></div>
+      <h3><a href="#" id="hotelName" data-type="text"></a></h3>
+      <h4><a href="#" id="address" data-type="text"></a></h4>
+      <div><a href="#" id="intro" class='editable editable-pre-wrapped editable-click' data-type="textarea"></a></div>
       <img>
       <h3><span class="label label-default">Recommend:</span> <input id="isRecommended" type="checkbox" data-on-color="success"></h3>
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>
       <button type="button" class="btn btn-default" onclick="addNewRoom()">Add <span class="glyphicon glyphicon-plus"></span></button>
-      <button type="button" class="btn btn-default">Remove All</button>
     </div>
     <div id="manage-orders" class="tab-pane fade">
       <h3>Manage Orders</h3>
