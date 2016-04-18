@@ -20,6 +20,7 @@ public class Hotel implements MySQLInit{
     private int isRecommended=-1;
     private int starRating=-1;
     private String label;
+    private String intro;
 
     public int getHotelID() {
         return hotelID;
@@ -67,6 +68,14 @@ public class Hotel implements MySQLInit{
     
     public void setLabel(String label) {
         this.label = label;
+    }
+    
+    public String getIntro() {
+        return intro;
+    }
+    
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public Hotel(String hotelName, String address, int isRecommended, int starRating, String label) {
