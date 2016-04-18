@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import hotel.*;
 import java.util.Set;
 import org.json.simple.*;
+import order.*;
 /**
  *
  * @author yanlind
@@ -42,7 +43,22 @@ public class ManageHotelServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             HttpSession session=request.getSession();
-            if (request.getParameter("indexAtArrayListManager")!=null){
+            if (request.getParameter("orderIDToManage")!=null){
+                int orderID=Integer.parseInt(request.getParameter("orderIDToManage"));
+                JSONObject obj=new JSONObject();
+                Order o=Order.getOrderByOrderID(orderID);
+                if (o==null){
+                    obj.put("status", "error");
+                    obj.put("msg", "Order with this ID cannot be found!");
+                    out.print(obj);
+                }
+                else {
+                    obj.put("status", "error");
+                    obj.put("msg", "Order with this ID cannot be found!");
+                    out.print(obj);
+                }
+            }
+            else if (request.getParameter("indexAtArrayListManager")!=null){
                 int indexAtArrayListManager=Integer.parseInt(request.getParameter("indexAtArrayListManager"));
                 Manager m=Manager.getManagerByUserID((Integer)session.getAttribute("userID")).get(indexAtArrayListManager);
                 Hotel h=Hotel.getHotelByID(m.getHotelID());
