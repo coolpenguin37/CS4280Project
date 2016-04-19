@@ -8,18 +8,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
+     <link rel =" stylesheet" href =" css/all.css">
+    <link rel =" stylesheet" href ="css/nav.css">
+    <div id = "title_bar_home">
+         
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Show Hotel Room</title>
+        <h1 id = "title" >Hypnos</h1>
+        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+        <jsp:include page="nav.jsp"></jsp:include>
+    </div>
 </head>
 <body>
-
-    <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
+    
+    <fieldset>
+        <legend>Hotel Room</legend>
+   
     <% if (session.getAttribute("name") != null) { %>
-        <h2>Hello <%=session.getAttribute("name")%> </h2>
-    <% } %>
-    
-    <jsp:include page="nav.jsp"></jsp:include>
-    
+        <p class = "info">Hello <%=session.getAttribute("name")%> </p>
+    <% } %>       
     <% 
         if (request.getParameter("currentHotel")!=null) {
             Hotel currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
@@ -166,5 +173,6 @@
                 <% }  
             }
         }%>
+    </fieldset>
 </body>
 </html>
