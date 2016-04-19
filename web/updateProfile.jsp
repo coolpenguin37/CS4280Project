@@ -1,7 +1,7 @@
 <%-- 
     Document   : updateProfile
     Created on : Mar 26, 2016, 6:05:18 AM
-    Author     : yanlind
+    Author     : yanlind, siruzhang2
 --%>
 
 <%@page import="java.util.ArrayList,hotel.*,user.*"%>
@@ -10,8 +10,16 @@
 
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</title>
+        <link rel =" stylesheet" href =" css/all.css">
+        <link rel =" stylesheet" href ="css/nav.css">
+        <div id = "title_bar_home">
+             
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>Update Profile</title>
+            <h1 id = "title" >Hypnos</h1>
+            <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+            <jsp:include page="nav.jsp"></jsp:include>
+    </div>
 </head>
 <body>
         <% 
@@ -22,7 +30,7 @@
             String userTel;
             int isSubscribed;
 	if(session.getAttribute("username")==null) { %>
-		<h1>You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
+		<h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
 	<% } 
             else { 
             if (request.getParameter("name")!=null ||
@@ -73,8 +81,9 @@
                 isSubscribed=(Integer)session.getAttribute("isSubscribed");
             } %>
                 
-        <h1>Hypnos-Your One Stop Solution for High Quality Rest During Your Trip</h1>
-        <h2>Hello <%=name%>. Update your profile here:</h2>
+        <fieldset>
+            <legend>Update Profile</legend>
+            <p class = "info">Hello <%=name%>. Update your profile here:</p>
         <jsp:include page="nav.jsp"></jsp:include>
         <form method="POST" action="">
 	<table>
@@ -110,7 +119,8 @@
             </tr> 
             <tr>
                 <td>
-                    <input type="submit" name="Update"> </td>
+                    <input type="submit" name="Update">
+                </td>
                 <td>
                     <button name="resetPassword">Reset Password</button>
                 </td>
@@ -124,6 +134,7 @@
                     <span><%=errorMessage%></span>
                 <% } %>
             </form>
+        </fieldset>
 	<% } %>
     </body>
 </html>
