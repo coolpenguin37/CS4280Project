@@ -168,12 +168,12 @@ public class Order implements MySQLInit, OrderStatus {
         
     }
     
-    public Order(int hotelID, int roomType, Date CIDate, Date CODate) {
-        this.hotelID = hotelID;
-        this.roomType = roomType;
-        this.CIDate = CIDate;
-        this.CODate = CODate;
-    }
+    // public Order(int hotelID, int roomType, Date CIDate, Date CODate) {
+    //     this.hotelID = hotelID;
+    //     this.roomType = roomType;
+    //     this.CIDate = CIDate;
+    //     this.CODate = CODate;
+    // }
 
     public Order(int hotelID, int roomType, int numOfRoom, Date CIDate, Date CODate) {
         this.hotelID = hotelID;
@@ -181,6 +181,10 @@ public class Order implements MySQLInit, OrderStatus {
         this.numOfRoom = numOfRoom;
         this.CIDate = CIDate;
         this.CODate = CODate;
+        this.name = "";
+        this.email = "";
+        this.phone = "";
+        this.price = 0;
     }
 
     public Order(int status, int userID, Date CIDate, Date CODate,
@@ -273,7 +277,7 @@ public class Order implements MySQLInit, OrderStatus {
             if (e.getStandardRate() >= lowestRate) {
                 continue;
             }
-            Order o = new Order(hotelID, e.getRoomType(), CIDate, CODate);
+            Order o = new Order(hotelID, e.getRoomType(), 1, CIDate, CODate);
             int remained = Order.getRemainedRoom(o);
             if (remained > 0) {
                 lowestRate = e.getStandardRate();
@@ -456,7 +460,7 @@ public class Order implements MySQLInit, OrderStatus {
             stmt.setInt(1, status);
             stmt.setInt(2, orderID);
             cnt = stmt.executeUpdate();
-            if (status == COMPLETED || status == ABORTED) {
+            if (status == COMPLETED || status == ABORTED || status == HOLDING) {
                 Chris.deleteByOrderID(orderID);
             }
             if (stmt != null) {
@@ -582,7 +586,7 @@ public class Order implements MySQLInit, OrderStatus {
         return available;
     }
 
-    public boolean mergeOrder(Order a, Order b) {
+    public static Order mergeOrder(Order a, Order b) {
         int newHotelID = a.getHotelID();
         int newRoomType = a.getRoomType();
         Date newCIDate;
@@ -609,29 +613,55 @@ public class Order implements MySQLInit, OrderStatus {
 
         Order o = new Order(newHotelID, newRoomType, newNumOfRoom, newCIDate, newCODate);
         if (!checkAvailability(o)) {
-            return false;
+            return null;
         } else {
-            return true;
+            return o;
+        }
+    }
+    // b: new order
+    // (status == PROCESSING, userID, hotelID, roomType, numOfRoom, CIDate, CODate)
+    public static int tryUpdateOrder(Order a, Order b) {
+        if (a.getRoomType() != b.getRoomType()) {
+            if (Order.checkAvailability(b)) {
+                return b.insertToDatabase();
+            } else {
+                return 0;
+            }
+        }
+        Order o = Order.mergeOrder(a, b);
+        if (o != null) {
+            Order.updateStatus(a.getOrderID(), HOLDING);
+            return o.insertToDatabase();
+        } else {
+            return 0;
         }
     }
 
-    public Order tryUpdateOrder(Order a, Order b) {
-        
-        if (a.getRoomType() != b.getRoomType()) {
-            if (Order.checkAvailability(b)) {
-                return b;
-            } else {
-                return null;
+    public static boolean doUpdateOrder(Order a, Order b, int c, int d) {
+        if (d == 0) {
+            Order.updateStatus(a.getOrderID(), PROCESSING);
+            Order.updateStatus(c, ABORTED);
+            int aID = a.getOrderID();
+            DateTime dtCIDate = new DateTime(a.getCIDate());
+            DateTime dtCODate = new DateTime(a.getCODate());
+            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+            for (int i = 0; i < duration; ++i) {
+                DateTime currentDate = dtCIDate.plusDays(i);
+                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+                Chris ctmp = new Chris(aID, sqlDate, a.getHotelID(), a.getRoomType(), a.getNumOfRoom());
+                ctmp.insertToDatabase();
             }
-        }
-        
-        if (mergeOrder(a, b)) {
-            return b;
         } else {
-            return null;
+            b.insertToDatabase();
+            Order.updateStatus(a.getOrderID(), ABORTED);
+            Order.updateStatus(c, ABORTED);
         }
+        return true;
+    }
 
-
+    public static boolean doUpdateOrder(Order a, Order b) {
+        Order.updateStatus(a.getOrderID(), ABORTED);
+        return true;
     }
 
     // public boolean updateOrder(Order o) {
@@ -646,9 +676,9 @@ public class Order implements MySQLInit, OrderStatus {
     //     }
     // }
 
-    public static ArrayList<Order> getOrderlist(String hotelName, String name){
-        return new ArrayList<Order> ();
-    }
+    // public static ArrayList<Order> getOrderlist(String hotelName, String name){
+    //     return new ArrayList<Order> ();
+    // }
 
     // public static boolean CancelOrder(int OrderID) {
     //    try {
