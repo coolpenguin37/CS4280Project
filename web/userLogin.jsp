@@ -10,13 +10,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel =" stylesheet" href =" css/all.css">
+    <link rel =" stylesheet" href ="css/nav.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>User Login</title>
+    <div id = "title_bar_home">
+        <title>User Login</title>
+        <h1 id = "title" >Hypnos</h1>
+        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+        <jsp:include page="nav.jsp"></jsp:include>
+    </div>
 </head>
 <body>
-    <jsp:include page="nav.jsp"></jsp:include>
+    
     <div>
-        <div id="content">
+
             <form method="POST" action="LoginServlet">
                 <fieldset>  
                     <legend>Member login</legend>
@@ -29,7 +36,7 @@
                     <% } %>
                 </fieldset>
             </form>
-        </div>
+
     </div>
 </body>
 </html>

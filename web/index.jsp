@@ -105,22 +105,22 @@
             <% } %>
         <% } %>
     <%  }  %>
-    <div class =" content"
-       <form method="POST" action="" class = "form_content">
-           <p class = "subtitle">SEARCH THE HOTEL<p>
-            <label for="location">Where are you going?</label>
+    <fieldset>
+        <legend>Search The Hotel</legend>
+        <form method="POST" action="">
+           <label for="location">Where are you going?</label><br>
             <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
             <label>When do you plan to travel</label> <br>
             <label>From:</label><input type="date" name="ciDate"> <br>
             <label>To:</label><input type="date" name="coDate"> <br>
-            <label for="numRooms">How many rooms do you want to book?</label>
+            <label for="numRooms">How many rooms do you want to book?</label><br>
             <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
             <p class = "submit" ><input type="submit" value="Search"></p>
         </form>
             <% if (e!=null && !e.isEmpty()){ %>
                 <span><%=e%></span>
             <% } %>
-    </div>
+    </fieldset>
     </div>
     </body>
 </html>
