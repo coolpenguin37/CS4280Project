@@ -43,7 +43,52 @@ public class ManageHotelServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             HttpSession session=request.getSession();
-            if (request.getParameter("checkInOrder")!=null){
+            if (request.getParameter("welcomeGift")!=null){
+                int newValue=Integer.parseInt(request.getParameter("welcomeGift"));
+                MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(Integer.parseInt(request.getParameter("hotelID")));
+                mb.setWelcomeGift(newValue);
+                if (MemberBenefits.updateMemberBenefits(mb)){
+                    return;
+                }
+                else{
+                    out.print("Cannot update welcome gift!");
+                }
+            }
+            else if (request.getParameter("lateCheckout")!=null){
+                int newValue=Integer.parseInt(request.getParameter("lateCheckout"));
+                MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(Integer.parseInt(request.getParameter("hotelID")));
+                mb.setLateCheckout(newValue);
+                if (MemberBenefits.updateMemberBenefits(mb)){
+                    return;
+                }
+                else{
+                    out.print("Cannot update late checkout!");
+                }
+            }
+            else if (request.getParameter("breakfast")!=null){
+                int newValue=Integer.parseInt(request.getParameter("breakfast"));
+                MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(Integer.parseInt(request.getParameter("hotelID")));
+                mb.setBreakfast(newValue);
+                if (MemberBenefits.updateMemberBenefits(mb)){
+                    return;
+                }
+                else{
+                    out.print("Cannot update breakfast!");
+                }
+            }
+            else if (request.getParameter("freeWiFi")!=null){
+                int newValue=Integer.parseInt(request.getParameter("freeWiFi"));
+                MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(Integer.parseInt(request.getParameter("hotelID")));
+                mb.setFreeWiFi(newValue);
+                if (MemberBenefits.updateMemberBenefits(mb)){
+                    return;
+                }
+                else{
+                    out.print("Cannot update free wifi!");
+                }
+            }
+            
+            else if (request.getParameter("checkInOrder")!=null){
                 int orderID=Integer.parseInt(request.getParameter("checkInOrder"));
                 Order.updateStatus(orderID,OrderStatus.STAYING);
                 return;
