@@ -22,7 +22,44 @@
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <style>
+      .member-benefit-table a{
+          display:block;
+          width:100%;
+          height:100%;
+          color:#333;
+      }
+ </style>
    <script>
+    function updateMemberBenefit(command,value){
+        var values={}
+        values[command]=value
+        values["hotelID"]=$("#isRecommended").attr("name")
+        $.ajax({
+            type:"POST",
+            url:"ManageHotelServlet",
+            data:values,
+            dataType:"text",
+            
+            success:function(data){
+                if (data==null || data==""){
+                    $(".alert").remove()
+                    $("#hotel-information").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> The member benefit has been updated successfully. </div>")
+                    $("#"+command+" span").removeClass("fake-span");
+                    $("#"+command+" .fake-empty *").remove();
+                    $("#"+command+" .fake-empty").css("color","#333")
+                    $("#"+command+" .fake-empty").removeClass("fake-empty");
+                }
+                else {
+                    alert(data)
+                }
+            },
+            
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
+            }
+        })
+    }
     function modifyOrderStatus(command,orderID){
         var values={}
         values[command]=orderID
@@ -33,7 +70,7 @@
             dataType:"text",
             
             success:function(data){
-                $(".col-md-12").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> This alert box could indicate a successful or positive action.</div>")
+                $(".col-md-12").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> The order has been updated successfully. </div>")
             },
             
             error: function(xhr,ajaxOptions,thrownError){
@@ -131,7 +168,54 @@
                     });
                 })
                 $("#isRecommended").attr("name",data.hotelInfo.hotelID)
-                
+                $.each(data.discountList,function(key,value){
+                   if (key.toString().toUpperCase().search("USER")==-1){
+                       for (i=value;i<=4;i++){
+                           $("#"+key+" td:nth-child("+(i+1)+") a").html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>")
+                       }
+                   }
+                })
+                $(".member-benefit-table td").hover(function(){
+//                    alert($(this).html()=="")
+                    if ($(this).find("a").html()==""){
+                        $(this).find("a").html("<span class='glyphicon glyphicon-ok fake-span' aria-hidden='true'></span>")
+                        
+                    }
+                    $(this).find("a").css("color","blue")
+                    $.each($(this).nextAll("td"),function(){
+                        if ($(this).find("a").html()==""){
+                          $(this).find("a").html("<span class='glyphicon glyphicon-ok fake-span' aria-hidden='true'></span>")  
+                          
+                        }
+                        $(this).find("a").css("color","blue")
+                    })
+                    
+                    $.each($(this).prevAll("td"),function(){
+                        if ($(this).find("a").html()!=""){
+                          $(this).find("a").addClass("fake-empty")
+                          
+                        }
+                        $(this).find("a").css("color","transparent")
+                    })
+                    
+                    $(this).nextAll("td")
+                }, function(){
+                    $.each($(this).prevAll("td"),function(){
+                        if ($(this).find("a").html()!=""){
+                          $(this).find("a").removeClass("fake-empty")
+                          
+                        }
+                        $(this).find("a").css("color","#333")
+                    })
+                    $(this).find("a").css("color","#333")
+                    $.each($(this).nextAll("td"),function(){
+                        if ($(this).find("a").html()==""){
+                          
+                        }
+                        $(this).find("a").css("color","#333")
+                    })
+                    $('.fake-span').remove()
+                })
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomID=value.roomType
@@ -352,6 +436,49 @@
       <div><a href="#" id="intro" class='editable editable-pre-wrapped editable-click' data-type="textarea"></a></div>
       <img>
       <h3><span class="label label-default">Recommend:</span> <input id="isRecommended" type="checkbox" data-on-color="success"></h3>
+      <div>
+          <table class="table table-hover member-benefit-table">
+    <thead>
+      <tr>
+        <th>Member Benefits</th>
+        <th>Common User</th>
+        <th>Preferred User</th>
+        <th>Gold User</th>
+        <th>Platinum User</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="welcomeGift">
+        <th>Welcome Gift</th>
+        <td><a onclick='updateMemberBenefit("welcomeGift",1)'></a></td>
+        <td><a onclick='updateMemberBenefit("welcomeGift",2)'></a></td>
+        <td><a onclick='updateMemberBenefit("welcomeGift",3)'></a></td>
+        <td><a onclick='updateMemberBenefit("welcomeGift",4)'></a></td>
+      </tr>
+      <tr id="lateCheckout">
+        <th>Late Checkout</th>
+        <td><a onclick='updateMemberBenefit("lateCheckout",1)'></a></td>
+        <td><a onclick='updateMemberBenefit("lateCheckout",2)'></a></td>
+        <td><a onclick='updateMemberBenefit("lateCheckout",3)'></a></td>
+        <td><a onclick='updateMemberBenefit("lateCheckout",4)'></a></td>
+      </tr>
+      <tr id="breakfast">
+        <th>Free Breakfast</th>
+        <td><a onclick='updateMemberBenefit("breakfast",1)'></a></td>
+        <td><a onclick='updateMemberBenefit("breakfast",2)'></a></td>
+        <td><a onclick='updateMemberBenefit("breakfast",3)'></a></td>
+        <td><a onclick='updateMemberBenefit("breakfast",4)'></a></td>
+      </tr>
+      <tr id="freeWiFi">
+        <th>Free Wifi</th>
+        <td><a onclick='updateMemberBenefit("freeWiFi",1)'></a></td>
+        <td><a onclick='updateMemberBenefit("freeWiFi",2)'></a></td>
+        <td><a onclick='updateMemberBenefit("freeWiFi",3)'></a></td>
+        <td><a onclick='updateMemberBenefit("freeWiFi",4)'></a></td>
+      </tr>
+    </tbody>
+  </table>
+      </div>
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>

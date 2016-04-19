@@ -25,42 +25,80 @@ public class MemberBenefits implements MySQLInit {
     int lateCheckout = -1;
     int breakfast = -1;
     int freeWiFi = -1;
-
+    
     public int getHotelID() {
         return hotelID;
+    }
+    
+    public void setHotelID(int i){
+        this.hotelID=i;
     }
 
     public int getCommonUser() {
         return commonUser;
     }
+    
+    public void setCommonUser(int i){
+        this.commonUser=i;
+    }
 
     public int getPreferredUser() {
         return preferredUser;
+    }
+    
+    public void setPreferredUser(int i){
+        this.preferredUser=i;
     }
 
     public int getGoldUser() {
         return goldUser;
     }
+    
+    public void setGoldUser(int i){
+        this.goldUser=i;
+    }
 
     public int getPlantiumUser() {
         return plantiumUser;
+    }
+    
+    public void setPlantiumUser(int i){
+        this.plantiumUser=i;
     }
 
     public int getWelcomeGift() {
         return welcomeGift;
     }
+    
+    public void setWelcomeGift(int i){
+        this.welcomeGift=i;
+    }
+    
 
     public int getLateCheckout() {
         return lateCheckout;
+    }
+     
+    public void setLateCheckout(int i){
+        this.lateCheckout=i;
     }
     
     public int getBreakfast() {
         return breakfast;
     }
+    
+    public void setBreakfast(int i){
+        this.breakfast=i;
+    }
 
     public int getFreeWiFi() {
         return freeWiFi;
     }
+    public void setFreeWiFi(int i){
+        this.freeWiFi=i;
+    }
+    
+    
 
     public MemberBenefits(int hotelID, int commonUser, int preferredUser, int goldUser,
         int plantiumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
