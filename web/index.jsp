@@ -15,10 +15,7 @@
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
     <div id = "title_bar_home">
-         <% String e="";%>
-        <% if (session.getAttribute("name") != null) { %>
-            <p id = "login_promot" >Hello <%=session.getAttribute("name")%></p>
-        <% } %>
+         
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Hypnos</title>
         <h1 id = "title" >Hypnos</h1>
@@ -27,11 +24,13 @@
     </div>
 </head>
 <body>
-    <div class =" container">
-   
-    
-    
-    
+    <div>
+        <fieldset>
+        <legend>Search The Hotel</legend>
+        <% String e="";%>
+        <% if (session.getAttribute("name") != null) { %>
+            <p class = "info" >Hello <%=session.getAttribute("name")%></p>
+        <% } %>
         <% if (request.getMethod()=="POST") {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
             //check if parameters are null. Only hotel name can be null;
@@ -105,8 +104,7 @@
             <% } %>
         <% } %>
     <%  }  %>
-    <fieldset>
-        <legend>Search The Hotel</legend>
+    
         <form method="POST" action="">
            <label for="location">Where are you going?</label><br>
             <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
@@ -118,7 +116,7 @@
             <p class = "submit" ><input type="submit" value="Search"></p>
         </form>
             <% if (e!=null && !e.isEmpty()){ %>
-                <span><%=e%></span>
+                <span class = "error"><%=e%></span>
             <% } %>
     </fieldset>
     </div>
