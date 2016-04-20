@@ -17,7 +17,9 @@
         <form-login-config>
             <form-login-page>/login.do</form-login-page>
             <form-error-page>/error.do</form-error-page>
+            &gt;
         </form-login-config>
+        &gt;
     </login-config>
     <security-role>
         <role-name>chiefManager</role-name>
@@ -41,10 +43,6 @@
     <servlet>
         <servlet-name>CreateAccount</servlet-name>
         <servlet-class>servlets.CreateAccount</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateProfileServlet</servlet-name>
-        <servlet-class>servlets.UpdateProfileServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckOutRoom</servlet-name>
@@ -83,10 +81,6 @@
         <url-pattern>/error.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UpdateProfileServlet</servlet-name>
-        <url-pattern>/UpdateProfileServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CheckOutRoom</servlet-name>
         <url-pattern>/CheckOutRoom</url-pattern>
     </servlet-mapping>
@@ -110,4 +104,5 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    &gt;
     </web-app>
