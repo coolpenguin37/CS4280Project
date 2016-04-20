@@ -19,7 +19,10 @@ public class Manager implements MySQLInit {
     int rID;
     int userID;
     int hotelID;
-
+    
+    public String getName(){
+        return User.getUserByUserID(userID).getName();
+    }
     public int getRID() {
         return rID;
     }
@@ -105,9 +108,9 @@ public class Manager implements MySQLInit {
         return flag;
     }
 
-    public static Manager getManagerByUsername(String username) {
+    public static ArrayList<Manager> getManagerByUsername(String username) {
         User u = User.getUserByUsername(username);
-        Manager temp = null;
+        ArrayList<Manager> managerList = new ArrayList<Manager>();
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
@@ -115,8 +118,9 @@ public class Manager implements MySQLInit {
             stmt.setInt(1, u.getUserID());
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+            while (rs.next()) {
+                Manager temp = new Manager(rs.getInt("RID"), rs.getInt("UserID"), rs.getInt("HotelID"));
+                managerList.add(temp);
             }
 
             if (rs != null) {
@@ -133,7 +137,7 @@ public class Manager implements MySQLInit {
         } catch (Exception e) {
             return null;
         }
-        return temp;
+        return managerList;
     }
     
     public static ArrayList<Manager> getAllManagers(){
