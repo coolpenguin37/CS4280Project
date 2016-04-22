@@ -6,6 +6,7 @@
 
 <%@page import="java.lang.String, user.*,hotel.*,manager.*,java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,13 +168,20 @@
                     });
                 })
                 $("#isRecommended").attr("name",data.hotelInfo.hotelID)
+                
                 $.each(data.discountList,function(key,value){
                    if (key.toString().toUpperCase().search("USER")==-1){
+                       for (i=1;i<=4;i++){
+                           $("#"+key+" td:nth-child("+(i+1)+") a span").remove();
+                       }
                        for (i=value;i<=4;i++){
                            $("#"+key+" td:nth-child("+(i+1)+") a").html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>")
                        }
                    }
                 })
+                
+                $(".member-benefit-table button").attr("disabled",false);
+                
                 $(".member-benefit-table td").hover(function(){
 //                    alert($(this).html()=="")
                     if ($(this).find("a").html()==""){
@@ -339,9 +347,6 @@
     }
     window.onload=init;
     
-    function refreshCSS(){
-        var i,a,s;a=document.getElementsByTagName('link');for(i=0;i<a.length;i++){s=a[i];if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href) {var h=s.href.replace(/(&|%5C?)forceReload=\d+/,'');s.href=h+(h.indexOf('?')>=0?'&':'?')+'forceReload='+(new Date().valueOf())}}
-    };
     
     function addNewRoom(){
         var div=$('div[class="roomInfo"]:last')
@@ -453,6 +458,7 @@
         <td><a onclick='updateMemberBenefit("welcomeGift",2)'></a></td>
         <td><a onclick='updateMemberBenefit("welcomeGift",3)'></a></td>
         <td><a onclick='updateMemberBenefit("welcomeGift",4)'></a></td>
+        <td><button type="button" class="btn btn-danger" onclick='updateMemberBenefit("welcomeGift",5)' disabled>Remove this benefit</button></td>
       </tr>
       <tr id="lateCheckout">
         <th>Late Checkout</th>
@@ -460,6 +466,7 @@
         <td><a onclick='updateMemberBenefit("lateCheckout",2)'></a></td>
         <td><a onclick='updateMemberBenefit("lateCheckout",3)'></a></td>
         <td><a onclick='updateMemberBenefit("lateCheckout",4)'></a></td>
+        <td><button type="button" class="btn btn-danger" onclick='updateMemberBenefit("lateCheckout",5)' disabled>Remove this benefit</button></td>
       </tr>
       <tr id="breakfast">
         <th>Free Breakfast</th>
@@ -467,6 +474,7 @@
         <td><a onclick='updateMemberBenefit("breakfast",2)'></a></td>
         <td><a onclick='updateMemberBenefit("breakfast",3)'></a></td>
         <td><a onclick='updateMemberBenefit("breakfast",4)'></a></td>
+        <td><button type="button" class="btn btn-danger" onclick='updateMemberBenefit("breakfast",5)' disabled>Remove this benefit</button></td>
       </tr>
       <tr id="freeWiFi">
         <th>Free Wifi</th>
@@ -474,6 +482,7 @@
         <td><a onclick='updateMemberBenefit("freeWiFi",2)'></a></td>
         <td><a onclick='updateMemberBenefit("freeWiFi",3)'></a></td>
         <td><a onclick='updateMemberBenefit("freeWiFi",4)'></a></td>
+        <td><button type="button" class="btn btn-danger" onclick='updateMemberBenefit("freeWiFi",5)' disabled>Remove this benefit</button></td>
       </tr>
     </tbody>
   </table>

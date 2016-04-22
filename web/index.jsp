@@ -5,25 +5,44 @@
     Author     : siruzhang2,yduan7
 --%>
 
-<%@page import="java.util.ArrayList,hotel.*,user.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime,javax.servlet.ServletContext"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
 <html>
 <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
     <div id = "title_bar_home">
          
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Hypnos</title>
-        <h1 id = "title" >Hypnos</h1>
-        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
-        <jsp:include page="nav.jsp"></jsp:include>
+        
     </div>
+    <script>
+        function init(){
+            //check if there is a message
+            <% ServletContext sc = request.getSession().getServletContext();
+               if (session.getAttribute("username")==null) { %>return;<%}
+               else if (sc.getAttribute((String)session.getAttribute("username"))!=null){ 
+                   String msg=(String)sc.getAttribute((String)session.getAttribute("username"));
+                   sc.removeAttribute((String)session.getAttribute("username"));
+            %>
+                   alert("<%=msg%>");
+                   return;
+            <%
+                }
+            %>
+        }
+        window.onload=init;
+    </script>
 </head>
 <body>
+    <h1 id = "title" >Hypnos</h1>
+        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+        <jsp:include page="nav.jsp"></jsp:include>
     <div>
         <fieldset>
         <legend>Search The Hotel</legend>
@@ -90,10 +109,13 @@
                         <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
                             <h3> <%= h.getHotelName() %> </h3>
                             <h4> <%= h.getAddress()%> </h4>
+                            <p> <%=h.getIntro()%></p>
                             <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)%></h3>
                             <div> 
                                 <span> Ratings: </span>
-                                <span> <%= h.getStarRating() %> Star</span>
+                                <% for (int p=1;p<=h.getStarRating();p++){ %>
+                                    <span class='glyphicon glyphicon-star' style='color:red;'></span>
+                                <% } %>
                             </div>
                             <img src="" alt="">
                             <form method="POST" action="showHotelRoom.jsp">

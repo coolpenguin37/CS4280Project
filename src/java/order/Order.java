@@ -663,6 +663,11 @@ public class Order implements MySQLInit, OrderStatus {
         Order.updateStatus(a.getOrderID(), ABORTED);
         return true;
     }
+    
+    //placeholder
+    public boolean updateOrder(Order o){
+        return true;
+    }
 
     // public boolean updateOrder(Order o) {
     //     Order t = Order.getOrderByOrderID(o.getOrderID());

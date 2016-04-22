@@ -57,9 +57,10 @@
                     discount = mb.getDiscountByUserType(u.getUserType());
                 }
                 int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
-                Order o = new Order(hotelID, room.getRoomType(),CIDate, CODate);
-                int remained = Order.getRemainedRoom(o);
                 int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
+                Order o = new Order(hotelID, room.getRoomType(),numRooms,CIDate, CODate);
+                int remained = Order.getRemainedRoom(o);
+                
     %>
             
             <div>

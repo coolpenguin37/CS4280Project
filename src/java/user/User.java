@@ -357,6 +357,18 @@ public class User implements MySQLInit, UserType {
                     stmt.close();
                 }
             }
+            
+            if (u.getUserType()!=-1)
+            {
+                String strQuery = "UPDATE [User] SET [UserType] = ? WHERE [UserID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, u.getUserType());
+                stmt.setInt(2, u.getUserID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
 
             if (conn != null) {
                 conn.close();
