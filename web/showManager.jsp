@@ -14,7 +14,7 @@
     </head>
     <body>
         <jsp:include page="manageManager.jsp"></jsp:include>
-        <h4>Manager Name: ${managerList[0].name}</h4>
+        <h4>Manager Name: ${(null== managerList[0])?managerAdded.name:managerList[0].name}</h4>
         <form action="ManageManagerServlet" method="GET">
             <table>
                 <thead>
@@ -30,7 +30,7 @@
                             <td><c:out value="${thisHotel.hotelName}" /></td>
                             <td>
                                 <c:forEach items="${managerList}" var="thisManager">
-                                    <c:if test="${thisManager.hotel.hotelName==thisHotel.hotelName}">
+                                    <c:if test="${(null==thisManager) || (thisManager.hotel.hotelName==thisHotel.hotelName)}">
                                         <c:set var="shouldCheck" value="checked"/>
                                     </c:if>
                                 </c:forEach>
@@ -41,7 +41,8 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <input type="submit" name="Update!" value="updateManager">
-        </form>  
+            <input type="submit" name="update" value="Update Manager">
+        </form>
+        <span>${param['msg']}</span>
     </body>
 </html>

@@ -12,15 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 import manager.*;
 import java.util.ArrayList;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import hotel.*;
-import java.util.Set;
 import org.json.simple.*;
 import order.*;
+import user.*;
 /**
  *
  * @author yanlind
@@ -96,6 +95,39 @@ public class ManageHotelServlet extends HttpServlet {
             else if (request.getParameter("checkOutOrder")!=null){
                 int orderID=Integer.parseInt(request.getParameter("checkOutOrder"));
                 Order.updateStatus(orderID,OrderStatus.COMPLETED);
+                //upgrade user
+                ArrayList<Order> allOrdersOfThisUser=Order.getAllOrdersByUserID(Order.getOrderByOrderID(orderID).getUserID());
+                int completedOrder=0;
+                String msg="";
+                User u=User.getUserByUserID(Order.getOrderByOrderID(orderID).getUserID());
+                for (Order thisOrder:allOrdersOfThisUser){
+                    if (thisOrder.getStatus()==OrderStatus.COMPLETED){completedOrder++;}
+                }
+                if (completedOrder>=2 && completedOrder<5){
+                    
+                    if (u.getUserType()==2){return;} 
+                    u.setUserType(2);
+                    if (User.updateProfile(u)){
+                        msg="Congratulations! Now you have become a preferred user.";
+                    }
+                }
+                else if(completedOrder>=5 && completedOrder<10){
+                    
+                    if (u.getUserType()==3){return;} 
+                    u.setUserType(3);
+                    if (User.updateProfile(u)){
+                        msg="Congratulations! Now you have become a gold user. Enjoy!";
+                    }
+                }
+                else if(completedOrder>=10){
+                    if (u.getUserType()==4){return;} 
+                    u.setUserType(4);
+                    if (User.updateProfile(u)){
+                        msg="Congratulations! Now you have become our most prestigious plantium user. Enjoy!";
+                    }
+                }
+                ServletContext application = getServletConfig().getServletContext();
+                if (!msg.isEmpty()){application.setAttribute(u.getUsername(), msg);}
                 return;
             }
             else if (request.getParameter("orderIDToManage")!=null){

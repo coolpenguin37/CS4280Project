@@ -6,6 +6,9 @@
             <web-resource-name>Chief Manager Management System</web-resource-name>
             <url-pattern>/manageManager.jsp</url-pattern>
             <url-pattern>/ManageManagerServlet</url-pattern>
+            <url-pattern>/addManager.jsp</url-pattern>
+            <url-pattern>/noSuchUser.jap</url-pattern>
+            <url-pattern>/showManager.jsp</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>chiefManager</role-name>
@@ -17,9 +20,7 @@
         <form-login-config>
             <form-login-page>/login.do</form-login-page>
             <form-error-page>/error.do</form-error-page>
-            &gt;
         </form-login-config>
-        &gt;
     </login-config>
     <security-role>
         <role-name>chiefManager</role-name>
@@ -104,5 +105,4 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    &gt;
     </web-app>
