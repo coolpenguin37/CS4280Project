@@ -225,8 +225,8 @@ public class ManageHotelServlet extends HttpServlet {
                             java.sql.Date sqlCIDate = new java.sql.Date(CIDate.getTime());
                             java.sql.Date sqlCODate = new java.sql.Date(CODate.getTime());
                             Order o = new Order(r.getHotelID(), r.getRoomType(), 1, sqlCIDate, sqlCODate);
-                            int minReq = Order.getRemainedRoom(o);
-                            if (minReq >= newNumOfRoom) {
+                            int minReq = r.getNumOfRoom() - Order.getRemainedRoom(o);
+                            if (minReq <= newNumOfRoom) {
                                 r.setNumOfRoom(newNumOfRoom);
                             } else {
                                 obj.put("status", "error");
