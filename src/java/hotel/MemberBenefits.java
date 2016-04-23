@@ -20,7 +20,7 @@ public class MemberBenefits implements MySQLInit {
     int commonUser = -1;
     int preferredUser = -1;
     int goldUser = -1;
-    int plantiumUser = -1;
+    int platinumUser = -1;
     int welcomeGift = -1;
     int lateCheckout = -1;
     int breakfast = -1;
@@ -58,12 +58,12 @@ public class MemberBenefits implements MySQLInit {
         this.goldUser=i;
     }
 
-    public int getPlantiumUser() {
-        return plantiumUser;
+    public int getPlatinumUser() {
+        return platinumUser;
     }
     
-    public void setPlantiumUser(int i){
-        this.plantiumUser=i;
+    public void setPlatinumUser(int i){
+        this.platinumUser=i;
     }
 
     public int getWelcomeGift() {
@@ -101,12 +101,12 @@ public class MemberBenefits implements MySQLInit {
     
 
     public MemberBenefits(int hotelID, int commonUser, int preferredUser, int goldUser,
-        int plantiumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
+        int platinumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
         this.hotelID = hotelID;
         this.commonUser = commonUser;
         this.preferredUser = preferredUser;
         this.goldUser = goldUser;
-        this.plantiumUser = plantiumUser;
+        this.platinumUser = platinumUser;
         this.welcomeGift = welcomeGift;
         this.lateCheckout = lateCheckout;
         this.breakfast = breakfast;
@@ -114,13 +114,13 @@ public class MemberBenefits implements MySQLInit {
     }
 
     public MemberBenefits(int rID, int hotelID, int commonUser, int preferredUser, int goldUser,
-        int plantiumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
+        int platinumUser, int welcomeGift, int lateCheckout, int breakfast, int freeWiFi) {
         this.rID = rID;
         this.hotelID = hotelID;
         this.commonUser = commonUser;
         this.preferredUser = preferredUser;
         this.goldUser = goldUser;
-        this.plantiumUser = plantiumUser;
+        this.platinumUser = platinumUser;
         this.welcomeGift = welcomeGift;
         this.lateCheckout = lateCheckout;
         this.breakfast = breakfast;
@@ -132,14 +132,14 @@ public class MemberBenefits implements MySQLInit {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [MemberBenefits] "
-                + "([HotelID], [CommonUser], [PreferredUser], [GoldUser], [PlantiumUser], "
+                + "([HotelID], [CommonUser], [PreferredUser], [GoldUser], [PlatinumUser], "
                 + "[WelcomeGift], [LateCheckout], [Breakfast], [FreeWiFi]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, hotelID);
             stmt.setInt(2, commonUser);
             stmt.setInt(3, preferredUser);
             stmt.setInt(4, goldUser);
-            stmt.setInt(5, plantiumUser);
+            stmt.setInt(5, platinumUser);
             stmt.setInt(6, welcomeGift);
             stmt.setInt(7, lateCheckout);
             stmt.setInt(8, breakfast);
@@ -234,11 +234,11 @@ public class MemberBenefits implements MySQLInit {
                 }
             }
 
-            if (mb.getPlantiumUser() != -1)
+            if (mb.getPlatinumUser() != -1)
             {
-                String strQuery = "UPDATE [MemberBenefits] SET [PlantiumUser] = ? WHERE [HotelID] = ?";
+                String strQuery = "UPDATE [MemberBenefits] SET [PlatinumUser] = ? WHERE [HotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setInt(1, mb.getPlantiumUser());
+                stmt.setInt(1, mb.getPlatinumUser());
                 stmt.setInt(2, mb.getHotelID());
                 stmt.executeUpdate();
                 if (stmt != null) {

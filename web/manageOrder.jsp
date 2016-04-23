@@ -284,26 +284,40 @@
                             <p> Number of rooms: <%= o.getNumOfRoom() %> </p>
                             <p> Check-in date: <%= o.getCIDate() %> </p>
                             <p> Check-out date: <%= o.getCODate() %> </p>
-                            <% if (o.getStatus()==1){ %>
-                                    <form method="POST" action="">
-                                        <button type="submit" name="pay" value="<%=o.getOrderID()%>">Pay now</button>
-                                    </form>
-                            <% }
-                                if (o.getStatus()==1 || o.getStatus()==5) { %>
-                                    <form method="POST" action="">
-                                        <button type="submit" name="modify" value="<%=o.getOrderID()%>">Modify order</button>
-                                    </form>
-                            <%  }
-                                if (o.getStatus()==1 || o.getStatus()==2 || o.getStatus()==5) { %>
-                                    <form method="POST" action="">
-                                        <button type="submit" name="cancel" value="<%=o.getOrderID()%>">Cancel</button>
-                                    </form>
-                            </div>
-                            <%  }
+        <%                  
+                            if (o.getStatus()==1){ 
+        %>
+                                <form method="POST" action="">
+                                    <button type="submit" name="pay" value="<%=o.getOrderID()%>">Pay now</button>
+                                </form>
+        <%                  }
+                            if (o.getStatus()==1 || o.getStatus()==5) { 
+        %>
+                                <form method="POST" action="">
+                                    <button type="submit" name="modify" value="<%=o.getOrderID()%>">Modify order</button>
+                                </form>
+        <%                  }
+                            if (o.getStatus()==1 || o.getStatus()==2 || o.getStatus()==5) { 
+        %>
+                                <form method="POST" action="">
+                                    <button type="submit" name="cancel" value="<%=o.getOrderID()%>">Cancel</button>
+                                </form>
                             
+        <%
+                            }
+                            if (o.getStatus() == 4) {
+        %>
+                                <form method="POST" action="">
+                                    <button type="submit" name="comment" value="<%=o.getOrderID()%>">Comment</button>
+                                </form>
+        <%
+                            }
+        %>
+                            </div>
+        <%
                         }
                     }
             }
-                %>
+        %>
     </body>
 </html>
