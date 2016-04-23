@@ -66,9 +66,11 @@
                 e="Number of rooms to be booked is not specified!";
             }
             else{
+                Date CIDate,CODate;
+                try{
+                    CIDate= java.sql.Date.valueOf(request.getParameter("ciDate"));
+                    CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
                 
-                Date CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
-                Date CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
                 DateTime CIDateDT=new DateTime(CIDate);
                 if (CIDate.after(CODate)){
                     e="Check-in date cannot be after check-out date!";
@@ -110,7 +112,7 @@
                             <h3> <%= h.getHotelName() %> </h3>
                             <h4> <%= h.getAddress()%> </h4>
                             <p> <%=h.getIntro()%></p>
-                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)%></h3>
+                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
                             <div> 
                                 <span> Ratings: </span>
                                 <% for (int p=1;p<=h.getStarRating();p++){ %>
@@ -123,9 +125,13 @@
                             </form>
                         </div>
                     <% } %>
-            <% } %>
-        <% } %>
-    <%  }  %>
+                <% } %>
+            <% }
+                catch (Exception ex){
+                    e="Check-in/Check-out date is invalid!";
+                }
+            }
+        } %>
     
         <form method="POST" action="">
            <label for="location">Where are you going?</label><br>

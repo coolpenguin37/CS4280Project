@@ -318,14 +318,14 @@ public class MemberBenefits implements MySQLInit {
                 case UserType.COMMONUSER:benefit="CommonUser";break;
                 case UserType.GOLDUSER:benefit="GoldUser";break;
                 case UserType.PREFERREDUSER:benefit="PreferredUser";break;
-                case UserType.PLATINUMUSER:benefit="PlaitiumUser";break;
+                case UserType.PLATINUMUSER:benefit="PlantiumUser";break;
                 default:benefit="CommonUser";break;
             }    
             PreparedStatement stmt = conn.prepareStatement("SELECT " + benefit + " FROM [MemberBenefits] WHERE [HotelID] = ?");
             stmt.setInt(1, hotelID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                temp = rs.getInt(userType + 1);
+                temp = rs.getInt(1);
             }
             if(rs != null) {
                 rs.close();

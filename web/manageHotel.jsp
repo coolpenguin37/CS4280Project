@@ -223,6 +223,7 @@
                     })
                     $('.fake-span').remove()
                 })
+                $(".roomInfo").remove();
                 //for roomInfo
                 $.each(data.roomInfo,function(key,value){
                     var roomID=value.roomType
