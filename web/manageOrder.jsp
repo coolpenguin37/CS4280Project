@@ -5,8 +5,12 @@
 --%>
 
 <%@page import="order.*"%>
-<%@page import="java.util.ArrayList,user.*,hotel.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime;"%>
+<%@page import="java.util.ArrayList,user.*,hotel.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime,java.text.SimpleDateFormat;"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%! private String getDateString(Date d){
+        SimpleDateFormat s=new SimpleDateFormat("YYYY/MM/DD");
+        return s.format(d);
+    } %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -89,14 +93,30 @@
                 Order o=(Order)session.getAttribute("orderToModify");
         %>
                 <form method="GET" action="">
-                    <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
-                    <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
+                    <label>From:</label><input type="date" name="ciDate" value="<%=getDateString(o.getCIDate())%>"> <br>
+                    <label>To:</label><input type="date" name="coDate" value="<%=getDateString(o.getCIDate())%>"> <br>
                     <input type="submit">
                 </form>
         <%
                 return;
             }
-            else if (request.getParameter("ciDate") != null || request.getParameter("coDate") != null){
+            else if (request.getParameter("ciDate") != null || request.getParameter("coDate") != null || request.getParameter("confirmChangeDate") != null){
+                if (request.getParameter("confirmChangeDate")!=null){
+                    Order a=(Order)session.getAttribute("a");
+                    Order b=(Order)session.getAttribute("b");
+                    int c=(Integer)session.getAttribute("c");
+                    session.removeAttribute("a");
+                    session.removeAttribute("b");
+                    session.removeAttribute("c");
+            if (Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeDate").equals("Confirm"))?1:0)){ %>
+                    <p>Success! The new order ID is: <%=c%> </p>
+                    <%
+                    }
+                    else { %>
+                    <p> Update order failed... </p>
+                <%
+                }
+                }
                 Order a = (Order) session.getAttribute("orderToModify");
                 String e = "";
                 Date CIDate, CODate;
@@ -107,15 +127,17 @@
                     try {
                         CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
                         CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
+                        int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
                         if (!validateDate(CIDate,CODate).isEmpty()){
                             e = validateDate(CIDate,CODate);
                         } else {
                             Order b = new Order(a);
                             b.setCIDate(CIDate);
                             b.setCODate(CODate);
-                            int mergedOrderID = tryUpdateOrder(a, b);
-                            if (mergedOrderID == 0) {
-                                // failed
+                            int mergedOrderID = Order.tryUpdateOrder(a, b);
+                            if (mergedOrderID == 0) { %>
+                                <span> There is no room available for your chosen check-in/check-out date</span>
+                            <%
                             } else {
                                 HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
                                 User u = User.getUserByUserID(a.getUserID());
@@ -126,9 +148,18 @@
                                 } else {
                                     discount = mb.getDiscountByUserType(u.getUserType());
                                 }
+                                int standardRate=room.getStandardRate();
                                 int realRate = (int) Math.floor(standardRate * (discount / 100.0));
-                                int realPrice = realRate * a.getNumOfRoom();
-                                //popup windows(b, realprice);
+                                int realPrice = realRate * a.getNumOfRoom()*numDays;
+                                session.setAttribute("a",a);
+                                session.setAttribute("b",b);
+                                session.setAttribute("c",mergedOrderID); %>
+                                <span> There is room available! Now the total price is: $ <%=realPrice%>. Do you confirm the modification?</span>
+                                <form method="POST" action="">
+                                <input type="submit" name="confirmChangeDate" value="Confirm">
+                                <input type="submit" name="confirmChangeDate" value="Cancel">
+                                </form>
+                            <%    
                             }
                         }
                         
@@ -141,16 +172,16 @@
         %>
                     <span> <%=e%> </span>
                     <form method="GET" action="">
-                        <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
-                        <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
+                        <label>From:</label><input type="date" name="ciDate" value="<%=getDateString(a.getCIDate())%>"> <br>
+                        <label>To:</label><input type="date" name="coDate" value="<%=getDateString(a.getCODate())%>"> <br>
                         <input type="submit">
                     </form>
         <%
                 }
                 return;
             }
-            else if (request.getParameter("changNumOfRoom")!=null){ 
-                Order o=(Order)session.getAttribute("orderToModify");
+            else if (request.getParameter("changNumOfRoom") != null){ 
+                Order o = (Order) session.getAttribute("orderToModify");
         %>
                 <form method="GET" action="">
                     <label>Number of rooms to book</label>
@@ -163,8 +194,9 @@
             }
             else if (request.getParameter("changeNumOfRoomTo")!=null){
                 //mark
-                Order o=(Order)session.getAttribute("orderToModify");
-                o.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
+                Order a = (Order) session.getAttribute("orderToModify");
+                Order b = new Order(a);
+                b.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
                 if (o.updateOrder(o)){ %>
                     <span> Updated Successfully!</span>
                 <%
@@ -178,6 +210,7 @@
             }
             if (session.getAttribute("userID") == null && request.getParameter("orderID")==null) { %>               
                     <form method="POST" action="">
+                        <fieldset>
                         <legend>Check My Order As a Guest</legend>
                         <label>Your Order ID:</label>
                         <input type="text" name="orderID">
@@ -186,6 +219,7 @@
                         <input type="text" name="pin">
                         <br>
                         <input type="submit">
+                        </fieldset>
                     </form>
             <% 
             } else {
@@ -232,7 +266,7 @@
                                         <button type="submit" name="pay" value="<%=o.getOrderID()%>">Pay now</button>
                                     </form>
                             <% }
-                                if (o.getStatus()==1) { %>
+                                if (o.getStatus()==1 || o.getStatus()==5) { %>
                                     <form method="POST" action="">
                                         <button type="submit" name="modify" value="<%=o.getOrderID()%>">Modify order</button>
                                     </form>

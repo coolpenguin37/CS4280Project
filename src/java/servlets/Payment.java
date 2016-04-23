@@ -78,8 +78,6 @@ public class Payment extends HttpServlet {
                 out.println("<form action='confirm.jsp' method='POST'>");
                 out.println("<fieldset>");
                 out.println("<legend>Personal Information</legend>");
-                out.println("<label>Title:</label>");
-                out.println("<input type='text' name='clientTitle'>");
                 out.println("<label>Name:</label>");
                 out.println("<input type='text' name='clientName' value="+u.getName()+">");
                 out.println("<label>E-mail Address:</label>");

@@ -47,7 +47,7 @@
         <% if (session.getAttribute("name") != null) { %>
             <p class = "info" >Hello <%=session.getAttribute("name")%></p>
         <% } %>
-        <% if (request.getMethod()=="GET") {
+        <% if (request.getParameter("search") != null) {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
             //check if parameters are null. Only hotel name can be null;
             if (request.getParameter("location") == null || request.getParameter("location").isEmpty()) {

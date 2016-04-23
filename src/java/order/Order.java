@@ -691,7 +691,7 @@ public class Order implements MySQLInit, OrderStatus {
         }
     }
     
-    //placeholder
+    //mark placeholder
     public boolean updateOrder(Order o){
         return true;
     }

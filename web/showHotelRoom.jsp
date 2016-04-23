@@ -3,7 +3,7 @@
     Created on : Mar 25, 2016, 11:54:19 PM
     Author     : yanlind
 --%>
-<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,java.sql.Date,java.sql.Date,org.joda.time.DateTime,org.joda.time.Days,org.joda.time.LocalDate,java.security.SecureRandom;"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,comment.*,java.sql.Date,java.sql.Date,org.joda.time.DateTime,org.joda.time.Days,org.joda.time.LocalDate,java.security.SecureRandom;"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -44,6 +44,34 @@
             
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
+    %>
+            <div>
+                <span> Score: </span>
+                <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
+            </div>
+            
+    <%
+            ArrayList<Comment> commentList = Comment.getCommentByHotelName(currentHotel.getHotelName());
+            if (commentList.size() > 0) {
+                for (int i = 0; i < commentList.size(); ++i) {
+                    Comment tmp = commentList.get(i);
+                    Order o = Order.getOrderByOrderID(tmp.getOrderID());
+                    int currentUserID = Integer.parseInt(session.getAttribute("UserID"));
+                    //ALANTODO PRINT OUT COMMENT                
+                    out.print("<div id=comment"+tmp.getCommentID()+">");
+                    out.print("<p>"+tmp.getContent()+" </p>");
+                    out.print("<p>"+tmp.getScore()+" </p>");
+                    out.print("<p>"+tmp.getTimestamp()+" </p>");
+                    if (currentUserID == o.getUserID())
+                    {
+                        out.println("<a onclick=check_delcomment("+thiscomment.getID()+",\""+thisuserid+"\","+videoid+") >"+"删除评论"+"</a>");
+                    }
+                    out.println("<br></br>");
+                    out.println("</div>");
+                }
+            } else {
+                //ALANTODO: NO COMMENT YET
+            }
             
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
@@ -72,37 +100,38 @@
                 
     %>
             
-            <div>
-                <h3> <%= room.getRoomName() %> </h3>
-                <h4> Standard Rate: $ 
-                    <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
-                </h4>
-                <h4> You only need to pay: $ 
-                    <span style="color: red;"><%= realRate %> for each room</span>
-                </h4>
-                <h4> Total: $
-                    <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
-                    in total 
-                </h4>
-                <div> 
-                    <span>Size: </span> 
-                    <span> <%= room.getRoomSize() %> Square Feet.</span>
+                <div>
+                    <h3> <%= room.getRoomName() %> </h3>
+                    <h4> Standard Rate: $ 
+                        <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                    </h4>
+                    <h4> You only need to pay: $ 
+                        <span style="color: red;"><%= realRate %> for each room</span>
+                    </h4>
+                    <h4> Total: $
+                        <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
+                        in total 
+                    </h4>
+                    <div> 
+                        <span>Size: </span> 
+                        <span> <%= room.getRoomSize() %> Square Feet.</span>
+                    </div>
+                    <% if (remained > 30) { %>
+                        <div> <span>Plenty rooms available.</span></div>
+                    <% } else if (remained <= 30 && remained>10) { %>
+                        <div> <span>Limited rooms available!</span></div>
+                    <% } else if (remained<=0){ %>
+                        <div> <span>Sold out...</span></div>
+                    <% } else { %>
+                        <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
+                    <% } %>
+                    <% if (remained>0){ %>
+                        <form method="POST" action="">
+                            <button type="submit" name="bookroom" value="<%=i%>">Book!</button>
+                        </form>
+                    <% } %>
                 </div>
-                <% if (remained > 30) { %>
-                    <div> <span>Plenty rooms available.</span></div>
-                <% } else if (remained <= 30 && remained>10) { %>
-                    <div> <span>Limited rooms available!</span></div>
-                <% } else if (remained<=0){ %>
-                    <div> <span>Sold out...</span></div>
-                <% } else { %>
-                    <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
-                <% } %>
-                <% if (remained>0){ %>
-                    <form method="POST" action="">
-                        <button type="submit" name="bookroom" value="<%=i%>">Book!</button>
-                    </form>
-                <% } %>
-            </div>
+                
         <% } %>
     <%  } %>
     <%  
