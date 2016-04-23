@@ -99,6 +99,7 @@
                     return
                 }
                 $('.fa').remove()
+                $.delay(1000)
                 $('.col-md-12').remove()
                 var orderInformation=$("<div class='col-md-12'>")
                 var idNumber=$("<h4> Order ID: "+data.orderID+"</h4>")
@@ -512,7 +513,7 @@
     </div>
     <div id="room-information" class="tab-pane fade">
       <h2>Room Information</h2>
-      <button type="button" class="btn btn-default" onclick="addNewRoom()">Add <span class="glyphicon glyphicon-plus"></span></button>
+      <!--<button type="button" class="btn btn-default" onclick="addNewRoom()">Add <span class="glyphicon glyphicon-plus"></span></button>-->
     </div>
     <div id="manage-orders" class="tab-pane fade">
       <h3>Manage Orders</h3>

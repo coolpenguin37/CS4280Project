@@ -170,7 +170,7 @@ public class MemberBenefits implements MySQLInit {
             while (rs.next()) {
                 temp = new MemberBenefits(rs.getInt("RID"), rs.getInt("HotelID"), 
                     rs.getInt("CommonUser"), rs.getInt("PreferredUser"), rs.getInt("GoldUser"), 
-                    rs.getInt("PlantiumUser"), rs.getInt("WelcomeGift"), rs.getInt("LateCheckout"), 
+                    rs.getInt("PlatinumUser"), rs.getInt("WelcomeGift"), rs.getInt("LateCheckout"), 
                     rs.getInt("Breakfast"), rs.getInt("FreeWiFi"));
             }
             if(rs != null) {
@@ -318,7 +318,7 @@ public class MemberBenefits implements MySQLInit {
                 case UserType.COMMONUSER:benefit="CommonUser";break;
                 case UserType.GOLDUSER:benefit="GoldUser";break;
                 case UserType.PREFERREDUSER:benefit="PreferredUser";break;
-                case UserType.PLATINUMUSER:benefit="PlantiumUser";break;
+                case UserType.PLATINUMUSER:benefit="PlatinumUser";break;
                 default:benefit="CommonUser";break;
             }    
             PreparedStatement stmt = conn.prepareStatement("SELECT " + benefit + " FROM [MemberBenefits] WHERE [HotelID] = ?");

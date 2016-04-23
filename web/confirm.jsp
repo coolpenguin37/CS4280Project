@@ -20,6 +20,12 @@
         }
         else{
             Order o=(Order)session.getAttribute("orderToPay");
+            o.setName((request.getParameter("clientName")==null||request.getParameter("clientName").isEmpty())?
+                    User.getUserByUserID(o.getUserID()).getName():request.getParameter("clientName"));
+            o.setEmail((request.getParameter("clientEmail")==null||request.getParameter("clientEmail").isEmpty())?
+                    User.getUserByUserID(o.getUserID()).getEmail():request.getParameter("clientEmail"));
+            o.setPhone((request.getParameter("clientPhone")==null||request.getParameter("clientPhone").isEmpty())?
+                    User.getUserByUserID(o.getUserID()).getEmail():request.getParameter("clientPhone"));
             if (o==null || o.getOrderID()==0){ %>
             <h1>Sorry...The confirmation failed. We cannot find your order information.</h1>
             <%
