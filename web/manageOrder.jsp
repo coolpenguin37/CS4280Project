@@ -101,85 +101,86 @@
                 return;
             }
             else if (request.getParameter("ciDate") != null || request.getParameter("coDate") != null || request.getParameter("confirmChangeDate") != null){
-                if (request.getParameter("confirmChangeDate")!=null){
+                if (request.getParameter("confirmChangeDate")!=null) {
                     Order a=(Order)session.getAttribute("a");
                     Order b=(Order)session.getAttribute("b");
                     int c=(Integer)session.getAttribute("c");
                     session.removeAttribute("a");
                     session.removeAttribute("b");
                     session.removeAttribute("c");
-            if (Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeDate").equals("Confirm"))?1:0)){ %>
-                    <p>Success! The new order ID is: <%=c%> </p>
-                    <%
-                    }
-                    else { %>
-                    <p> Update order failed... </p>
-                <%
-                }
-                }
-                Order a = (Order) session.getAttribute("orderToModify");
-                String e = "";
-                Date CIDate, CODate;
-                if (request.getParameter("ciDate") == null || request.getParameter("coDate") == null) {
-                    e = "Check-in date and check-out date cannot be empty!";
-                }
-                else {
-                    try {
-                        CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
-                        CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
-                        int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
-                        if (!validateDate(CIDate,CODate).isEmpty()){
-                            e = validateDate(CIDate,CODate);
-                        } else {
-                            Order b = new Order(a);
-                            b.setCIDate(CIDate);
-                            b.setCODate(CODate);
-                            int mergedOrderID = Order.tryUpdateOrder(a, b);
-                            if (mergedOrderID == 0) { %>
-                                <span> There is no room available for your chosen check-in/check-out date</span>
-                            <%
-                            } else {
-                                HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
-                                User u = User.getUserByUserID(a.getUserID());
-                                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(a.getHotelID());
-                                int discount;
-                                if (u == null || u.getUserType() < 1){
-                                    discount=100;
-                                } else {
-                                    discount = mb.getDiscountByUserType(u.getUserType());
-                                }
-                                int standardRate=room.getStandardRate();
-                                int realRate = (int) Math.floor(standardRate * (discount / 100.0));
-                                int realPrice = realRate * a.getNumOfRoom()*numDays;
-                                session.setAttribute("a",a);
-                                session.setAttribute("b",b);
-                                session.setAttribute("c",mergedOrderID); %>
-                                <span> There is room available! Now the total price is: $ <%=realPrice%>. Do you confirm the modification?</span>
-                                <form method="POST" action="">
-                                <input type="submit" name="confirmChangeDate" value="Confirm">
-                                <input type="submit" name="confirmChangeDate" value="Cancel">
-                                </form>
-                            <%    
-                            }
-                        }
-                        
-                    }
-                    catch (Exception e1){
-                        e="Check-in date/check-out date not valid!";
-                    }
-                }
-                if (!e.isEmpty()) { 
-        %>
-                    <span> <%=e%> </span>
-                    <form method="GET" action="">
-                        <label>From:</label><input type="date" name="ciDate" value="<%=getDateString(a.getCIDate())%>"> <br>
-                        <label>To:</label><input type="date" name="coDate" value="<%=getDateString(a.getCODate())%>"> <br>
-                        <input type="submit">
-                    </form>
+                    if (Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeDate").equals("Confirm"))?1:0)){ %>
+                        <p>Success! The new order ID is: <%=b%> </p>
         <%
+                    }
+                    else { 
+        %>
+                        <p> Update order failed... </p>
+        <%
+                    }
+                } else {
+                    Order a = (Order) session.getAttribute("orderToModify");
+                    String e = "";
+                    Date CIDate, CODate;
+                    if (request.getParameter("ciDate") == null || request.getParameter("coDate") == null) {
+                        e = "Check-in date and check-out date cannot be empty!";
+                    } else {
+                        try {
+                            CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
+                            CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
+                            int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
+                            if (!validateDate(CIDate,CODate).isEmpty()) {
+                                e = validateDate(CIDate,CODate);
+                            } else {
+                                Order b = new Order(a);
+                                b.setCIDate(CIDate);
+                                b.setCODate(CODate);
+                                int mergedOrderID = Order.tryUpdateOrder(a, b);
+                                if (mergedOrderID == 0) { %>
+                                    <span> There is no room available for your chosen check-in/check-out date</span>
+                                <%
+                                } else {
+                                    HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
+                                    User u = User.getUserByUserID(a.getUserID());
+                                    MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(a.getHotelID());
+                                    int discount;
+                                    if (u == null || u.getUserType() < 1){
+                                        discount=100;
+                                    } else {
+                                        discount = mb.getDiscountByUserType(u.getUserType());
+                                    }
+                                    int standardRate=room.getStandardRate();
+                                    int realRate = (int) Math.floor(standardRate * (discount / 100.0));
+                                    int realPrice = realRate * a.getNumOfRoom()*numDays;
+                                    session.setAttribute("a",a);
+                                    session.setAttribute("b",b);
+                                    session.setAttribute("c",mergedOrderID); %>
+                                    <span> There is room available! Now the total price is: $ <%=realPrice%>. Do you confirm the modification?</span>
+                                    <form method="POST" action="">
+                                    <input type="submit" name="confirmChangeDate" value="Confirm">
+                                    <input type="submit" name="confirmChangeDate" value="Cancel">
+                                    </form>
+                                <%    
+                                }
+                            }
+                        
+                        } catch (Exception e1){
+                            e="Check-in date/check-out date not valid!";
+                        }
+                    }
+                    if (!e.isEmpty()) { 
+        %>
+                        <span> <%=e%> </span>
+                        <form method="GET" action="">
+                            <label>From:</label><input type="date" name="ciDate" value="<%=getDateString(a.getCIDate())%>"> <br>
+                            <label>To:</label><input type="date" name="coDate" value="<%=getDateString(a.getCODate())%>"> <br>
+                            <input type="submit">
+                        </form>
+        <%
+                    }
+                    return;
                 }
-                return;
-            }
+            }               
+                
             else if (request.getParameter("changNumOfRoom") != null){ 
                 Order o = (Order) session.getAttribute("orderToModify");
         %>
@@ -192,8 +193,7 @@
         <%
                 return;
             }
-            else if (request.getParameter("changeNumOfRoomTo")!=null){
-                //mark
+            else if (request.getParameter("changeNumOfRoomTo") != null){
                 Order a = (Order) session.getAttribute("orderToModify");
                 Order b = new Order(a);
                 b.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
@@ -206,7 +206,7 @@
                     HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
                     User u = User.getUserByUserID(a.getUserID());
                     MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(a.getHotelID());
-                    int numDays = Days.daysBetween(new LocalDate(a.getCIDate()), new LocalDate(CODate)).getCODate();
+                    int numDays = Days.daysBetween(new LocalDate(a.getCIDate()), new LocalDate(a.getCODate())).getDays();
                     int discount;
                     if (u == null || u.getUserType() < 1){
                         discount = 100;
@@ -216,15 +216,16 @@
                     int standardRate=room.getStandardRate();
                     int realRate = (int) Math.floor(standardRate * (discount / 100.0));
                     int realPrice = realRate * b.getNumOfRoom() * numDays;
-                    session.setAttribute("a",a);
-                    session.setAttribute("b",b);
-                    session.setAttribute("c",mergedOrderID); %>
+                    session.setAttribute("a", a);
+                    session.setAttribute("b", b);
+                    session.setAttribute("c", mergedOrderID); 
+        %>
                     <span> 
                         There is room available! Now the total price is: $ <%=realPrice%>. Do you confirm the modification?
                     </span>
                     <form method="POST" action="">
-                        <input type="submit" name="confirmChangeDate" value="Confirm">
-                        <input type="submit" name="confirmChangeDate" value="Cancel">
+                        <input type="submit" name="confirmChangeNum" value="Confirm">
+                        <input type="submit" name="confirmChangeNum" value="Cancel">
                     </form>
         <%
                 }
