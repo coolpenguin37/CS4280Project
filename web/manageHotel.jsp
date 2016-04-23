@@ -34,7 +34,7 @@
     function updateMemberBenefit(command,value){
         var values={}
         values[command]=value
-        values["hotelID"]=$("#isRecommended").attr("name")
+        values["hotelID"]=$(".isRecommended").attr("name")
         $.ajax({
             type:"POST",
             url:"ManageHotelServlet",
@@ -148,7 +148,7 @@
 //                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
                     if (key=="isRecommended") {
-                        $("#isRecommended").bootstrapSwitch("disabled",false)
+                        $(".isRecommended").bootstrapSwitch("disabled",false)
                         $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
                     }
                     else {
@@ -167,7 +167,7 @@
                         
                     });
                 })
-                $("#isRecommended").attr("name",data.hotelInfo.hotelID)
+                $(".isRecommended").attr("name",data.hotelInfo.hotelID)
                 
                 $.each(data.discountList,function(key,value){
                    if (key.toString().toUpperCase().search("USER")==-1){
@@ -233,6 +233,7 @@
                     var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-name='standardRate' data-pk="+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
                     var rate=value.standardRate
                     var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-name='numOfRoom' data-pk="+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
+                    var recommendFlag='<span class="label label-default">Recommend:</span> <input class="isRecommended room" name='+roomID+' type="checkbox" data-on-color="success">'
                     var priceTable="<div class='container'><table class='table table-hover'>\n\
             <thead>\n\
             <th>User Type</th>\n\
@@ -249,8 +250,27 @@
                     })
                     priceTable+="</tbody></table></div>"
                     var img=$("<img></img")
-                    var newDiv=($("<div class='roomInfo'>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(priceTable).append(img))
+                    var newDiv=($("<div class='roomInfo'>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(recommendFlag).append(priceTable).append(img))
                     $("#room-information").append(newDiv) 
+                    $(".isRecommended").bootstrapSwitch("disabled",false)
+                    $(".isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {
+                        $.ajax({
+                
+                        type:"POST",
+                        url:"ManageHotelServlet",
+                        //duan check this
+                        data:{"pk":$(this).attr("name"),"name":"isRecommended","value":state},
+                        dataType:"json",
+
+                        success:function(response){
+                        },
+                        error: function(xhr,ajaxOptions,thrownError){
+                        }
+                    })
+                    })
+        
+        
+        
                     $('.discount').editable({
                         type: 'text',
                         url: 'ManageHotelServlet',
@@ -330,6 +350,7 @@
                 alert(xhr.status+"\n"+thrownError);
             }
         })
+        
         }
 //                
                 
@@ -344,7 +365,7 @@
 //            };
 //        };)
     function init(){
-        $("#isRecommended").bootstrapSwitch("disabled",true)
+        $(".isRecommended").bootstrapSwitch("disabled",true)
     }
     window.onload=init;
     
@@ -440,7 +461,7 @@
       <h4><a href="#" id="address" data-type="text"></a></h4>
       <div><a href="#" id="intro" class='editable editable-pre-wrapped editable-click' data-type="textarea"></a></div>
       <img>
-      <h3><span class="label label-default">Recommend:</span> <input id="isRecommended" type="checkbox" data-on-color="success"></h3>
+      <h3><span class="label label-default">Recommend:</span> <input class="isRecommended hotel" type="checkbox" data-on-color="success"></h3>
       <div>
           <table class="table table-hover member-benefit-table">
     <thead>
@@ -512,7 +533,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
   <script>
     $.fn.editable.defaults.mode='inline';
-     $("#isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {
+     $(".isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {
             $.ajax({
                 
                 type:"POST",

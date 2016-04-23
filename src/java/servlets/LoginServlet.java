@@ -46,7 +46,6 @@ public class LoginServlet extends HttpServlet{
                     String name = user.getName();
                     String userEmail = user.getEmail();
                     String userTel = user.getTel();
-                    String userPwd = user.getPassword();
                     int isSubscribed = user.getIsSubscribed();
                     int userType = user.getUserType();
                     session = request.getSession(true);
@@ -62,7 +61,7 @@ public class LoginServlet extends HttpServlet{
                     session.setAttribute("userTel",userTel);
                     session.setAttribute("isSubscribed", isSubscribed);
                     session.setAttribute("type", userType);
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect((String)session.getAttribute("previousPage"));
                 }
                 
             } 

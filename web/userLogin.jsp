@@ -13,20 +13,20 @@
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>User Login</title>
+</head>
+<body>
     <div id = "title_bar_home">
-        <title>User Login</title>
         <h1 id = "title" >Hypnos</h1>
         <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
-</head>
-<body>
-    
     <div>
-
             <form method="POST" action="LoginServlet">
                 <fieldset>  
                     <legend>Member login</legend>
+                <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
+                        session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));}%>
                     <p><label><b>Username: </b></label><input type="text" name="username"> </p>
                     <p><label><b>Password: </b></label><input type="password" name="password"></p>
                     <p class = "info">Click <a href="newAccount.jsp">here</a> for new member registration!</p>
@@ -37,7 +37,7 @@
                     <% } %>
                 </fieldset>
             </form>
-
+            <p><%=(request.getParameter("result")!=null)?request.getParameter("result"):""%></p>
     </div>
 </body>
 </html>

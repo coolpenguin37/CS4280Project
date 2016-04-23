@@ -44,13 +44,11 @@
         </div>
     </header>
     <div>
-        <fieldset>
-        <legend>Search The Hotel</legend>
         <% String e="";%>
         <% if (session.getAttribute("name") != null) { %>
             <p class = "info" >Hello <%=session.getAttribute("name")%></p>
         <% } %>
-        <% if (request.getMethod()=="POST") {
+        <% if (request.getMethod()=="GET") {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
             //check if parameters are null. Only hotel name can be null;
             if (request.getParameter("location") == null || request.getParameter("location").isEmpty()) {
@@ -120,7 +118,7 @@
                                 <% } %>
                             </div>
                             <img src="" alt="">
-                            <form method="POST" action="showHotelRoom.jsp">
+                            <form method="GET" action="showHotelRoom.jsp">
                                 <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
                             </form>
                         </div>
@@ -133,8 +131,10 @@
             }
         } %>
     
-        <form method="POST" action="">
-           <label for="location">Where are you going?</label><br>
+        <form method="GET" action="">
+            <fieldset>
+            <legend>Search The Hotel</legend>
+            <label for="location">Where are you going?</label><br>
             <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
             <label>When do you plan to travel</label> <br>
             <label>From:</label><input type="date" name="ciDate"> <br>
@@ -142,11 +142,12 @@
             <label for="numRooms">How many rooms do you want to book?</label><br>
             <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
             <p class = "submit" ><input type="submit" value="Search"></p>
+            </fieldset>
         </form>
             <% if (e!=null && !e.isEmpty()){ %>
                 <span class = "error"><%=e%></span>
             <% } %>
-    </fieldset>
+        
     </div>
     </body>
 </html>
