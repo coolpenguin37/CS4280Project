@@ -644,6 +644,14 @@ public class Order implements MySQLInit, OrderStatus {
                 return 0;
             }
         }
+        if (a.getCODate().compareTo(b.getCIDate()) < 0) {
+            if (!checkAvailability(b)) {
+                return 0;
+            } else {
+                Order.updateStatus(a.getOrderID(), HOLDING);
+                return b.insertToDatabase();
+            }
+        }
         Chris.deleteByOrderID(a.getOrderID());
         Order o = Order.mergeOrder(a, b);
         if (o != null) {

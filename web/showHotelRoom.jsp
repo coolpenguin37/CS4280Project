@@ -56,20 +56,21 @@
                 for (int i = 0; i < commentList.size(); ++i) {
                     Comment tmp = commentList.get(i);
                     Order o = Order.getOrderByOrderID(tmp.getOrderID());
-                    int currentUserID = Integer.parseInt(session.getAttribute("UserID"));
+                    int currentUserID = Integer.parseInt((String) session.getAttribute("UserID"));
                     //ALANTODO PRINT OUT COMMENT                
                     out.print("<div id=comment"+tmp.getCommentID()+">");
                     out.print("<p>"+tmp.getContent()+" </p>");
                     out.print("<p>"+tmp.getScore()+" </p>");
-                    out.print("<p>"+tmp.getTimestamp()+" </p>");
+                    out.print("<p>"+tmp.getDate()+" </p>");
                     if (currentUserID == o.getUserID())
                     {
-                        out.println("<a onclick=check_delcomment("+thiscomment.getID()+",\""+thisuserid+"\","+videoid+") >"+"删除评论"+"</a>");
+                        out.println("<a onclick=delcomment(" + tmp.getCommentID() + ") >" + "Delete"+"</a>");
                     }
                     out.println("<br></br>");
                     out.println("</div>");
                 }
             } else {
+                out.print("<p> No Comment </p>");
                 //ALANTODO: NO COMMENT YET
             }
             
