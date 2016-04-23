@@ -189,7 +189,7 @@
                     <br>
                     <input type="submit">
                 </form>
-                <%
+        <%
                 return;
             }
             else if (request.getParameter("changeNumOfRoomTo")!=null){
@@ -197,14 +197,36 @@
                 Order a = (Order) session.getAttribute("orderToModify");
                 Order b = new Order(a);
                 b.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
-                if (o.updateOrder(o)){ %>
-                    <span> Updated Successfully!</span>
-                <%
-                }
-                else { %>
-                    <p> Updated failed...there are no more available room in your selection.</p>
-                    <p> Rest assured. Your previous order is not canceled. </p>
-                <%
+                int mergedOrderID = Order.tryUpdateOrder(a, b);
+                if (mergedOrderID == 0) { 
+        %>
+                    <span> There is no room available for you to change number of rooms </span>
+        <%
+                } else {
+                    HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
+                    User u = User.getUserByUserID(a.getUserID());
+                    MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(a.getHotelID());
+                    int numDays = Days.daysBetween(new LocalDate(a.getCIDate()), new LocalDate(CODate)).getCODate();
+                    int discount;
+                    if (u == null || u.getUserType() < 1){
+                        discount = 100;
+                    } else {
+                        discount = mb.getDiscountByUserType(u.getUserType());
+                    }
+                    int standardRate=room.getStandardRate();
+                    int realRate = (int) Math.floor(standardRate * (discount / 100.0));
+                    int realPrice = realRate * b.getNumOfRoom() * numDays;
+                    session.setAttribute("a",a);
+                    session.setAttribute("b",b);
+                    session.setAttribute("c",mergedOrderID); %>
+                    <span> 
+                        There is room available! Now the total price is: $ <%=realPrice%>. Do you confirm the modification?
+                    </span>
+                    <form method="POST" action="">
+                        <input type="submit" name="confirmChangeDate" value="Confirm">
+                        <input type="submit" name="confirmChangeDate" value="Cancel">
+                    </form>
+        <%
                 }
                 return;
             }
