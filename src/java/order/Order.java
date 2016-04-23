@@ -667,11 +667,12 @@ public class Order implements MySQLInit, OrderStatus {
     // b: new Order
     // c: merged OrderID
     // d: 0 for negative; 1 for positive
-    public static boolean doUpdateOrder(Order a, Order b, int c, int d) {
+    public static int doUpdateOrder(Order a, Order b, int c, int d) {
         if (d == 0) {
             Order.updateStatus(a.getOrderID(), PROCESSING);
             Chris.insertByOrderID(a.getOrderID());
             Order.updateStatus(c, ABORTED);
+            return -1;
 //            int aID = a.getOrderID();
 //            DateTime dtCIDate = new DateTime(a.getCIDate());
 //            DateTime dtCODate = new DateTime(a.getCODate());
@@ -683,11 +684,11 @@ public class Order implements MySQLInit, OrderStatus {
 //                ctmp.insertToDatabase();
 //            }
         } else {
-            b.insertToDatabase();
             Order.updateStatus(a.getOrderID(), ABORTED);
             Order.updateStatus(c, ABORTED);
+            return b.insertToDatabase();
         }
-        return true;
+        
     }
 
     public static int updateOrderRoomType(Order a, int newRoomType) {
