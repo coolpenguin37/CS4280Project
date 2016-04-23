@@ -20,6 +20,7 @@ public class HotelRoom implements MySQLInit {
     int standardRate;
     int numOfRoom;
     int roomSize;
+    int isRecommended;
 
     public int getHotelID() {
         return hotelID;
@@ -64,15 +65,24 @@ public class HotelRoom implements MySQLInit {
     public void setRoomSize(int roomSize) {
         this.roomSize = roomSize;
     }
+    
+    public int getIsRecommended() {
+        return isRecommended;
+    }
+    
+    public void setIsRecommended(int isRecommended) {
+        this.isRecommended = isRecommended;
+    }
 
     public HotelRoom (int hotelID, int roomType, String roomName, 
-        int standardRate, int numOfRoom, int roomSize) {
+        int standardRate, int numOfRoom, int roomSize, int isRecommended) {
         this.hotelID = hotelID;
         this.roomType = roomType;
         this.roomName = roomName;
         this.standardRate = standardRate;
         this.numOfRoom = numOfRoom;
         this.roomSize = roomSize;
+        this.isRecommended = isRecommended;
     }
 
     public HotelRoom (int hotelID, int roomType, String roomName) {
@@ -82,6 +92,7 @@ public class HotelRoom implements MySQLInit {
         this.standardRate = 0;
         this.numOfRoom = 0;
         this.roomSize = 0;
+        this.isRecommended = 0;
     }
 
     public static int getNumOfRoomByID(int hotelID, int roomType) {
@@ -125,14 +136,15 @@ public class HotelRoom implements MySQLInit {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [HotelRoom] "
-                + "([HotelID], [RoomType], [RoomName], [StandardRate], [NumOfRoom], [RoomSize]) "
-                + "VALUES (?, ?, ?, ?, ?, ?)");
+                + "([HotelID], [RoomType], [RoomName], [StandardRate], [NumOfRoom], [RoomSize], [IsRecommended]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, hotelID);
             stmt.setInt(2, roomType);
             stmt.setString(3, roomName);
             stmt.setInt(4, standardRate);
             stmt.setInt(5, numOfRoom);
             stmt.setInt(6, roomSize);
+            stmt.setInt(7, isRecommended);
 
             stmt.executeUpdate();
             if (stmt != null) {
@@ -156,8 +168,8 @@ public class HotelRoom implements MySQLInit {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM [HotelRoom]");
             while (rs.next()) {
-                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
-                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getString("RoomName"), 
+                    rs.getInt("StandardRate"), rs.getInt("NumOfRoom"), rs.getInt("RoomSize"), rs.getInt("IsRecommended"));
                 roomList.add(temp);
             }
 
@@ -191,8 +203,8 @@ public class HotelRoom implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
-                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+                HotelRoom temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("RoomType"), rs.getString("RoomName"), 
+                    rs.getInt("StandardRate"), rs.getInt("NumOfRoom"), rs.getInt("RoomSize"), rs.getInt("IsRecommended"));
                 roomList.add(temp);
             }
 
@@ -227,7 +239,7 @@ public class HotelRoom implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 temp = new HotelRoom(rs.getInt("HotelID"), rs.getInt("roomType"), rs.getString("RoomName"), 
-                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"));
+                    rs.getInt("standardRate"), rs.getInt("numOfRoom"), rs.getInt("RoomSize"), rs.getInt("IsRecommended"));
             }
 
             if(rs != null) {
@@ -301,6 +313,18 @@ public class HotelRoom implements MySQLInit {
                 stmt.setInt(1, r.getRoomSize());
                 stmt.setInt(2, r.getHotelID());
                 stmt.setInt(3, r.getRoomType());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (r.getIsRecommended() != 0) {
+                String strQuery = "UPDATE [HotelRoom] SET [RoomSize] = ? WHERE [HotelID] = ? AND [IsRecommended] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, r.getRoomSize());
+                stmt.setInt(2, r.getHotelID());
+                stmt.setInt(3, r.getIsRecommended());
                 stmt.executeUpdate();
                 if (stmt != null) {
                     stmt.close();

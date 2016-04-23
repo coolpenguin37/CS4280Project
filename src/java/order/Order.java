@@ -705,6 +705,66 @@ public class Order implements MySQLInit, OrderStatus {
     
     //mark placeholder
     public boolean updateOrder(Order o){
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+            if (!o.getName().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Name] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getName());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (!o.getEmail().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Email] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getEmail());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (!o.getPhone().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Phone] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getPhone());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (o.getPrice() != 0)
+            {
+                String strQuery = "UPDATE [Orders] SET [Price] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, o.getPrice());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 

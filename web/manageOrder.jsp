@@ -204,6 +204,9 @@
                                 e = validateDate(CIDate,CODate);
                             } else {
                                 Order b = new Order(a);
+                                if (a == b) {
+                                    out.print("<p> APTX </p>");
+                                }
                                 b.setCIDate(CIDate);
                                 b.setCODate(CODate);
                                 int mergedOrderID = Order.tryUpdateOrder(a, b);
