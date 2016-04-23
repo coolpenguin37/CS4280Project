@@ -72,7 +72,9 @@ public class Payment extends HttpServlet {
 
                 //See whether is guest
                 
-                int realRate = (int) Math.ceil(standardRate * (discount / 100.0)); 
+                int realRate = ((o.getPrice()==0)?(int) Math.ceil(standardRate * (discount / 100.0)):o.getPrice()); 
+                o.setPrice(realRate);
+                o.updateOrder(o);
                 int numRooms=o.getNumOfRoom();      
                 //mark
                 out.println("<form action='confirm.jsp' method='POST'>");

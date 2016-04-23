@@ -16,6 +16,78 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Previous Order</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script>
+            function processInput(){
+               //alan to do
+                var orderID=$("#orderIDField").val();
+                var values={}
+                values["comment"]=$("#comment").val();
+                values["rating"]=$(".glyphicon-star").length
+                values["orderID"]=orderID
+                $.ajax({
+                    type:"POST",
+                    url:"CommentServlet",
+                    data:values,
+                    dataType:"text",
+
+                    success:function(data){
+                        alert("button[data-target='#'"+orderID""]")
+                        $("button[data-target='#'"+orderID""]").click();
+                        alert("123")
+                        if (data==null || data==""){
+                            alert("Comment submit successfully!")
+                            $("#collapseButton").click();
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+
+                    error: function(xhr,ajaxOptions,thrownError){
+                        alert(xhr.status+"\n"+thrownError);
+                    }
+                })
+            }
+            function init(){
+                    $(".rating-star").hover(function(){
+                    $(this).removeClass(".glyphicon-star-empty")
+                    var previousSiblings=$(this).prevAll(".glyphicon-star-empty")
+                    var nextSiblings=$(this).nextAll(".glyphicon-star")
+                    $(this).addClass("glyphicon-star");
+                    $(this).addClass("fake-star");
+                    $(this).css("color","red");
+                    $(previousSiblings).addClass("glyphicon-star");
+                    $(previousSiblings).addClass("fake-star");
+                    $(previousSiblings).css("color","yellow");
+                    $(nextSiblings).addClass("fake-empty");
+                    $(nextSiblings).addClass("glyphicon-star-empty")
+                    $(nextSiblings).removeClass("glyphicon-star")
+                    $(nextSiblings).css("color","")
+                },function(){
+                    $(".fake-star").css("color","");
+                    $(".fake-star").addClass("glyphicon-star-empty")
+                    $(".fake-star").removeClass("glyphicon-star")
+                    $(".fake-star").removeClass("fake-star")
+                    $(".fake-empty").css("color","yellow");
+                    $(".fake-empty").addClass("glyphicon-star")
+                    $(".fake-empty").removeClass("glyphicon-star-empty")
+                    $(".fake-empty").removeClass("fake-empty")
+                })
+                
+                    $(".rating-star").click(function(){
+                        $(".fake-star").removeClass("fake-star")
+                        $(".fake-empty").removeClass("fake-empty")
+                    })
+                  
+            }
+            window.onload=init;
+        </script>
     </head>
     <body>
         <jsp:include page="nav.jsp"></jsp:include>
@@ -151,6 +223,7 @@
                                     int standardRate=room.getStandardRate();
                                     int realRate = (int) Math.floor(standardRate * (discount / 100.0));
                                     int realPrice = realRate * a.getNumOfRoom()*numDays;
+                                    b.setPrice(realPrice);
                                     session.setAttribute("a",a);
                                     session.setAttribute("b",b);
                                     session.setAttribute("c",mergedOrderID); %>
@@ -234,6 +307,7 @@
                     int standardRate=room.getStandardRate();
                     int realRate = (int) Math.floor(standardRate * (discount / 100.0));
                     int realPrice = realRate * b.getNumOfRoom() * numDays;
+                    b.setPrice(realPrice);
                     session.setAttribute("a", a);
                     session.setAttribute("b", b);
                     session.setAttribute("c", mergedOrderID); 
@@ -292,6 +366,7 @@
                     } else {
                         for (int i = 0; i < orderList.size(); ++i) {
                             Order o = orderList.get(i);
+                            if (o.getStatus()==6){continue;}
                 %>
                             <div>
                             <p> ------------------------------------</p>
@@ -302,6 +377,8 @@
                             <p> Number of rooms: <%= o.getNumOfRoom() %> </p>
                             <p> Check-in date: <%= o.getCIDate() %> </p>
                             <p> Check-out date: <%= o.getCODate() %> </p>
+                            <p> Total price: <%=o.getPrice() %> </p>
+                            
         <%                  
                             if (o.getStatus()==1){ 
         %>
@@ -325,9 +402,16 @@
                             }
                             if (o.getStatus() == 4) {
         %>
-                                <form method="POST" action="">
-                                    <button type="submit" name="comment" value="<%=o.getOrderID()%>">Comment</button>
-                                </form>
+                                <button data-toggle="collapse" data-target="#<%=o.getOrderID()%>">Comment</button>
+                                <div class="collapse" <%="id="+o.getOrderID()%> >
+                                    <div class="form-group">
+                                        <label for="comment">Comment:</label>
+                                        <textarea class="form-control" rows="5" id="comment"></textarea>
+                                        <label>Rating:</label><span class="glyphicon glyphicon-star-empty rating-star"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span>
+                                        <input type="hidden" id="orderIDField" name="orderID" value="<%=o.getOrderID()%>">
+                                        <button onclick="processInput()">Submit Comment</button>
+                                    </div>  
+                                </div>
         <%
                             }
         %>
