@@ -27,8 +27,9 @@
                     <legend>Member login</legend>
                 <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
                         session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));}%>
-                    <p><label><b>Username: </b></label><input type="text" name="username"> </p>
-                    <p><label><b>Password: </b></label><input type="password" name="password"></p>
+                    <ul>
+                    <li><label><b>Username: </b></label><input type="text" name="username"> </li>
+                    <li><label><b>Password: </b></label><input type="password" name="password"></li>
                     <p class = "info">Click <a href="newAccount.jsp">here</a> for new member registration!</p>
                     <p class = "info"><a href="manageManager.jsp">Administrative Login</a></p>
                     <p><input type="submit" value="Login"></p>   
@@ -36,6 +37,7 @@
                         <p class = "error"><%= request.getAttribute("result") %></p>
                     <% } %>
                 </fieldset>
+                    </ul>
             </form>
             <p><%=(request.getParameter("result")!=null)?request.getParameter("result"):""%></p>
     </div>

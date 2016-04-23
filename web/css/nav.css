@@ -1,12 +1,13 @@
 .menu a {
-  color: #145b7d;
-  font-weight: bond;
+  color: white;
+  font-size:20px;
   display: block;
   text-align: center;
   text-decoration: none;
-  border-bottom: 1px solid #90d7ec;
-  border-top: 1px solid #90d7ec;
-  line-height: 40px;
+  border-bottom: 1px solid white;
+  border-top: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.3);
+  line-height: 96px;
   padding: 0 70px;
   filter: none;
 }
@@ -16,4 +17,15 @@
   display: block;
   text-align: center;
   text-decoration: none;
+}
+
+.menu ul {
+    list-style-type:none;   
+}
+.menu {
+    position: absolute;
+    top:0px;
+    left: 800px;
+    font-family: Georgia;
+    color: #145b7d;
 }

@@ -8,37 +8,15 @@
 
 body{
         background-color: #ECFFFF;
-    }
-
-label {
-    font-size: 20px;
-    display: inline;
-    display: inline-block;
-    margin: 12px 0px;
-    text-align: left;
-}
-
-input{
         font-family: Georgia;
-	outline: none;
-	border: 1px solid rgb(216, 216, 216);
-	padding: 2px 10px 2px 10px;
-        margin: 12px 0px;
-}
-input[type="text"],input[type = "password"], input[type="number"],input[type="date"]{
-	height: 25px;
-	line-height: 25px;
-	border-radius: 5px;
-        width: 300px;
-	vertical-align: middle;
-	color:black;
-}
+    }
 fieldset {
+        position: relative;
 	margin: 2%;
 	text-align: left;
         border-radius: 5px;
         border: 2px solid #007c7e;
-        width: 1200px;
+        width: 1100px;
         display: inline;
 }
 legend {
@@ -48,20 +26,42 @@ legend {
         color: #007c7e;
         padding: 5px 4px;
         margin-bottom: 15px;
-        top:10px;
-        left:0;
-        right:0;
 }
-form{
-    position: relative;
-    left:0px;
-    right:0px;
-    width:50%;
+.content label {
+    font-size: 16px;
+    display: inline-block;
+    margin: 10px 0px;
+    float: left;
+    width: 300px;
+}
+
+.content input[type="text"],input[type = "password"], input[type="number"],input[type="date"]{
+        font-family: Georgia;
+	border: 1px solid rgb(216, 216, 216);
+	padding: 2px 10px 2px 10px;
+        margin: 10px 0px;
+	height: 32px;
+	line-height: 25px;
+	border-radius: 5px;
+        width: 300px;
+        vertical-align: middle;
+	color:black;
+}
+.content ul{
+
+    list-style-type:none;
+    //list-style-position:outside;
+    margin:0px;
+    padding:0px;
+}
+.content li{
+    padding:12px; 
+    position:relative;
+    clear:left;
 }
 
 table {
         font-family: Georgia;
-        width: 100%;
 }
 
 td {
@@ -76,24 +76,6 @@ th {
         color: #FFFFFF;
 }
 
-button{
-    font-family: Georgia;
-        color: #FFFFFF;
-        width: 200px;
-        font-weight: bold;  
-        border-radius: 5px;
-        padding: 5px 13px;
-        margin: 20px 0px;
-        background: -moz-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #85d8da), color-stop(50%, #59bfc1), color-stop(51%, #4bb4b6), color-stop(100%, #68cbcd));
-        background: -webkit-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
-        background: -o-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
-        background: -ms-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
-        background: linear-gradient(to bottom, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
-        filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-        border: 1px solid #4bb4b6;
-        filter: none;
-}
 input[type="submit"], input[type="button"] {
         font-family: Georgia;
         width: 200px;
@@ -113,12 +95,13 @@ input[type="submit"], input[type="button"] {
         filter: none;
         
 }
+
 .error{
-    font-size: 30px;
-    text-align: middle;
-    font-family: Georgia;
+    font-size: 18px;
+    font-style: italic;
     position: relative;
-    margin-top: 50px;
+    margin-left:10px;
+    margin-top:50px;
     color: #F23447;
 }
 
@@ -126,7 +109,6 @@ input[type="submit"], input[type="button"] {
     font-size: 16px;
     font-weight: bold;
     color: #273640;
-    font-family: Georgia;
 }
 
 #login_promot{
@@ -149,11 +131,4 @@ input[type="submit"], input[type="button"] {
     font-size: 20px;
     font-style: italic;
 }
-nav{
-    position: absolute;
-    top: 100px;
-    left: 850px;
-    font-size: 20px;
-    font-family: Georgia;
-    color: #145b7d;
-}
+

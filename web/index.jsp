@@ -12,7 +12,6 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
     <title>Hypnos</title>
@@ -131,22 +130,35 @@
             }
         } %>
     
-        <form method="GET" action="">
+        
+        <form method="GET" action="" class = "content"> 
             <fieldset>
             <legend>Search The Hotel</legend>
-            <label for="location">Where are you going?</label><br>
-            <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
-            <label>When do you plan to travel</label> <br>
-            <label>From:</label><input type="date" name="ciDate"> <br>
-            <label>To:</label><input type="date" name="coDate"> <br>
-            <label for="numRooms">How many rooms do you want to book?</label><br>
-            <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
+            <ul>
+                <li>
+                <label for="location">Where are you going?</label>
+                <input id="location" type="text" name="location" value="Destination, Hotel"> 
+                </li>
+                <li>
+                <label>When do you plan to travel</label>
+                </li>
+                <li>
+                <label>From:</label><input type="date" name="ciDate"> <br>
+                <label>To:</label><input type="date" name="coDate"> 
+                </li>
+                <li>
+                <label for="numRooms">How many rooms do you want to book?</label>
+                <input id="numRooms" type="number" name="numRooms" min="1" max="99">
+                </li>  
+            </ul>
             <p class = "submit" ><input type="submit" value="Search"></p>
-            </fieldset>
-        </form>
             <% if (e!=null && !e.isEmpty()){ %>
                 <span class = "error"><%=e%></span>
             <% } %>
+             </fieldset>
+        </form>
+                
+   
         
     </div>
     </body>
