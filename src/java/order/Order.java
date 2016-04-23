@@ -644,11 +644,13 @@ public class Order implements MySQLInit, OrderStatus {
                 return 0;
             }
         }
+        Chris.deleteByOrderID(a.getOrderID());
         Order o = Order.mergeOrder(a, b);
         if (o != null) {
             Order.updateStatus(a.getOrderID(), HOLDING);
             return o.insertToDatabase();
         } else {
+            Chris.insertByOrderID(a.getOrderID());
             return 0;
         }
     }
@@ -660,17 +662,18 @@ public class Order implements MySQLInit, OrderStatus {
     public static boolean doUpdateOrder(Order a, Order b, int c, int d) {
         if (d == 0) {
             Order.updateStatus(a.getOrderID(), PROCESSING);
+            Chris.insertByOrderID(a.getOrderID());
             Order.updateStatus(c, ABORTED);
-            int aID = a.getOrderID();
-            DateTime dtCIDate = new DateTime(a.getCIDate());
-            DateTime dtCODate = new DateTime(a.getCODate());
-            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
-            for (int i = 0; i < duration; ++i) {
-                DateTime currentDate = dtCIDate.plusDays(i);
-                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
-                Chris ctmp = new Chris(aID, sqlDate, a.getHotelID(), a.getRoomType(), a.getNumOfRoom());
-                ctmp.insertToDatabase();
-            }
+//            int aID = a.getOrderID();
+//            DateTime dtCIDate = new DateTime(a.getCIDate());
+//            DateTime dtCODate = new DateTime(a.getCODate());
+//            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+//            for (int i = 0; i < duration; ++i) {
+//                DateTime currentDate = dtCIDate.plusDays(i);
+//                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+//                Chris ctmp = new Chris(aID, sqlDate, a.getHotelID(), a.getRoomType(), a.getNumOfRoom());
+//                ctmp.insertToDatabase();
+//            }
         } else {
             b.insertToDatabase();
             Order.updateStatus(a.getOrderID(), ABORTED);
