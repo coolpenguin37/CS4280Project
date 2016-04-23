@@ -328,6 +328,18 @@ public class Hotel implements MySQLInit{
                     stmt.close();
                 }
             }
+            
+            if (!h.getIntro().equals(""))
+            {
+                String strQuery = "UPDATE [HotelInfo] SET [Intro] = ? WHERE [hotelID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, h.getIntro());
+                stmt.setInt(2, h.getHotelID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
 
             if (conn != null) {
                 conn.close();
