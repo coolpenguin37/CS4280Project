@@ -50,3 +50,6 @@ INSERT INTO [MemberBenefits] VALUES (1, 100, 95, 90, 85, 2, 3, 4 ,4);
 INSERT INTO [MemberBenefits] VALUES (2, 100, 100, 90, 90, 3, 3, 4, 4);
 INSERT INTO [MemberBenefits] VALUES (3, 100, 100, 100, 100, 4, 4, 4, 4);
 SELECT * FROM [MemberBenefits];
+
+ALTER TABLE [Comment] ADD date [Date] NULL;
+EXEC sp_RENAME 'MemberBenefits.PlantiumUser', 'PlatinumUser', 'COLUMN'

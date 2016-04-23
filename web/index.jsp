@@ -135,12 +135,12 @@
             <fieldset>
             <legend>Search The Hotel</legend>
             <label for="location">Where are you going?</label><br>
-            <input id="location" type="text" name="location" value="Destination, Hotel"> <br>
+            <input id="location" type="text" name="location" value="Hong Kong"> <br>
             <label>When do you plan to travel</label> <br>
-            <label>From:</label><input type="date" name="ciDate"> <br>
-            <label>To:</label><input type="date" name="coDate"> <br>
+            <label>From:</label><input type="date" name="ciDate" value="2016-05-01"> <br>
+            <label>To:</label><input type="date" name="coDate" value="2016-05-05"> <br>
             <label for="numRooms">How many rooms do you want to book?</label><br>
-            <input id="numRooms" type="number" name="numRooms" min="1" max="99"> <br>
+            <input id="numRooms" type="number" value="1" name="numRooms" min="1" max="99"> <br>
             <p class = "submit" ><input type="submit" value="Search"></p>
             </fieldset>
         </form>

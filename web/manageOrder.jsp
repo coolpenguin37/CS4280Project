@@ -149,8 +149,8 @@
                 }
                 return;
             }
-            else if (request.getParameter("changNumOfRoom")!=null){ 
-                Order o=(Order)session.getAttribute("orderToModify");
+            else if (request.getParameter("changNumOfRoom") != null){ 
+                Order o = (Order) session.getAttribute("orderToModify");
         %>
                 <form method="GET" action="">
                     <label>Number of rooms to book</label>
@@ -163,8 +163,9 @@
             }
             else if (request.getParameter("changeNumOfRoomTo")!=null){
                 //mark
-                Order o=(Order)session.getAttribute("orderToModify");
-                o.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
+                Order a = (Order) session.getAttribute("orderToModify");
+                Order b = new Order(a);
+                b.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
                 if (o.updateOrder(o)){ %>
                     <span> Updated Successfully!</span>
                 <%

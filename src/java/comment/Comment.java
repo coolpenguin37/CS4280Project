@@ -6,6 +6,7 @@
 package comment;
 
 import database.*;
+import java.sql.Date;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class Comment implements MySQLInit {
     int orderID;
     String content;
     int score;
+    Date date;
     
     public int getCommentID() {
         return commentID;
@@ -51,23 +53,35 @@ public class Comment implements MySQLInit {
         this.score = score;
     }
     
-    public Comment(int orderID, int score) {
+    public Date getDate() {
+        return date;
+    }
+    
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    
+    public Comment(int orderID, int score, Date date) {
         this.orderID = orderID;
         this.content = "";
         this.score = score;
+        this.date = date;
     }
 
-    public Comment(int orderID, String content, int score) {
+    public Comment(int orderID, String content, int score, Date date) {
         this.orderID = orderID;
         this.content = content;
         this.score = score;
+        this.date = date;        
     }
     
-    public Comment(int commentID, int orderID, String content, int score) {
+    public Comment(int commentID, int orderID, String content, int score, Date date) {
         this.commentID = commentID;
         this.orderID = orderID;
         this.content = content;
         this.score = score;
+        this.date = date;
+        
     }
     
     public boolean insertToDatabase() {
@@ -75,13 +89,14 @@ public class Comment implements MySQLInit {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Comments] "
-                + "([CommentID], [OrderID], [Content], [Score]) VALUES (?, ?, ?, ?)");
+                + "([CommentID], [OrderID], [Content], [Score], [Date]) VALUES (?, ?, ?, ?, ?)");
 
             stmt.setInt(1, commentID);
             stmt.setInt(2, orderID);
             stmt.setString(3, content);
             stmt.setInt(4, score);
-
+            stmt.setDate(5, date);
+            
             stmt.executeUpdate();
             if (stmt != null) {
                 stmt.close();
@@ -96,7 +111,7 @@ public class Comment implements MySQLInit {
         return true;
     }
 
-    public ArrayList<Comment> getCommentByHotelName(String hotelName) {
+    public static ArrayList<Comment> getCommentByHotelName(String hotelName) {
         ArrayList<Comment> commentList = new ArrayList<Comment>();
         try {
             Class.forName(SQLDriver);
@@ -104,13 +119,13 @@ public class Comment implements MySQLInit {
             String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.HotelID IN (SELECT HotelInfo.HotelID From [HotelInfo] "
-                + "WHERE [HotelName] = ?";
+                + "WHERE [HotelName] = ?)";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
             stmt.setString(1, hotelName);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment temp = new Comment(rs.getInt("CommentID"), rs.getInt("OrderID"),
-                    rs.getString("Content"), rs.getInt("Score"));
+                    rs.getString("Content"), rs.getInt("Score"), rs.getDate("Date"));
                 commentList.add(temp);
             }
 
@@ -132,7 +147,24 @@ public class Comment implements MySQLInit {
         return commentList;
     }
 
-    public ArrayList<Comment> getCommentByUsername(String username) {
+    public static double getScoreByHotelName(String hotelName) {
+        ArrayList<Comment> commentList = getCommentByHotelName(hotelName);
+        if (commentList == null) {
+            return 0.0;
+        }
+        int sum = 0;
+        for (int i = 0; i < commentList.size(); ++i) {
+            Comment temp = commentList.get(i);
+            sum = sum + temp.getScore();
+        }
+        double avg = sum * 1.0 / (commentList.size() + 1.0);
+        avg = avg * 10;
+        avg = Math.round(avg);
+        avg = avg / 10;
+        return avg;
+    }
+
+    public static ArrayList<Comment> getCommentByUsername(String username) {
         ArrayList<Comment> commentList = new ArrayList<Comment>();
         try {
             Class.forName(SQLDriver);
@@ -146,7 +178,7 @@ public class Comment implements MySQLInit {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment temp = new Comment(rs.getInt("CommentID"), rs.getInt("OrderID"),
-                    rs.getString("Content"), rs.getInt("Score"));
+                    rs.getString("Content"), rs.getInt("Score"), rs.getDate("Date"));
                 commentList.add(temp);
             }
 
