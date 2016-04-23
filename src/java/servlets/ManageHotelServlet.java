@@ -5,6 +5,8 @@
  */
 package servlets;
 
+import java.util.Date;
+import java.sql.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import manager.*;
 import java.util.ArrayList;
 import com.google.gson.*;
 import hotel.*;
+import java.util.Calendar;
 import org.json.simple.*;
 import order.*;
 import user.*;
@@ -212,9 +215,25 @@ public class ManageHotelServlet extends HttpServlet {
                             
                         }
                         else if(command.indexOf("numOfRoom")!=-1){
-                           //mark
-                            r.setNumOfRoom(Integer.parseInt(result));
-                            //check if valid
+                            int newNumOfRoom = Integer.parseInt(result);
+                            Date CIDate = new Date();
+                            Date CODate = new Date();
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(CODate);
+                            c.add(Calendar.DATE, 90);
+                            CODate = c.getTime();
+                            java.sql.Date sqlCIDate = new java.sql.Date(CIDate.getTime());
+                            java.sql.Date sqlCODate = new java.sql.Date(CODate.getTime());
+                            Order o = new Order(r.getHotelID(), r.getRoomType(), 1, sqlCIDate, sqlCODate);
+                            int minReq = Order.getRemainedRoom(o);
+                            if (minReq >= newNumOfRoom) {
+                                r.setNumOfRoom(newNumOfRoom);
+                            } else {
+                                obj.put("status", "error");
+                                obj.put("msg", "TOO SMALL! Minimum # of Room: " + minReq );
+                            }
+                            
+                            
                         }
                         else if(command.indexOf("discount")!=-1){
                             MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);  
