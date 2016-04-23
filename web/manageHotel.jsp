@@ -308,8 +308,9 @@
                             }
                         }
                     });
-                    
+                    var oldValueObj = $('.numOfRoom').editable('getValue');
                     $('.numOfRoom,.roomSize').editable({
+                        //alan todo
                         type: 'text',
                         url: 'ManageHotelServlet',
                         validate: function(value) {
@@ -318,6 +319,14 @@
                             }
                             if(!$.isNumeric(value)){
                                 return 'Please input a number!'
+                            }
+                        },
+                        success: function(data){
+                            if (data.status=="error"){
+                                clearErr()
+                                $("#room-information").append("<div><span class='alert alert-danger'><strong>Error!</strong> " + data.msg + "</span></div>")
+                                $(this).editable('setValue',oldValueObj)
+                                return false;
                             }
                         }
                     });

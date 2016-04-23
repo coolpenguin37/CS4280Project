@@ -214,27 +214,7 @@ public class ManageHotelServlet extends HttpServlet {
                             r.setStandardRate(Integer.parseInt(result));
                             
                         }
-                        else if(command.indexOf("numOfRoom")!=-1){
-                            int newNumOfRoom = Integer.parseInt(result);
-                            Date CIDate = new Date();
-                            Date CODate = new Date();
-                            Calendar c = Calendar.getInstance();
-                            c.setTime(CODate);
-                            c.add(Calendar.DATE, 90);
-                            CODate = c.getTime();
-                            java.sql.Date sqlCIDate = new java.sql.Date(CIDate.getTime());
-                            java.sql.Date sqlCODate = new java.sql.Date(CODate.getTime());
-                            Order o = new Order(r.getHotelID(), r.getRoomType(), 1, sqlCIDate, sqlCODate);
-                            int minReq = r.getNumOfRoom() - Order.getRemainedRoom(o);
-                            if (minReq <= newNumOfRoom) {
-                                r.setNumOfRoom(newNumOfRoom);
-                            } else {
-                                obj.put("status", "error");
-                                obj.put("msg", "TOO SMALL! Minimum # of Room: " + minReq );
-                            }
-                            
-                            
-                        }
+                        
                         else if(command.indexOf("discount")!=-1){
                             MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);  
                             MemberBenefits newMB;
@@ -268,14 +248,41 @@ public class ManageHotelServlet extends HttpServlet {
                            }
                         }
                         else{
-                            if (!HotelRoom.updateRoom(r)){
-                               obj.put("status", "error");
-                               obj.put("msg", "Cannot update hotel room!");
-                               
+                            if(command.indexOf("numOfRoom")!=-1){
+                                int newNumOfRoom = Integer.parseInt(result);
+                                Date CIDate = new Date();
+                                Date CODate = new Date();
+                                Calendar c = Calendar.getInstance();
+                                c.setTime(CODate);
+                                c.add(Calendar.DATE, 90);
+                                CODate = c.getTime();
+                                java.sql.Date sqlCIDate = new java.sql.Date(CIDate.getTime());
+                                java.sql.Date sqlCODate = new java.sql.Date(CODate.getTime());
+                                Order o = new Order(r.getHotelID(), r.getRoomType(), 1, sqlCIDate, sqlCODate);
+                                int minReq = r.getNumOfRoom() - Order.getRemainedRoom(o);
+                                if (minReq <= newNumOfRoom) {
+                                    r.setNumOfRoom(newNumOfRoom);
+                                    if (!HotelRoom.updateRoom(r)) {
+                                        obj.put("status", "error");
+                                        obj.put("msg", "Cannot update hotel room!");
+                                    }
+                                } else {
+                                    obj.put("status", "error");
+                                    obj.put("msg", "TOO SMALL! Minimum # of Room: " + minReq );
+                                }
+                            
+                            
                             }
-                            else{
-                               obj.put("status", "correct");
-                               obj.put("msg", "Nice");
+                            else {
+                                if (!HotelRoom.updateRoom(r)){
+                                    obj.put("status", "error");
+                                    obj.put("msg", "Cannot update hotel room!");
+                               
+                                }
+                                else{
+                                    obj.put("status", "correct");
+                                    obj.put("msg", "Nice");
+                                }
                             }
                         }  
                         out.print(obj);
