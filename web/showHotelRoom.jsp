@@ -24,12 +24,24 @@
     <fieldset>
         <legend>Hotel Room</legend>
    
-    <% if (session.getAttribute("name") != null) { %>
-        <p class = "info">Hello <%=session.getAttribute("name")%> </p>
-    <% } %>       
     <% 
-        if (request.getParameter("currentHotel")!=null) {
-            Hotel currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
+        if (session.getAttribute("name") != null) { 
+    %>
+            <p class = "info">Hello <%=session.getAttribute("name")%> </p>
+    <%
+        }
+    %>
+    <% 
+        if (request.getParameter("currentHotel") != null || session.getAttribute("orderToModify") != null) {
+            Hotel currentHotel = null;
+            Order a = null;
+            if (request.getParameter("currentHotel") != null) {
+                currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
+            } else {
+                a = (Order) session.getAttribute("orderToModify");
+                currentHotel = Hotel.getHotelByID(a.getHotelID());
+            }
+            
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
             
@@ -39,11 +51,8 @@
             Date CIDate = (Date)session.getAttribute("ciDate");
             Date CODate = (Date)session.getAttribute("coDate");
             int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
-                for (int i = 0; i < rooms.size(); ++i) {
+            for (int i = 0; i < rooms.size(); ++i) {
                 HotelRoom room = rooms.get(i);
-                //TODO: class method required to map (hotelID, roomType, username) --> rate
-                //The reason we need to pass username is that for registered user, the rate should be lower
-                //We do it in server side to allow personalized discount/special discount
                 int standardRate = room.getStandardRate();
                 String username = (String) session.getAttribute("username");
                 User u = User.getUserByUsername(username);
@@ -96,84 +105,92 @@
             </div>
         <% } %>
     <%  } %>
-    <%  boolean hasLoggedIn=false;
+    <%  
+        
+        
+        
+        boolean hasLoggedIn=false;
         int random_password=0;
         int randomNum=0;
-        if (request.getParameter("bookroom")!=null && !(request.getParameter("bookroom").isEmpty())){
-            ArrayList<HotelRoom> rooms=(ArrayList<HotelRoom>)session.getAttribute("rooms");
-            HotelRoom room=rooms.get(Integer.parseInt(request.getParameter("bookroom")));
+        if (request.getParameter("bookroom") != null && !(request.getParameter("bookroom").isEmpty())){
+            ArrayList<HotelRoom> rooms = (ArrayList<HotelRoom>)session.getAttribute("rooms");
+            HotelRoom room = rooms.get(Integer.parseInt(request.getParameter("bookroom")));
             int orderID;
-            if (session.getAttribute("orderToModify")!=null){
-                Order o=(Order)session.getAttribute("orderToModify");
-                o.setRoomType(room.getRoomType());
-                if (o.updateOrder(o)){ %>
+            
+            if (session.getAttribute("orderToModify") != null){
+                Order a = (Order) session.getAttribute("orderToModify");
+                if (Order.updateOrderRoomType(a, room.getRoomType()) > 0){ 
+    %>
                     <p> Your room type has been successfully modified! </p>
                     <form method="POST" action="Payment">
                         <button type="submit">Pay now</button>
                     </form>
                     <a href="index.jsp">Go back to main page</a>
                     
-                <%
+    <%
                     return;
                 }
-                else { %>
+                else { 
+    %>
                     <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
                 <%
                     return;
                 }
+            }
+
+            else {
+            
+            int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
+            int userID;
+            if (session.getAttribute("userID")==null){
+                hasLoggedIn=false;
+                SecureRandom rn=new SecureRandom();
+                int maximum=99999999;
+                int minimum=10000000;
+                int n = maximum - minimum + 1;
+                randomNum =  minimum + Math.abs(rn.nextInt() % n);
+                while (User.usernameExist(Integer.toString(randomNum))){
+                    randomNum = minimum + Math.abs(rn.nextInt() % n);
+                }
+                random_password=minimum + Math.abs(rn.nextInt() % n);
+                User u=new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
+                u.insertToDatabase();
+                u=User.getUserByUsername(Integer.toString(randomNum));
+                userID=u.getUserID();
+//                request.setAttribute("userID",userID);
             }
             else {
-                int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
-                int userID;
-                if (session.getAttribute("userID")==null){
-                    hasLoggedIn=false;
-                    SecureRandom rn=new SecureRandom();
-                    int maximum=99999999;
-                    int minimum=10000000;
-                    int n = maximum - minimum + 1;
-                    randomNum =  minimum + Math.abs(rn.nextInt() % n);
-                    while (User.usernameExist(Integer.toString(randomNum))){
-                        randomNum = minimum + Math.abs(rn.nextInt() % n);
-                    }
-                    random_password=minimum + Math.abs(rn.nextInt() % n);
-                    User u=new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
-                    u.insertToDatabase();
-                    u=User.getUserByUsername(Integer.toString(randomNum));
-                    userID=u.getUserID();
-    //                request.setAttribute("userID",userID);
-                }
-                else {
-                    userID=(Integer)session.getAttribute("userID");
-                    hasLoggedIn=true;
-                }
-                Date ciDate= (Date)session.getAttribute("ciDate");
-                Date coDate= (Date)session.getAttribute("coDate");
-                Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
-                orderID = o.insertToDatabase();
-                if (orderID > 0){ 
-                    o.setOrderID(orderID);
-                    session.setAttribute("orderToPay",o);
-        %>
-
-                    <span> Your order has been submitted successfully! </span>
-
-                    <% if (!hasLoggedIn) { %>
-                        <p>You are not logged in. Please remember your Order ID and Pin below in order to manage your order later.</p>
-                        <span> Your Order ID is: <%=randomNum%> </span>
-                        <p>Pin: <%=random_password%></p>
-                    <%} %>
-                    <form method="POST" action="Payment">
-                        <button type="submit">Pay now</button>
-                    </form>
-                    <a href="index.jsp">Go back to main page</a>
-                <% }
-                else { %>
-                    <span> Failed to order the room...</span>
-                    <a href="index.jsp">Go back to main page</a>
-                <% }  
+                userID=(Integer)session.getAttribute("userID");
+                hasLoggedIn=true;
             }
-        }%>
+            Date ciDate= (Date)session.getAttribute("ciDate");
+            Date coDate= (Date)session.getAttribute("coDate");
+            Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
+            orderID = o.insertToDatabase();
+            if (orderID > 0){ 
+                o.setOrderID(orderID);
+                session.setAttribute("orderToPay",o);
+    %>
+
+                <span> Your order has been submitted successfully! </span>
+
+                <% if (!hasLoggedIn) { %>
+                    <p>You are not logged in. Please remember your Order ID and Pin below in order to manage your order later.</p>
+                    <span> Your Order ID is: <%=randomNum%> </span>
+                    <p>Pin: <%=random_password%></p>
+                <%} %>
+                <form method="POST" action="Payment">
+                    <button type="submit">Pay now</button>
+                </form>
+                <a href="index.jsp">Go back to main page</a>
+            <% }
+            else { %>
+                <span> Failed to order the room...</span>
+                <a href="index.jsp">Go back to main page</a>
+            <% }  
+        }
+    }%>
     </fieldset>
 </body>
 </html>

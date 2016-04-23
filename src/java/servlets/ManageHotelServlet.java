@@ -212,7 +212,7 @@ public class ManageHotelServlet extends HttpServlet {
                             
                         }
                         else if(command.indexOf("numOfRoom")!=-1){
-                           
+                           //mark
                             r.setNumOfRoom(Integer.parseInt(result));
                             //check if valid
                         }

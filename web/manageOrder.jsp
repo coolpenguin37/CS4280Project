@@ -47,78 +47,88 @@
                 return;
             }
             else if (request.getParameter("cancel")!=null){
-                
-                %>
-                <script>
-                if(confirm("Do you really want to cancel this order?")){
-                <% Order.updateStatus(Integer.parseInt(request.getParameter("cancel")), OrderStatus.ABORTED); %>
-                }
-                </script>
-            <%
+        %>
+            <script>
+            if(confirm("Do you really want to cancel this order?")){
+            <% Order.updateStatus(Integer.parseInt(request.getParameter("cancel")), OrderStatus.ABORTED); %>
             }
-            else if (request.getParameter("modify")!=null){
-                Order o=Order.getOrderByOrderID(Integer.parseInt(request.getParameter("modify")));%>
+            </script>
+        <%
+            }
+            else if (request.getParameter("modify")!=null) {
+                Order o=Order.getOrderByOrderID(Integer.parseInt(request.getParameter("modify")));
+        %>
                
-                    <p>Hotel Name: <%=Hotel.getHotelByID(o.getHotelID()).getHotelName()%></p>
-                    <br>
-                    <p>Hotel Room: <%=HotelRoom.getHotelRoom(o.getHotelID(), o.getRoomType()).getRoomName()%></p>
-                    <form method="POST" action="showHotelRoom.jsp?currentHotel=<%=o.getHotelID()%>">
-                        <% session.setAttribute("orderToModify",o);%>
-                        <input type="submit" name="Change Hotel Room">
-                    </form>
-                    <br>
-                    <p>Check-in Date: <%=o.getCIDate().toString()%></p>
-                    <p>Check-date Date: <%=o.getCODate().toString()%></p>
-                    <form method="POST" action="<%=request.getRequestURI()%>?changeDate=true">
-                        <% session.setAttribute("orderToModify",o);%>
-                        <input type="submit" name="Change Check In/Check Out Date">
-                    </form>
-                    <br>
-                    <p>Number of rooms: <%=o.getNumOfRoom()%></p>
-                    <form method="POST" action="<%=request.getRequestURI()%>?changNumOfRoom=true">
-                        <% session.setAttribute("orderToModify",o);%>
-                        <input type="submit" name="Change Number of Rooms">
-                    </form>
-                    
-            <%    
-                    return;
+            <p>Hotel Name: <%=Hotel.getHotelByID(o.getHotelID()).getHotelName()%></p>
+            <br>
+            <p>Hotel Room: <%=HotelRoom.getHotelRoom(o.getHotelID(), o.getRoomType()).getRoomName()%></p>
+            <form method="POST" action="showHotelRoom.jsp?changeRoom=true">
+                <% session.setAttribute("orderToModify",o);%>
+                <input type="submit" name="Change Hotel Room">
+            </form>
+            <br>
+            <p>Check-in Date: <%=o.getCIDate().toString()%></p>
+            <p>Check-date Date: <%=o.getCODate().toString()%></p>
+            <form method="POST" action="<%=request.getRequestURI()%>?changeDate=true">
+                <% session.setAttribute("orderToModify",o);%>
+                <input type="submit" name="Change Check In/Check Out Date">
+            </form>
+            
+            <br>
+            <p>Number of rooms: <%=o.getNumOfRoom()%></p>
+            <form method="POST" action="<%=request.getRequestURI()%>?changNumOfRoom=true">
+                <% session.setAttribute("orderToModify",o);%>
+                <input type="submit" name="Change Number of Rooms">
+            </form>
+                
+        <%    
+                return;
             }
+                
             else if (request.getParameter("changeDate")!=null){ 
                 Order o=(Order)session.getAttribute("orderToModify");
-            %>
-                <form method="GET" action=""
+        %>
+                <form method="GET" action="">
                     <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
                     <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
                     <input type="submit">
                 </form>
-                <%
+        <%
                 return;
             }
-            else if (request.getParameter("ciDate")!=null || request.getParameter("coDate")!=null){
-                Order o=(Order)session.getAttribute("orderToModify");
-                String e="";
-                Date CIDate,CODate;
-                if (request.getParameter("ciDate")==null || request.getParameter("coDate")==null){
-                    e="Check-in date and check-out date cannot be empty!";
+            else if (request.getParameter("ciDate") != null || request.getParameter("coDate") != null){
+                Order a = (Order) session.getAttribute("orderToModify");
+                String e = "";
+                Date CIDate, CODate;
+                if (request.getParameter("ciDate") == null || request.getParameter("coDate") == null) {
+                    e = "Check-in date and check-out date cannot be empty!";
                 }
                 else {
                     try {
-                        CIDate= java.sql.Date.valueOf(request.getParameter("ciDate"));
+                        CIDate = java.sql.Date.valueOf(request.getParameter("ciDate"));
                         CODate = java.sql.Date.valueOf(request.getParameter("coDate"));
                         if (!validateDate(CIDate,CODate).isEmpty()){
-                            e=validateDate(CIDate,CODate);
-                        }
-                        else {
-                            o.setCIDate(CIDate);
-                            o.setCODate(CODate);
-                            if (o.updateOrder(o)){ %>
-                            <span> Updated Successfully!</span>
-                            <%
-                            }
-                            else { %>
-                            <p> Updated failed...there are no more available room in your selection.</p>
-                            <p> Rest assured. Your previous order is not canceled. </p>
-                            <%
+                            e = validateDate(CIDate,CODate);
+                        } else {
+                            Order b = new Order(a);
+                            b.setCIDate(CIDate);
+                            b.setCODate(CODate);
+                            int mergedOrderID = tryUpdateOrder(a, b);
+                            if (mergedOrderID == 0) {
+                                // failed
+                            } else {
+                                HotelRoom room = HotelRoom.getHotelRoom(a.getHotelID(), a.getRoomType());
+                                User u = User.getUserByUserID(a.getUserID());
+                                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(a.getHotelID());
+                                int discount;
+                                if (u == null || u.getUserType() < 1){
+                                    discount=100;
+                                } else {
+                                    discount = mb.getDiscountByUserType(u.getUserType());
+                                }
+                                int realRate = (int) Math.floor(standardRate * (discount / 100.0));
+                                int realPrice = realRate * a.getNumOfRoom();
+                                //popup windows(b, realprice);
                             }
                         }
                         
@@ -127,23 +137,24 @@
                         e="Check-in date/check-out date not valid!";
                     }
                 }
-                if (!e.isEmpty()) { %>
-                <span> <%=e%> </span>
-                <form method="GET" action=""
-                    <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
-                    <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
-                    <input type="submit">
-                </form>
-            <%
+                if (!e.isEmpty()) { 
+        %>
+                    <span> <%=e%> </span>
+                    <form method="GET" action="">
+                        <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
+                        <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
+                        <input type="submit">
+                    </form>
+        <%
                 }
                 return;
             }
             else if (request.getParameter("changNumOfRoom")!=null){ 
                 Order o=(Order)session.getAttribute("orderToModify");
-            %>
+        %>
                 <form method="GET" action="">
                     <label>Number of rooms to book</label>
-                    <input type="number" name="changeNumOfRoomTo" value="<%=o.getNumOfRoom()%>" min="1" max="99">
+                    <input type="number" name="changeNumOfRoomTo" value=<%=o.getNumOfRoom()%> min="1" max="99">
                     <br>
                     <input type="submit">
                 </form>
@@ -151,6 +162,7 @@
                 return;
             }
             else if (request.getParameter("changeNumOfRoomTo")!=null){
+                //mark
                 Order o=(Order)session.getAttribute("orderToModify");
                 o.setNumOfRoom(Integer.parseInt(request.getParameter("changeNumOfRoomTo")));
                 if (o.updateOrder(o)){ %>

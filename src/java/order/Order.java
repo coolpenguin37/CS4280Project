@@ -234,6 +234,20 @@ public class Order implements MySQLInit, OrderStatus {
         this.price = price;
     }
 
+    public Order(Order another) {
+        this.status = another.status;
+        this.userID = another.userID;
+        this.CIDate = another.CIDate;
+        this.CODate = another.CODate;
+        this.hotelID = another.hotelID;
+        this.roomType = another.roomType;
+        this.numOfRoom = another.numOfRoom;
+        this.name = another.name;
+        this.email = another.email;
+        this.phone = another.phone;
+        this.price = another.price;
+    }
+
     public static Order getOrderByOrderID(int orderID) {
         Order temp = null;
         try {
@@ -619,6 +633,7 @@ public class Order implements MySQLInit, OrderStatus {
             return o;
         }
     }
+
     // b: new order
     // (status == PROCESSING, userID, hotelID, roomType, numOfRoom, CIDate, CODate)
     public static int tryUpdateOrder(Order a, Order b) {
@@ -638,6 +653,10 @@ public class Order implements MySQLInit, OrderStatus {
         }
     }
 
+    // a: old Order
+    // b: new Order
+    // c: merged OrderID
+    // d: 0 for negative; 1 for positive
     public static boolean doUpdateOrder(Order a, Order b, int c, int d) {
         if (d == 0) {
             Order.updateStatus(a.getOrderID(), PROCESSING);
@@ -660,9 +679,16 @@ public class Order implements MySQLInit, OrderStatus {
         return true;
     }
 
-    public static boolean doUpdateOrder(Order a, Order b) {
-        Order.updateStatus(a.getOrderID(), ABORTED);
-        return true;
+    public static int updateOrderRoomType(Order a, int newRoomType) {
+        Order b = new Order(a);
+        b.setRoomType(newRoomType);
+        int newOrderID = b.insertToDatabase();
+        if (newOrderID > 0) {
+            a.updateStatus(a.getOrderID(), ABORTED);
+            return newOrderID;
+        } else {
+            return 0;
+        }
     }
     
     //placeholder

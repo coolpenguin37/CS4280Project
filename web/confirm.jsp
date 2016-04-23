@@ -28,6 +28,8 @@
             <h1>The payment is successful! Your order (Order ID: <%=o.getOrderID()%>)is confirmed.</h1>
             
             <%  
+                //get request params, put into order (got from session), and update order
+                //mark
                 Order.updateStatus(o.getOrderID(),OrderStatus.ONGOING);
                 session.removeAttribute("orderToPay");
             } 
