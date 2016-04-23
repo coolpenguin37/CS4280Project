@@ -48,7 +48,7 @@
         <% if (session.getAttribute("name") != null) { %>
             <p class = "info" >Hello <%=session.getAttribute("name")%></p>
         <% } %>
-        <% if (request.getMethod()=="GET") {
+        <% if (request.getParameter("search") != null) {
             ArrayList<Integer> hotelIDList=new ArrayList<Integer>();
             //check if parameters are null. Only hotel name can be null;
             if (request.getParameter("location") == null || request.getParameter("location").isEmpty()) {
@@ -141,7 +141,7 @@
             <label>To:</label><input type="date" name="coDate" value="2016-05-05"> <br>
             <label for="numRooms">How many rooms do you want to book?</label><br>
             <input id="numRooms" type="number" value="1" name="numRooms" min="1" max="99"> <br>
-            <p class = "submit" ><input type="submit" value="Search"></p>
+            <p class = "submit" ><input type="submit" name='search' value="Search"></p>
             </fieldset>
         </form>
             <% if (e!=null && !e.isEmpty()){ %>
