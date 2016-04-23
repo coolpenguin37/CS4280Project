@@ -8,18 +8,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-     <link rel =" stylesheet" href =" css/all.css">
+    <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Show Hotel Room</title>
+</head>
+<body>
+    
     <div id = "title_bar_home">
-         
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Show Hotel Room</title>
         <h1 id = "title" >Hypnos</h1>
         <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
-</head>
-<body>
     
     <fieldset>
         <legend>Hotel Room</legend>

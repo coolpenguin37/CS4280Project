@@ -108,12 +108,12 @@
                     session.removeAttribute("a");
                     session.removeAttribute("b");
                     session.removeAttribute("c");
-                    if (Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeDate").equals("Confirm"))?1:0)){ %>
-                        <p>Success! The new order ID is: <%=b%> </p>
+                    int newOrderID=Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeDate").equals("Confirm"))?1:0);
+                    if (newOrderID!=-1){ %>
+                        <p>Success! The new order ID is: <%=newOrderID%> </p>
         <%
                     }
-                    else { 
-        %>
+                    else { %>
                         <p> Update order failed... </p>
         <%
                     }
@@ -192,6 +192,24 @@
                 </form>
         <%
                 return;
+            }
+            else if (request.getParameter("confirmChangeNum")!=null){
+                Order a=(Order)session.getAttribute("a");
+                Order b=(Order)session.getAttribute("b");
+                int c=(Integer)session.getAttribute("c");
+                session.removeAttribute("a");
+                session.removeAttribute("b");
+                session.removeAttribute("c");
+                int newOrderID=Order.doUpdateOrder(a,b,c,(request.getParameter("confirmChangeNum").equals("Confirm"))?1:0);
+                if (newOrderID!=-1){ %>
+                    <p>Success! The new order ID is: <%=newOrderID%> </p>
+    <%
+                }
+                else { 
+    %>
+                    <p> Update order failed... </p>
+    <%
+                }
             }
             else if (request.getParameter("changeNumOfRoomTo") != null){
                 Order a = (Order) session.getAttribute("orderToModify");

@@ -22,6 +22,7 @@
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
     <div>
+        <a href="https://www.facebook.com/dialog/oauth?client_id=622571284564354&redirect_uri=<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>&response_type=token">Login using Facebook</a>
             <form method="POST" action="LoginServlet">
                 <fieldset>  
                     <legend>Member login</legend>
