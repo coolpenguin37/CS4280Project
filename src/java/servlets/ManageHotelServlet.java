@@ -281,9 +281,9 @@ public class ManageHotelServlet extends HttpServlet {
                         else if (command.indexOf("address")!=-1){
                             h.setAddress(request.getParameter("value"));
                         }
-    //                    else if(command.indexOf("infomration")!=-1){
-    //                        h.setInformation(request.getParameter("value"));
-    //                    }
+                        else if(command.indexOf("intro")!=-1){
+                            h.setIntro(request.getParameter("value"));
+                        }
                         else if (command.indexOf("isRecommended")!=-1){
                             if (request.getParameter("value").equals("true")){
                                 h.setIsRecommended(1);

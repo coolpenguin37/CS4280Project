@@ -15,12 +15,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
-    <div id = "title_bar_home">
-         
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Hypnos</title>
-        
-    </div>
+    <title>Hypnos</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script>
         function init(){
             //check if there is a message
@@ -40,9 +36,13 @@
     </script>
 </head>
 <body>
-    <h1 id = "title" >Hypnos</h1>
-        <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
-        <jsp:include page="nav.jsp"></jsp:include>
+    <header>
+        <div id = "title_bar_home">
+            <h1 id = "title" >Hypnos</h1>
+            <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+            <jsp:include page="nav.jsp"></jsp:include>
+        </div>
+    </header>
     <div>
         <fieldset>
         <legend>Search The Hotel</legend>

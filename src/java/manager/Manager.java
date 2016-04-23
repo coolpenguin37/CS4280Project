@@ -16,13 +16,15 @@ import hotel.*;
  * @author Lin Jianxiong
  */
 public class Manager implements MySQLInit {
-    int rID;
-    int userID;
-    int hotelID;
+    
+    private int rID;
+    private int userID;
+    private int hotelID;
     
     public String getName(){
         return User.getUserByUserID(userID).getName();
     }
+
     public int getRID() {
         return rID;
     }
@@ -37,6 +39,10 @@ public class Manager implements MySQLInit {
     
     public Hotel getHotel(){
         return Hotel.getHotelByID(hotelID);
+    }
+    
+    public Manager(){
+        
     }
 
     public Manager(int userID, int hotelID) {
