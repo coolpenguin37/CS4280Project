@@ -9,13 +9,16 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel =" stylesheet" href =" css/all.css">
+        <link rel =" stylesheet" href ="css/nav.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Show Manager</title>
     </head>
     <body>
         <jsp:include page="manageManager.jsp"></jsp:include>
-        <h4>Manager Name: ${(null== managerList[0])?managerAdded.name:managerList[0].name}</h4>
-        <form action="ManageManagerServlet" method="GET">
+        <h3 id ="subtitle">Manager Name: ${(null== managerList[0])?managerAdded.name:managerList[0].name}</h4>
+        <form action="ManageManagerServlet" method="GET" class="content">
             <table>
                 <thead>
                     <tr>

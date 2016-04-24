@@ -9,13 +9,22 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel =" stylesheet" href =" css/all.css">
+        <link rel =" stylesheet" href ="css/nav.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Confirmation</title>
     </head>
     <body>
-        <jsp:include page="nav.jsp"></jsp:include>
+        <header>
+        <div id = "title_bar_home">
+            <h1 id = "title" >Hypnos</h1>
+            <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+            <jsp:include page="nav.jsp"></jsp:include>
+        </div>
+        </header>
         <% if (request.getHeader("referer").indexOf("Payment")==-1){%>
-        <h1>Sorry...The confirmation failed.You did not come from the payment page.</h1> 
+        <div class = "prompt">Sorry...The confirmation failed.You did not come from the payment page.</div> 
         <% 
         }
         else{
@@ -31,7 +40,7 @@
             <%
             }
             else { %>
-            <h1>The payment is successful! Your order (Order ID: <%=o.getOrderID()%>)is confirmed.</h1>
+            <div class = "prompt">The payment is successful! Your order (Order ID: <%=o.getOrderID()%>)is confirmed.</div>
             
             <%  
                 //get request params, put into order (got from session), and update order

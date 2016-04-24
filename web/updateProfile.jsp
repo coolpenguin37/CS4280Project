@@ -10,18 +10,19 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel =" stylesheet" href =" css/all.css">
         <link rel =" stylesheet" href ="css/nav.css">
-        <div id = "title_bar_home">
-             
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <title>Update Profile</title>
-            <h1 id = "title" >Hypnos</h1>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Update Profile</title>
+        
+</head>
+<body>
+    <div id = "title_bar_home">
+      <h1 id = "title" >Hypnos</h1>
             <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
             <jsp:include page="nav.jsp"></jsp:include>
     </div>
-</head>
-<body>
         <% 
             int isSuccess=0;
             String errorMessage="";
@@ -81,58 +82,57 @@
                 isSubscribed=(Integer)session.getAttribute("isSubscribed");
             } %>
                 
-        <fieldset>
+        <fieldset class = "fieldset">
             <legend>Update Profile</legend>
             <p class = "info">Hello <%=name%>. Update your profile here:</p>
-        <jsp:include page="nav.jsp"></jsp:include>
-        <form method="POST" action="">
-	<table>
-	<thead>
-            <tr>
-                <th>Information</th><th>Details</th>
-            </tr>
-	</thead>
-        <tbody>
-            <tr>
-                <td>Name</td>
-                <td><input type="text" name="name" value="<%= name%>" ></td>
-            </tr>
-            
-            <tr>
-                <td>Email</td>
-                <td><input type="text" name="userEmail" value="<%=userEmail %>" ></td>
-            </tr> 
-            
-            <tr>
-                <td>Telephone</td>
-                <td><input type="text" name="userTel" value="<%=userTel%>" ></td>
-            </tr> 
-            
-            <tr>
-                <td>Subscribe to our email list</td>
-                <td>
-                    <span>Yes</span>
-                    <input type="checkbox" name="isSubscribed" value="1" <%= (isSubscribed==1)?"checked":"" %>>
-                    <span>No</span>
-                    <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==0)?"checked":"" %>>
-                </td>
-            </tr> 
-            <tr>
-                <td>
-                    <input type="submit" name="Update">
-                </td>
-                <td>
-                    <button name="resetPassword">Reset Password</button>
-                </td>
-            </tr>
-            </tbody>
-            </table>
-                <% if (isSuccess==1) { %>
-                <span> Your profile has been updated successfully! </span>
-                <% } else if (isSuccess==-1){ %>
-                    <span> Your profile cannot be updated... </span>
-                    <span><%=errorMessage%></span>
-                <% } %>
+            <form method="POST" action="" class = "content">
+            <table>
+            <thead>
+                <tr>
+                    <th>Information</th><th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" name="name" value="<%= name%>" ></td>
+                </tr>
+
+                <tr>
+                    <td>Email</td>
+                    <td><input type="text" name="userEmail" value="<%=userEmail %>" ></td>
+                </tr> 
+
+                <tr>
+                    <td>Telephone</td>
+                    <td><input type="text" name="userTel" value="<%=userTel%>" ></td>
+                </tr> 
+
+                <tr>
+                    <td>Subscribe to our email list</td>
+                    <td>
+                        <span>Yes</span>
+                        <input type="checkbox" name="isSubscribed" value="1" <%= (isSubscribed==1)?"checked":"" %>>
+                        <span>No</span>
+                        <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==0)?"checked":"" %>>
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <input type="submit" name="Update">
+                    </td>
+                    <td>
+                        <button name="resetPassword">Reset Password</button>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+                    <% if (isSuccess==1) { %>
+                    <span class = "info"> Your profile has been updated successfully! </span>
+                    <% } else if (isSuccess==-1){ %>
+                    <span class ="info"> Your profile cannot be updated... </span><br>
+                        <span class ="error"><%=errorMessage%></span>
+                    <% } %>
             </form>
         </fieldset>
 	<% } %>

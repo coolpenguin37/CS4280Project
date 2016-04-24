@@ -43,7 +43,11 @@ public class Payment extends HttpServlet {
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
                 out.println("<head>");
-                out.println("<title>Payment</title>");            
+                out.println("<title>Payment</title>");      
+                out.println("<link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">");
+                out.println("<link rel =\" stylesheet\" href =\" css/all.css\">");
+                out.println("<link rel =\" stylesheet\" href =\" css/nav.css\">");
+                
                 out.println("</head>");
                 out.println("<body>");
                 HttpSession session=request.getSession();
@@ -77,21 +81,22 @@ public class Payment extends HttpServlet {
                 o.updateOrder(o);
                 int numRooms=o.getNumOfRoom();      
                 //mark
-                out.println("<form action='confirm.jsp' method='POST'>");
-                out.println("<fieldset>");
-                out.println("<legend>Personal Information</legend>");
+                out.println("<fieldset class = 'fieldset'>");
+                out.println("<legend>Payment</legend>");
+                out.println("<form action='confirm.jsp' method='POST' class = 'content'>");          
+                out.println("<h3 id = 'subtitle'>Personal Information</h2>");
                 out.println("<label>Name:</label>");
-                out.println("<input type='text' name='clientName' value="+u.getName()+">");
+                out.println("<input type='text' name='clientName' value="+u.getName()+"><br>");
                 out.println("<label>E-mail Address:</label>");
-                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+">");
+                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+"><br>");
                 out.println("<label>Retype Your E-mail Address:</label>");
-                out.println("<input type='text' name='clientRetypeEmail'>");
+                out.println("<input type='text' name='clientRetypeEmail'><br>");
                 out.println("<label>Phone:</label>");
-                out.println("<input type='text' name='clientPhone' value="+u.getTel()+">");
-                out.println("</fieldset>");
-                out.println("<h2>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
-                out.println("<fieldset>");
-                out.println("<legend>Credit Card Information</legend>");
+                out.println("<input type='text' name='clientPhone' value="+u.getTel()+"><br>");
+                out.println("<br><br>");
+                out.println("<h3 id = 'subtitle'>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
+                out.println("<br><br>");
+                out.println("<h3 id = 'subtitle'>Credit Card Information</h2>");
                 out.println("<label>Credit Card Number:</label>");
                 out.println("<input type='text' name='cardNum'>");
                 out.println("<br><label>Valid until:</label>");
@@ -101,6 +106,7 @@ public class Payment extends HttpServlet {
                 out.println("<br><label>CVV2:</label>");
                 out.println("<input type='text' name='cvv2'>");
                 out.println("<br><input type='submit' name='Submit' value='Submit'>");
+                out.println("</form>");
                 out.println("</fieldset>");
                 out.println("</body>");
                 out.println("</html>");

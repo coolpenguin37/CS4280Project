@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -23,8 +24,8 @@
     </div>
     <div>
         <a href="https://www.facebook.com/dialog/oauth?client_id=622571284564354&redirect_uri=<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>&response_type=token">Login using Facebook</a>
-            <form method="POST" action="LoginServlet">
-                <fieldset>  
+            <form method="POST" action="LoginServlet" class = "content">
+                <fieldset class = "fieldset">  
                     <legend>Member login</legend>
                 <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
                         session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));}%>
@@ -33,9 +34,10 @@
                     <li><label><b>Password: </b></label><input type="password" name="password"></li>
                     </ul>
                     <p class = "info">Click <a href="newAccount.jsp">here</a> for new member registration!</p>
-                    <p class = "info"><a href="manageManager.jsp">Administrative Login</a></p>          
+                    <p class = "info"><a href="manageManager.jsp">Administrative Login</a></p>  
+                    <p><input type="submit" value="Login"></p>
             </form>
-            <p><input type="submit" value="Login"></p>   
+               
             <% if(request.getAttribute("result") != null) { %>
                 <p class = "error"><%= request.getAttribute("result") %></p>
              <% } %>

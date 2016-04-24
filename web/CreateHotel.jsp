@@ -8,6 +8,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel =" stylesheet" href =" css/all.css">
+        <link rel =" stylesheet" href ="css/nav.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Create New Hotel</title>
     </head>

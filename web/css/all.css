@@ -8,9 +8,9 @@
 
 body{
         background-color: #ECFFFF;
-        font-family: Georgia;
+        font-family: Georgia !important;
     }
-fieldset {
+.fieldset {
         position: relative;
 	margin: 2%;
 	text-align: left;
@@ -18,21 +18,29 @@ fieldset {
         border: 2px solid #007c7e;
         width: 1100px;
         display: inline;
+        padding-bottom: 50px;
 }
-legend {
+.fieldset legend {
         font-weight: bold;
         position:relative;
         font-size: 25px;
         color: #007c7e;
         padding: 5px 4px;
         margin-bottom: 15px;
+        width: auto;
+        border:none;
+}
+.fieldset p{
+    margin-left:2%;
+    font-size: 16px;
+    text-align: left;
 }
 .content label {
     font-size: 16px;
+    padding: 5px;
     display: inline-block;
-    margin: 10px 0px;
+    margin-left: 10px !important;
     font-weight:bold;
-    float: left;
     width: 200px;
 }
 
@@ -46,45 +54,63 @@ legend {
 	border-radius: 5px;
         width: 300px;
         vertical-align: middle;
-	color:black;
+	color:grey;
 }
 .content ul{
 
     list-style-type:none;
     list-style-position:outside;
-    margin:0px;
-    padding:0px;
 }
 .content li{
-    padding:12px; 
     position:relative;
     clear:left;
 }
 
-table {
-        font-family: Georgia;
+.for_content p{
+    margin-left:2%;
+    font-size: 16px;
+    text-align: left;
+    margin: 2%;
+}
+.for_content {
+    float: left;
+    width: 400px;
+    height: 470px;
+    margin-left: 50px;
+    margin-top: 50px;
+    border: 2px solid #007c7e;   
 }
 
+#order_ID{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+table{
+    font-size: 16px;
+
+}
 td {
-        padding: 1% 0%;
+        padding: 1% 20px;
+        margin-left:20px;
         width: 20%;
 }
-
 th {
-        padding: 1% 0%;
+        padding: 1% 20px;
         width: 20%;
+        margin-left:20px;
         background-color: #2f999b;
         color: #FFFFFF;
 }
 
 input[type="submit"], input[type="button"] {
-        font-family: Georgia;
         width: 200px;
-        color: #FFFFFF;
-        font-weight: bold;  
+        color: #FFFFFF !important;
+        font-weight: bold !important;  
         border-radius: 5px;
         padding: 5px 13px;
-        margin: 50px 0px;
+        margin-left: 2% !important;
+        margin-top: 10px !important;
         background: -moz-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
         background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #85d8da), color-stop(50%, #59bfc1), color-stop(51%, #4bb4b6), color-stop(100%, #68cbcd));
         background: -webkit-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
@@ -97,17 +123,46 @@ input[type="submit"], input[type="button"] {
         vertical-align: middle;
         
 }
-
+button {
+        width: 200px;
+        color: #FFFFFF !important;
+        font-weight: bold !important;  
+        border-radius: 5px;
+        padding: 5px 13px;
+        margin-left: 2% !important;
+        margin-top: 10px !important;
+        background: -moz-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #85d8da), color-stop(50%, #59bfc1), color-stop(51%, #4bb4b6), color-stop(100%, #68cbcd));
+        background: -webkit-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -o-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: -ms-linear-gradient(top, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        background: linear-gradient(to bottom, #85d8da 0%, #59bfc1 50%, #4bb4b6 51%, #68cbcd 100%);
+        filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
+        border: 1px solid #4bb4b6;
+        filter: none;
+        vertical-align: middle;
+        
+}
+.prompt{
+    margin-top: 50px;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #273640;
+}
 .error{
     font-size: 18px;
     font-style: italic;
     position: relative;
-    margin-left:10px;
+    margin-left:2%;
     margin-top:50px;
     color: #F23447;
 }
 
 .info{
+    margin-left:2%;
     font-size: 16px;
     font-weight: bold;
     color: #273640;
@@ -132,5 +187,16 @@ input[type="submit"], input[type="button"] {
     width: 800px;
     font-size: 20px;
     font-style: italic;
+}
+
+#checkbox{
+    height:70px;
+}
+
+#subtitle{
+     font-size: 22px;
+     margin-left:10px;
+     margin-bottom: 20px;
+     font-weight: bold;
 }
 

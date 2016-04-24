@@ -9,6 +9,7 @@
 
 <html>
     <head>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel =" stylesheet" href =" css/all.css">
         <link rel =" stylesheet" href ="css/nav.css">
         <div id = "title_bar_home">
@@ -21,10 +22,10 @@
         </div>
     </head>
     <body>
-        
+        <fieldset class = "fieldset">
+            <legend>Create Account</legend>
             <form method="POST" action="CreateAccount" class = "content">
-                <fieldset>
-                <legend>Create Account</legend>
+                
                 <ul>
                     <li>
                     <label>Username:</label>
@@ -48,11 +49,11 @@
                     </li>
                     <li>
                     <label>Do you want to subscribe in our distribution list?</label>
-                    <input type="checkbox" name="subscribe" value="yes" checked>
+                    <input type="checkbox" name="subscribe" id = "checkbox" value="yes" checked>
                     </li>
                 </ul>
-            </form>
-                <input type="submit" name="Create New Account">
+                <input type="submit" value="Create">
+            </form>  
             <% if(request.getAttribute("result") != null) { %>
             <p class = "error"><%= request.getAttribute("result") %></p>
             <% } %> 
