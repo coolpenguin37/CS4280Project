@@ -644,11 +644,21 @@ public class Order implements MySQLInit, OrderStatus {
                 return 0;
             }
         }
+        if (a.getCODate().compareTo(b.getCIDate()) < 0) {
+            if (!checkAvailability(b)) {
+                return 0;
+            } else {
+                Order.updateStatus(a.getOrderID(), HOLDING);
+                return b.insertToDatabase();
+            }
+        }
+        Chris.deleteByOrderID(a.getOrderID());
         Order o = Order.mergeOrder(a, b);
         if (o != null) {
             Order.updateStatus(a.getOrderID(), HOLDING);
             return o.insertToDatabase();
         } else {
+            Chris.insertByOrderID(a.getOrderID());
             return 0;
         }
     }
@@ -657,26 +667,28 @@ public class Order implements MySQLInit, OrderStatus {
     // b: new Order
     // c: merged OrderID
     // d: 0 for negative; 1 for positive
-    public static boolean doUpdateOrder(Order a, Order b, int c, int d) {
+    public static int doUpdateOrder(Order a, Order b, int c, int d) {
         if (d == 0) {
             Order.updateStatus(a.getOrderID(), PROCESSING);
+            Chris.insertByOrderID(a.getOrderID());
             Order.updateStatus(c, ABORTED);
-            int aID = a.getOrderID();
-            DateTime dtCIDate = new DateTime(a.getCIDate());
-            DateTime dtCODate = new DateTime(a.getCODate());
-            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
-            for (int i = 0; i < duration; ++i) {
-                DateTime currentDate = dtCIDate.plusDays(i);
-                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
-                Chris ctmp = new Chris(aID, sqlDate, a.getHotelID(), a.getRoomType(), a.getNumOfRoom());
-                ctmp.insertToDatabase();
-            }
+            return -1;
+//            int aID = a.getOrderID();
+//            DateTime dtCIDate = new DateTime(a.getCIDate());
+//            DateTime dtCODate = new DateTime(a.getCODate());
+//            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+//            for (int i = 0; i < duration; ++i) {
+//                DateTime currentDate = dtCIDate.plusDays(i);
+//                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+//                Chris ctmp = new Chris(aID, sqlDate, a.getHotelID(), a.getRoomType(), a.getNumOfRoom());
+//                ctmp.insertToDatabase();
+//            }
         } else {
-            b.insertToDatabase();
             Order.updateStatus(a.getOrderID(), ABORTED);
             Order.updateStatus(c, ABORTED);
+            return b.insertToDatabase();
         }
-        return true;
+        
     }
 
     public static int updateOrderRoomType(Order a, int newRoomType) {
@@ -693,6 +705,66 @@ public class Order implements MySQLInit, OrderStatus {
     
     //mark placeholder
     public boolean updateOrder(Order o){
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+
+            if (!o.getName().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Name] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getName());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (!o.getEmail().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Email] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getEmail());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (!o.getPhone().equals(""))
+            {
+                String strQuery = "UPDATE [Orders] SET [Phone] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, o.getPhone());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+            
+            if (o.getPrice() != 0)
+            {
+                String strQuery = "UPDATE [Orders] SET [Price] = ? WHERE [OrderID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setInt(1, o.getPrice());
+                stmt.setInt(2, o.getOrderID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 

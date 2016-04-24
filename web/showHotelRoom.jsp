@@ -8,18 +8,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-     <link rel =" stylesheet" href =" css/all.css">
+    <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Show Hotel Room</title>
+</head>
+<body>
+    
     <div id = "title_bar_home">
-         
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Show Hotel Room</title>
         <h1 id = "title" >Hypnos</h1>
         <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
-</head>
-<body>
     
     <fieldset>
         <legend>Hotel Room</legend>
@@ -56,20 +56,21 @@
                 for (int i = 0; i < commentList.size(); ++i) {
                     Comment tmp = commentList.get(i);
                     Order o = Order.getOrderByOrderID(tmp.getOrderID());
-                    int currentUserID = Integer.parseInt(session.getAttribute("UserID"));
+                    int currentUserID = Integer.parseInt((String) session.getAttribute("UserID"));
                     //ALANTODO PRINT OUT COMMENT                
                     out.print("<div id=comment"+tmp.getCommentID()+">");
                     out.print("<p>"+tmp.getContent()+" </p>");
                     out.print("<p>"+tmp.getScore()+" </p>");
-                    out.print("<p>"+tmp.getTimestamp()+" </p>");
+                    out.print("<p>"+tmp.getDate()+" </p>");
                     if (currentUserID == o.getUserID())
                     {
-                        out.println("<a onclick=check_delcomment("+thiscomment.getID()+",\""+thisuserid+"\","+videoid+") >"+"删除评论"+"</a>");
+                        out.println("<a onclick=delcomment(" + tmp.getCommentID() + ") >" + "Delete"+"</a>");
                     }
                     out.println("<br></br>");
                     out.println("</div>");
                 }
             } else {
+                out.print("<p> No Comment </p>");
                 //ALANTODO: NO COMMENT YET
             }
             

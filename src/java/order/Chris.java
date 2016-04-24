@@ -8,6 +8,9 @@ package order;
 import java.sql.*;
 import java.sql.Date;
 import database.*;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 /**
  *
  * @author Lin Jianxiong
@@ -93,6 +96,26 @@ public class Chris implements MySQLInit {
             return 0;
         }
         return cnt;
+    }
+    
+    public static boolean insertByOrderID(int orderID) {
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            Order o = Order.getOrderByOrderID(orderID);
+            DateTime dtCIDate = new DateTime(o.getCIDate());
+            DateTime dtCODate = new DateTime(o.getCODate());
+            int duration = Days.daysBetween(new LocalDate(dtCIDate), new LocalDate(dtCODate)).getDays();
+            for (int i = 0; i < duration; ++i) {
+                DateTime currentDate = dtCIDate.plusDays(i);
+                java.sql.Date sqlDate = new java.sql.Date(currentDate.toDate().getTime());
+                Chris ctmp = new Chris(o.getOrderID(), sqlDate, o.getHotelID(), o.getRoomType(), o.getNumOfRoom());
+                ctmp.insertToDatabase();
+            }
+        } catch (Exception e) {
+            return false;
+        }   
+        return true;
     }
 
     // Delete if [Date] <= date

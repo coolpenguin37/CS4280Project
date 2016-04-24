@@ -43,7 +43,8 @@
             
             success:function(data){
                 if (data==null || data==""){
-                    $(".alert").remove()
+                    setTimeout(function(){$(".alert").fadeOut();},2000)
+                    $(".alert").remove();
                     $("#hotel-information").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> The member benefit has been updated successfully. </div>")
                     $("#"+command+" span").removeClass("fake-span");
                     $("#"+command+" .fake-empty *").remove();
@@ -99,7 +100,6 @@
                     return
                 }
                 $('.fa').remove()
-                $.delay(1000)
                 $('.col-md-12').remove()
                 var orderInformation=$("<div class='col-md-12'>")
                 var idNumber=$("<h4> Order ID: "+data.orderID+"</h4>")
@@ -308,8 +308,9 @@
                             }
                         }
                     });
-                    
+                    var oldValueObj = $('.numOfRoom').editable('getValue');
                     $('.numOfRoom,.roomSize').editable({
+                        //alan todo
                         type: 'text',
                         url: 'ManageHotelServlet',
                         validate: function(value) {
@@ -318,6 +319,14 @@
                             }
                             if(!$.isNumeric(value)){
                                 return 'Please input a number!'
+                            }
+                        },
+                        success: function(data){
+                            if (data.status=="error"){
+                                clearErr()
+                                $("#room-information").append("<div><span class='alert alert-danger'><strong>Error!</strong> " + data.msg + "</span></div>")
+                                $(this).editable('setValue',oldValueObj)
+                                return false;
                             }
                         }
                     });

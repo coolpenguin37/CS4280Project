@@ -14,6 +14,8 @@
 <head>
     <link rel =" stylesheet" href =" css/all.css">
     <link rel =" stylesheet" href ="css/nav.css">
+    <link rel ="stylesheet" href ="css/all.css">
+    <link rel ="stylesheet" href ="css/nav.css">
     <title>Hypnos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script>
@@ -104,8 +106,9 @@
                     }           
                     for (int i = 0; i < hotelIDList.size(); ++i) { 
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
+                        if (h.getIsRecommended()==0){continue;}
             %>
-                        <div <%= (h.getIsRecommended() == 1)?"class='recommended'":"" %> >
+                        <div class='recommended'>
                             <h3> <%= h.getHotelName() %> </h3>
                             <h4> <%= h.getAddress()%> </h4>
                             <p> <%=h.getIntro()%></p>
@@ -122,6 +125,34 @@
                             </form>
                         </div>
                     <% } %>
+                    
+                    <%
+                    for (int i = 0; i < hotelIDList.size(); ++i) { 
+                        Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
+                        if (h.getIsRecommended()==1){continue;}
+            %>
+                        <div>
+                            <h3> <%= h.getHotelName() %> </h3>
+                            <h4> <%= h.getAddress()%> </h4>
+                            <p> <%=h.getIntro()%></p>
+                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
+                            <div> 
+                                <span> Ratings: </span>
+                                <% for (int p=1;p<=h.getStarRating();p++){ %>
+                                    <span class='glyphicon glyphicon-star' style='color:red;'></span>
+                                <% } %>
+                            </div>
+                            <img src="" alt="">
+                            <form method="GET" action="showHotelRoom.jsp">
+                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
+                            </form>
+                        </div>
+                    <% } %>
+                    
+                    
+                    
+                    
+                    
                 <% } %>
             <% }
                 catch (Exception ex){

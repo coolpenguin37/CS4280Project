@@ -22,9 +22,10 @@
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
     <div>
-        <fieldset>  
-            <legend>Member login</legend>
-            <form method="POST" action="LoginServlet" class = "content">
+        <a href="https://www.facebook.com/dialog/oauth?client_id=622571284564354&redirect_uri=<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>&response_type=token">Login using Facebook</a>
+            <form method="POST" action="LoginServlet">
+                <fieldset>  
+                    <legend>Member login</legend>
                 <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
                         session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));}%>
                     <ul>
