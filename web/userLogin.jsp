@@ -22,24 +22,24 @@
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
     <div>
-            <form method="POST" action="LoginServlet">
-                <fieldset>  
-                    <legend>Member login</legend>
+        <fieldset>  
+            <legend>Member login</legend>
+            <form method="POST" action="LoginServlet" class = "content">
                 <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
                         session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));}%>
                     <ul>
                     <li><label><b>Username: </b></label><input type="text" name="username"> </li>
                     <li><label><b>Password: </b></label><input type="password" name="password"></li>
-                    <p class = "info">Click <a href="newAccount.jsp">here</a> for new member registration!</p>
-                    <p class = "info"><a href="manageManager.jsp">Administrative Login</a></p>
-                    <p><input type="submit" value="Login"></p>   
-                    <% if(request.getAttribute("result") != null) { %>
-                        <p class = "error"><%= request.getAttribute("result") %></p>
-                    <% } %>
-                </fieldset>
                     </ul>
+                    <p class = "info">Click <a href="newAccount.jsp">here</a> for new member registration!</p>
+                    <p class = "info"><a href="manageManager.jsp">Administrative Login</a></p>          
             </form>
+            <p><input type="submit" value="Login"></p>   
+            <% if(request.getAttribute("result") != null) { %>
+                <p class = "error"><%= request.getAttribute("result") %></p>
+             <% } %>
             <p><%=(request.getParameter("result")!=null)?request.getParameter("result"):""%></p>
+        </fieldset>
     </div>
 </body>
 </html>

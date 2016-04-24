@@ -12,7 +12,8 @@
         <title>Create New Hotel</title>
     </head>
     <body>
-        <form method="POST" action="CreateHotelServlet">
+        <form method="POST" action="CreateHotelServlet" class = "content">
+
             <label>Hotel Name:</label>
             <input type="text" name="hotelName">
             <br>

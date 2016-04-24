@@ -21,23 +21,38 @@
         </div>
     </head>
     <body>
-        <fieldset>
-            <legend>Create Account</legend>
-            <form method="POST" action="CreateAccount">
-                <label>Username:</label><br>
-            <input type="text" name="username">
-            <br><label>Password:</label><br>
-            <input type="password" name="password">
-            <br><label>Name:</label><br>
-            <input type="text" name="name">
-            <br><label>Telephone:</label><br>
-            <input type="text" name="telephone">
-            <br><label>Email</label><br>
-            <input type="text" name="email">
-            <br><label>Do you want to subscribe in our distribution list?</label>
-            <input type="checkbox" name="subscribe" value="yes" checked><br>
-            <input type="submit" name="Create New Account">
+        
+            <form method="POST" action="CreateAccount" class = "content">
+                <fieldset>
+                <legend>Create Account</legend>
+                <ul>
+                    <li>
+                    <label>Username:</label>
+                    <input type="text" name="username">
+                    </li>
+                    <li>
+                    <label>Password:</label>
+                    <input type="password" name="password">
+                    </li>
+                    <li>
+                    <label>Name:</label>
+                    <input type="text" name="name">
+                    </li>
+                    <li>
+                    <label>Telephone:</label>
+                    <input type="text" name="telephone">
+                    </li>
+                    <li>
+                    <label>Email</label>
+                    <input type="text" name="email">
+                    </li>
+                    <li>
+                    <label>Do you want to subscribe in our distribution list?</label>
+                    <input type="checkbox" name="subscribe" value="yes" checked>
+                    </li>
+                </ul>
             </form>
+                <input type="submit" name="Create New Account">
             <% if(request.getAttribute("result") != null) { %>
             <p class = "error"><%= request.getAttribute("result") %></p>
             <% } %> 
