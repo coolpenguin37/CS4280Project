@@ -38,31 +38,36 @@ body{
 .recommended{
     margin-top:30px;
     width: 100%;
-    height:300px;
+    height:250px;
     margin-left:1%;
+    position: relative;
 }
 .img{
-    width:400px;
-    height:300px;
+    width:350px;
+    height:250px;
 }
 .image{
-    width: 400px;
-    height: 300px;
+    width: 350px;
+    height: 250px;
     position: relative;
     left: 0px;
 }
 .price{
-    width: 240px;
+    width: 320px;
     height: 60px;
-    background-color: rgba(0,0,0,0.6);
-    position: relative;
-    left: 0px;
-    top: 200px;  
+    background-color: rgba(0,0,0,0.3);
+    position: absolute;
+    right: 0px;
+    top: 180px;  
+    color: white;
+    text-align: center;
 }
 .text{
-    position: relative;
-    float:left;
-    width:750px
+    position:absolute;
+    top: 0px;
+    left: 370px;
+    width:750px;
+    height: 200px;
 }
 .content {
     padding-bottom: 50px;

@@ -111,7 +111,7 @@
                             <div class ="image">
                                 <img src="image/11.jpg" class = "img">
                                 <div class = "price">
-                                <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
+                                <h3> Price: $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
                                 </div>
                             </div>
                             <div class = "text">
@@ -124,10 +124,11 @@
                                         <span class='glyphicon glyphicon-star' style='color:red;'></span>
                                     <% } %>
                                 </div>
+                                <form method="GET" action="showHotelRoom.jsp">
+                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
+                                </form>
                             </div>
-                            <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
-                            </form>
+                            
                         </div>
                     <% } %>
                     
@@ -140,7 +141,7 @@
                             <div class="image">
                                 <img src="image/10.jpg" class = "img">
                                 <div class = "price">
-                                <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
+                                <h3> Price: $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
                                 </div>
                             </div>
                             <div class ="text">
@@ -154,10 +155,11 @@
                                         <span class='glyphicon glyphicon-star' style='color:red;'></span>
                                     <% } %>
                                 </div>
+                                <form method="GET" action="showHotelRoom.jsp">
+                                <button type="submit" id =" check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
+                                </form>
                             </div>
-                            <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
-                            </form>
+                            
                         </div>
                     <% } %>
                     
