@@ -84,6 +84,8 @@
                     userID=(Integer)session.getAttribute("userID");
                     hasLoggedIn=true;
                 }
+                o.setUserID(userID);
+                o.setStatus(OrderStatus.PROCESSING);
                 orderID = o.insertToDatabase();
                 //successfully submit order
                 if (orderID > 0) {
@@ -141,7 +143,7 @@
                     Order o = Order.getOrderByOrderID(tmp.getOrderID());
                     int currentUserID;
                     if (session.getAttribute("userID") != null) {
-                        currentUserID = (Integer) session.getAttribute("UserID");
+                        currentUserID = (Integer) session.getAttribute("userID");
                     } else {
                         currentUserID = -1;
                     } %>
@@ -189,7 +191,7 @@
                 int realRate = (int) Math.floor(standardRate * (discount / 100.0));
                 
                 int numRooms=(session.getAttribute("numRooms")==null)?a.getNumOfRoom():Integer.valueOf((String)session.getAttribute("numRooms"));
-                Order o = new Order(hotelID, room.getRoomType(),numRooms,CIDate, CODate);
+                Order o=new Order(room.getHotelID(), room.getRoomType(), numRooms, CIDate, CODate);
                 o.setPrice(realRate*numRooms*numDays);
                 orderMap.put(hotelID+"_"+room.getRoomType(), o);
                 int remained = Order.getRemainedRoom(o); %>
@@ -225,7 +227,7 @@
                     <% } %>
                     <% if (remained>0){ %>
                         <form method="POST" <%="action='"+((session.getAttribute("orderToModify")==null)?"":"manageOrder.jsp")+"'"%>>
-                            <button type="submit" name="bookroom" value="<%=hotelID+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
+                            <button type="submit" name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
                         </form>
                     <% } %>
                 </div>
