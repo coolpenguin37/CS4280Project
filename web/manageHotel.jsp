@@ -35,7 +35,7 @@
     function updateMemberBenefit(command,value){
         var values={}
         values[command]=value
-        values["hotelID"]=$(".isRecommended").attr("name")
+        values["hotelID"]=$(".isRecommended.hotel").attr("name")
         $.ajax({
             type:"POST",
             url:"ManageHotelServlet",
@@ -150,8 +150,9 @@
                 
                 $.each(data.hotelInfo,function(key,value){
                     if (key=="isRecommended") {
-                        $(".isRecommended").bootstrapSwitch("disabled",false)
-                        $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
+                        $(".isRecommended.hotel").bootstrapSwitch("disabled",false)
+                        $(".isRecommended.hotel").off("switchChange.bootstrapSwitch");
+                        $(".isRecommended.hotel").bootstrapSwitch("state",(value==1)?true:false)
                     }
                     else if (key=="label"){
                         
@@ -198,7 +199,7 @@
                         });
                     }
                 })
-                $(".isRecommended").attr("name",data.hotelInfo.hotelID)
+                $(".isRecommended.hotel").attr("name",data.hotelInfo.hotelID)
                 
                 $.each(data.discountList,function(key,value){
                    if (key.toString().toUpperCase().search("USER")==-1){
@@ -264,7 +265,7 @@
                     var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-name='standardRate' data-pk="+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
                     var rate=value.standardRate
                     var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-name='numOfRoom' data-pk="+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
-                    var recommendFlag='<span class="label label-default">Recommend:</span> <input class="isRecommended room" name='+roomID+' type="checkbox" data-on-color="success">'
+                    var recommendFlag='<span class="label label-default">Recommend:</span> <input class="isRecommended room" name='+hotelID+"_"+roomID+' type="checkbox" data-on-color="success">'
                     var priceTable="<div class='container'><table class='table table-hover'>\n\
             <thead>\n\
             <th>User Type</th>\n\
@@ -283,13 +284,14 @@
                     var img=$("<img></img")
                     var newDiv=($("<div class='roomInfo'>").append(roomName).append(roomSize).append(standardRate).append(numOfRoom).append(recommendFlag).append(priceTable).append(img))
                     $("#room-information").append(newDiv) 
-                    $(".isRecommended").bootstrapSwitch("disabled",false)
-                    $(".isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {
+                    $(".isRecommended.room").bootstrapSwitch("disabled",false)
+                    $(".isRecommended.room").off("switchChange.bootstrapSwitch");
+                    $("input[name='"+hotelID+"_"+roomID+"']").bootstrapSwitch("state",(value.isRecommended==1)?true:false)
+                    $(".isRecommended.room").on('switchChange.bootstrapSwitch', function(event, state) {
                         $.ajax({
                 
                         type:"POST",
                         url:"ManageHotelServlet",
-                        //duan check this
                         data:{"pk":$(this).attr("name"),"name":"isRecommended","value":state},
                         dataType:"json",
 
@@ -400,8 +402,7 @@
 //        };)
     function init(){
         $(".isRecommended").bootstrapSwitch("disabled",true)
-        //alan to do not working well
-        
+        $("#hotel-selection li:first").click()
     }
     window.onload=init;
     

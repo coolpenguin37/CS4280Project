@@ -20,7 +20,7 @@ public class HotelRoom implements MySQLInit {
     int standardRate;
     int numOfRoom;
     int roomSize;
-    int isRecommended;
+    int isRecommended=-1;
 
     public int getHotelID() {
         return hotelID;
@@ -319,12 +319,12 @@ public class HotelRoom implements MySQLInit {
                 }
             }
             
-            if (r.getIsRecommended() != 0) {
-                String strQuery = "UPDATE [HotelRoom] SET [RoomSize] = ? WHERE [HotelID] = ? AND [IsRecommended] = ?";
+            if (r.getIsRecommended() != -1) {
+                String strQuery = "UPDATE [HotelRoom] SET [IsRecommended] = ? WHERE [HotelID] = ? AND [RoomType] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
-                stmt.setInt(1, r.getRoomSize());
+                stmt.setInt(1, r.getIsRecommended());
                 stmt.setInt(2, r.getHotelID());
-                stmt.setInt(3, r.getIsRecommended());
+                stmt.setInt(3, r.getRoomType());
                 stmt.executeUpdate();
                 if (stmt != null) {
                     stmt.close();

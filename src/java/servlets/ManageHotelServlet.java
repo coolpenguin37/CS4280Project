@@ -214,6 +214,15 @@ public class ManageHotelServlet extends HttpServlet {
                             r.setRoomSize(Integer.parseInt(result));   
                         }
                         
+                        else if(command.indexOf("Recommend")!=-1){
+                            if (request.getParameter("value").equals("true")){
+                                r.setIsRecommended(1);
+                            }
+                            else{
+                                r.setIsRecommended(0);
+                            }
+                        }
+                        
                         else if(command.indexOf("Rate")!=-1){
                             r.setStandardRate(Integer.parseInt(result));
                             
