@@ -87,6 +87,7 @@ public class CreateHotelServlet extends HttpServlet {
                 disp.forward(request, response);
                 return;
             }
+            
             Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label), intro);
             if (h.insertToDatabase()) {
                 out.println("<p>Yes!<p/>");

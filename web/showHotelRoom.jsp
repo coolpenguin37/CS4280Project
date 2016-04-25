@@ -189,12 +189,25 @@
             
                 <div>
                     <h3> <%= room.getRoomName() %> </h3>
+                    
+    <%              
+                    if (realRate != room.getStandardRate()) {
+    %>
+                        <h4> Standard Rate: $ 
+                            <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                        </h4>
+                        <h4> You only need to pay: $ 
+                            <span style="color: red;"><%= realRate %> for each room</span>
+                        </h4>
+    <%
+                    } else {
+    %>
                     <h4> Standard Rate: $ 
-                        <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                        <span> <%= room.getStandardRate() %> </span>
                     </h4>
-                    <h4> You only need to pay: $ 
-                        <span style="color: red;"><%= realRate %> for each room</span>
-                    </h4>
+    <%                
+                    }
+    %>
                     <h4> Total: $
                         <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
                         in total 
