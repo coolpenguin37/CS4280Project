@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="order.*"%>
-<%@page import="java.util.ArrayList,user.*,hotel.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime,java.text.SimpleDateFormat;"%>
+<%@page import="java.util.ArrayList,user.*,hotel.*,java.sql.Date,order.*,org.joda.time.Days,org.joda.time.LocalDate,org.joda.time.DateTime,java.text.SimpleDateFormat,java.util.*;"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%! private String getDateString(Date d){
         SimpleDateFormat s=new SimpleDateFormat("YYYY/MM/DD");
@@ -195,8 +195,8 @@
             }
             else if (request.getParameter("bookroom")!=null){
                 Order a=(Order)session.getAttribute("orderToModify");
-                Order b=new Order(a);
-                int newRoomType=((ArrayList<HotelRoom>)session.getAttribute("rooms")).get(Integer.parseInt(request.getParameter("bookroom"))).getRoomType();
+                Order b=new Order(a);    
+                int newRoomType=((HashMap<String,Order>)session.getAttribute("orderMap")).get(request.getParameter("bookroom")).getRoomType();
                 b.setRoomType(newRoomType);
                 int c=Order.tryUpdateOrder(a, b);
                 int newOrderID=-1;

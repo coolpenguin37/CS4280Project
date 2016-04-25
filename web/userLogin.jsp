@@ -27,15 +27,15 @@
             <form method="POST" action="LoginServlet" class = "content">
                 <fieldset class = "fieldset">  
                     <legend>Member login</legend>
-                <%if (request.getHeader("referer").indexOf("userLogin.jsp")==-1){
-                        if (request.getHeader("referer").indexOf("newAccount")==-1){
+    <%              if (request.getHeader("referer").indexOf("userLogin.jsp") == -1){
+                        if ((request.getHeader("referer").indexOf("newAccount") == -1) && (request.getHeader("referer").indexOf("confirm") == -1)) {
                             session.setAttribute("previousPage",request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString()));
                         }
                         else{
                             session.setAttribute("previousPage","index.jsp");
                         }
                 }
-                %>
+    %>
                     <ul>
                     <li><label><b>Username: </b></label><input type="text" name="username"> </li>
                     <li><label><b>Password: </b></label><input type="password" name="password"></li>

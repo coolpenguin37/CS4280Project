@@ -22,10 +22,11 @@
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
     
-    <h1 style ="margin-left: 2%;">Hotel Room</h1>
-
- 
-    <%  
+    <h2>Hotel Room</h2>
+   
+    <%  if (session.getAttribute("name") != null) { %>
+        <p class = "info">Hello <%=session.getAttribute("name")%> </p>
+    <%  }
         
         boolean hasLoggedIn=false;
         int random_password=0;
@@ -42,20 +43,17 @@
             if (session.getAttribute("orderToModify") != null) {
                 Order a = (Order) session.getAttribute("orderToModify");
                 if (Order.updateOrderRoomType(a, room.getRoomType()) > 0){ %>
-                <div class="prompt">    
-                <p> Your room type has been successfully modified! </p>
+                    <p> Your room type has been successfully modified! </p>
                     <form method="POST" action="Payment">
                         <button type="submit">Pay now</button>
                     </form>
                     <a href="index.jsp">Go back to main page</a>
-                </div>   
+                    
     <%              return;
                 }
                 else { %>
-                <div class="prompt">    
-                <span> Failed to order the room...</span>
+                    <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
-                </div>
                 <%  return;
                 }
             }
@@ -86,13 +84,14 @@
                     userID=(Integer)session.getAttribute("userID");
                     hasLoggedIn=true;
                 }
+                o.setUserID(userID);
+                o.setStatus(OrderStatus.PROCESSING);
                 orderID = o.insertToDatabase();
                 //successfully submit order
                 if (orderID > 0) {
                     o.setOrderID(orderID);
                     session.setAttribute("orderToPay",o);
     %>
-                    <div class="info">
                     <span> Your order has been submitted successfully! </span>
                     <% if (!hasLoggedIn) { %>
                         <p>You are not logged in. Please remember your temporary User ID and Pin below in order to manage your order later.</p>
@@ -103,16 +102,13 @@
                         <button type="submit">Pay now</button>
                     </form>
                     <a href="index.jsp">Go back to main page</a>
-                    </div>
     <% 
                 } 
                 //order failed submission
                 else { 
     %>
-                    <div class="prompt">
                     <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
-                    </div>
     <% 
                 }
             }
@@ -134,10 +130,9 @@
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
     %>
-                <div class="info">
+            <div>
                 <span> Score: </span>
                 <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
-                </div>
             </div>
             
     <%
@@ -148,7 +143,7 @@
                     Order o = Order.getOrderByOrderID(tmp.getOrderID());
                     int currentUserID;
                     if (session.getAttribute("userID") != null) {
-                        currentUserID = (Integer) session.getAttribute("UserID");
+                        currentUserID = (Integer) session.getAttribute("userID");
                     } else {
                         currentUserID = -1;
                     } %>
@@ -171,15 +166,6 @@
                 
             <%
             }
-                %>
-            </div>
-
-   
-    
-    
-            
-    <%
-            
             
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
@@ -205,17 +191,11 @@
                 int realRate = (int) Math.floor(standardRate * (discount / 100.0));
                 
                 int numRooms=(session.getAttribute("numRooms")==null)?a.getNumOfRoom():Integer.valueOf((String)session.getAttribute("numRooms"));
-                Order o = new Order(hotelID, room.getRoomType(),numRooms,CIDate, CODate);
+                Order o=new Order(room.getHotelID(), room.getRoomType(), numRooms, CIDate, CODate);
                 o.setPrice(realRate*numRooms*numDays);
                 orderMap.put(hotelID+"_"+room.getRoomType(), o);
                 int remained = Order.getRemainedRoom(o); %>
-                <div class ="recommended">
-                    <div class="image">
-                        <img src="image/13-2.jpg" class = "img">
-                    </div>
-                    <div class="text">
-                        
-                            
+                <div>
                     <h3><%= room.getRoomName()%></h3>        
     <%              if (realRate != room.getStandardRate()) {           %>
                     <h4> Standard Rate: $ 
@@ -232,38 +212,28 @@
                     <h4> Total: $
                         <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
                         in total 
-                    </h3>
+                    </h4>
                     <div> 
                         <span>Size: </span> <span> <%= room.getRoomSize() %> Square Feet.</span>
                     </div>
                     <% if (remained > 30) { %>
-                        <div> <span>Plenty rooms available.</span>
-                            <br><br>
-                        </div>
+                        <div> <span>Plenty rooms available.</span></div>
                     <% } else if (remained <= 30 && remained>10) { %>
-                        <div> <span>Limited rooms available!</span>
-                            <br><br>
-                        </div>
+                        <div> <span>Limited rooms available!</span></div>
                     <% } else if (remained<=0){ %>
-                        <div> <span>Sold out...</span>
-                            <br><br>
-                        </div>
+                        <div> <span>Sold out...</span></div>
                     <% } else { %>
                         <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
                     <% } %>
                     <% if (remained>0){ %>
                         <form method="POST" <%="action='"+((session.getAttribute("orderToModify")==null)?"":"manageOrder.jsp")+"'"%>>
-                            <button id ="check_room" type="submit" name="bookroom" value="<%=hotelID+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
+                            <button type="submit" name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
                         </form>
                     <% } %>
-                    </div>
                 </div>
                 
         <% }
             session.setAttribute("orderMap",orderMap);
-        } %>  
-        <div class ="footer">
-                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
-            </div>
+        } %>     
 </body>
 </html>
