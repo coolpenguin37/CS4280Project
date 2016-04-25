@@ -40,9 +40,9 @@
             String userEmail;
             String userTel;
             int isSubscribed;
-	if(session.getAttribute("username")==null) { %>
-		<h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
-	<% } 
+    if(session.getAttribute("username")==null) { %>
+        <h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
+    <% } 
             else {
             if (request.getParameter("resetPassword")!=null){ %>
                 <form action="ResetPasswordServlet" method="POST">
@@ -166,7 +166,7 @@
             </fieldset>
             </form>
         
-	<% } %>
+    <% } %>
     </body>
 </html>
 

@@ -310,8 +310,7 @@ public class User implements MySQLInit, UserType {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
 
-            if (!u.getName().equals(""))
-            {
+            if (!u.getName().equals("")) {
                 String strQuery = "UPDATE [User] SET [Name] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getName());
@@ -322,8 +321,7 @@ public class User implements MySQLInit, UserType {
                 }
             }
 
-            if (!u.getEmail().equals(""))
-            {
+            if (!u.getEmail().equals("")) {
                 String strQuery = "UPDATE [User] SET [Email] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getEmail());
@@ -334,8 +332,7 @@ public class User implements MySQLInit, UserType {
                 }
             }
 
-            if (!u.getTel().equals(""))
-            {
+            if (!u.getTel().equals("")) {
                 String strQuery = "UPDATE [User] SET [Tel] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, u.getTel());
@@ -346,8 +343,7 @@ public class User implements MySQLInit, UserType {
                 }
             }
 
-            if (u.getIsSubscribed()==0 || u.getIsSubscribed()==1)
-            {
+            if (u.getIsSubscribed()==0 || u.getIsSubscribed()==1) {
                 String strQuery = "UPDATE [User] SET [IsSubscribed] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setInt(1, u.getIsSubscribed());
@@ -358,8 +354,19 @@ public class User implements MySQLInit, UserType {
                 }
             }
             
-            if (u.getUserType()!=-1)
-            {
+            if (!u.getPassword().equals("")) {
+                String strQuery = "UPDATE [User] SET [Password] = ? WHERE [UserID] = ?";
+                PreparedStatement stmt = conn.prepareStatement(strQuery);
+                stmt.setString(1, u.getPassword());
+                stmt.setInt(2, u.getUserID());
+                stmt.executeUpdate();
+                if (stmt != null) {
+                    stmt.close();
+                }
+                
+            }
+            
+            if (u.getUserType()!=-1) {
                 String strQuery = "UPDATE [User] SET [UserType] = ? WHERE [UserID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setInt(1, u.getUserType());

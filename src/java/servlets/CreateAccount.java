@@ -50,16 +50,16 @@ public class CreateAccount extends HttpServlet {
                 String result = User.USERNAME_ERROR;
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
-               disp1.forward(request, response);
-               return;
+                disp1.forward(request, response);
+                return;
             }
             String password=request.getParameter("password");
             if (password==null || password.isEmpty() || !User.validatePassword(password)) {
                 String result = User.PASSWORD_ERROR;
                 request.setAttribute("result", result);
                 RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");
-               disp1.forward(request, response);
-               return;
+                disp1.forward(request, response);
+                return;
             }
             String name, telephone = null, email = null;
             int isSubscribed;
@@ -67,16 +67,14 @@ public class CreateAccount extends HttpServlet {
                 name="";
             }
             else{
-                name=request.getParameter("name");
-                
+                name=request.getParameter("name");               
             }
             if (request.getParameter("telephone")==null){
                 telephone="";
-            }
-            else{
-                if (User.validateTel(request.getParameter("telephone"))) 
-                    {telephone=request.getParameter("telephone");}
-                else {
+            } else{
+                if (User.validateTel(request.getParameter("telephone"))) {
+                    telephone=request.getParameter("telephone");
+                } else {
                     String result = User.TEL_ERROR;
                     request.setAttribute("result", result);
                     RequestDispatcher disp1 = request.getRequestDispatcher("newAccount.jsp");

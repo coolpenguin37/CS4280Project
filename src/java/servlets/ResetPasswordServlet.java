@@ -60,33 +60,34 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        HttpSession session=request.getSession(true);
-        String oldPwd=(String) session.getAttribute("password");
-        String input_oldPwd,input_newPwd;
+        HttpSession session = request.getSession(true);
+        User u = User.getUserByUserID((Integer) session.getAttribute("userID"));
+        String oldPwd = u.getPassword();
+        
+        String input_oldPwd, input_newPwd;
         try{
-            input_oldPwd=PasswordHash.hash(request.getParameter("oldPwd"));
-            input_newPwd=PasswordHash.hash(request.getParameter("newPwd"));
+            input_oldPwd = PasswordHash.hash(request.getParameter("oldPwd"));
+            input_newPwd = PasswordHash.hash(request.getParameter("newPwd"));
         }
         catch (Exception e){
-            input_oldPwd=request.getParameter("oldPwd");
-            input_newPwd=request.getParameter("newPwd");
+            input_oldPwd = request.getParameter("oldPwd");
+            input_newPwd = request.getParameter("newPwd");
         }
-        if (oldPwd.equals(input_oldPwd)){
-            User u=User.getUserByUserID((Integer)session.getAttribute("userID"));
-            if (!User.validatePassword(input_newPwd)){
-                request.setAttribute("errorMessage",User.PASSWORD_ERROR);
-            }
-            u.setPassword(input_newPwd);
-            if (!User.updateProfile(u)){
-                request.setAttribute("errorMessage","Reset password failed....");
-            }
-            else{
-                session.setAttribute("password", input_newPwd);
+        if (oldPwd.equals(input_oldPwd)) {
+            if (!User.validatePassword(request.getParameter("newPwd"))) {
+                request.setAttribute("errorMessage", User.PASSWORD_ERROR);
+            } else {
+                u.setPassword(input_newPwd);
+                if (!User.updateProfile(u)) {
+                    request.setAttribute("errorMessage", "Reset password failed....");
+                }
+                else{
+                    session.setAttribute("password", request.getParameter("newPwd"));
+                }
             }
         }
         else {
-            request.setAttribute("errorMessage","Old password is wrong!");
-           
+            request.setAttribute("errorMessage", "Old password is wrong!");
         }
         RequestDispatcher rd = request.getRequestDispatcher("updateProfile.jsp");
         rd.forward(request, response);

@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet{
                     int isSubscribed = user.getIsSubscribed();
                     int userType = user.getUserType();
                     session = request.getSession(true);
-                    session.setAttribute("password",password);
+                    session.setAttribute("password", password);
                     session.setAttribute("userID", userID);
                     session.setAttribute("username", userName);
                     if (name.isEmpty()) {

@@ -51,5 +51,5 @@ INSERT INTO [MemberBenefits] VALUES (2, 100, 100, 90, 90, 3, 3, 4, 4);
 INSERT INTO [MemberBenefits] VALUES (3, 100, 100, 100, 100, 4, 4, 4, 4);
 SELECT * FROM [MemberBenefits];
 
-ALTER TABLE [Comment] ADD date [Date] NULL;
+ALTER TABLE [HotelRoom] ADD IsRecommended int NULL;
 EXEC sp_RENAME 'MemberBenefits.PlantiumUser', 'PlatinumUser', 'COLUMN'
