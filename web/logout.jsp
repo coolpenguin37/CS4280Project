@@ -10,11 +10,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>logout Page</title>
+        <script>
+            alert("You have logged out successfully!")
+            window.location.href="index.jsp"
+        </script>
     </head>
     <body>  
-        <% session.invalidate();%>
-        <jsp:include page="nav.jsp"></jsp:include>
-            <p>You have logged out successfully!</p>
-        <% response.sendRedirect("userLogin.jsp");%>
+        <%session.invalidate();%>
+        
     </body>
 </html>

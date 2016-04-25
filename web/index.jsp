@@ -13,12 +13,30 @@
 <html>
 <head>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel =" stylesheet" href =" css/all.css">
-    <link rel =" stylesheet" href ="css/nav.css">
+    <link rel ="stylesheet" href =" css/all.css">
+    <link rel ="stylesheet" href ="css/nav.css">
     <title>Hypnos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script>
+        function getDateString(today){
+            var year=today.getFullYear();
+            var month=today.getMonth()+1;
+            if (today.getMonth()+1<10){
+                month="0"+(today.getMonth()+1);
+            }
+            var day=today.getDate();
+            if (today.getDate()<10){
+                day="0"+today.getDate();
+            }
+            return year+"-"+month+"-"+day;
+        }    
         function init(){
+                var today=new Date();
+                var three_days_later=new Date(today.getTime());
+                three_days_later.setDate(three_days_later.getDate()+3);
+                document.querySelector('input[name="ciDate"]').value=getDateString(today);
+                document.querySelector('input[name="coDate"]').value=getDateString(three_days_later);
+                document.querySelector('#numRooms').value=1;
             //check if there is a message
             <% ServletContext sc = request.getSession().getServletContext();
                if (session.getAttribute("username")==null) { %>return;<%}
@@ -171,12 +189,13 @@
                 <input id="location" type="text" name="location" value="Destination, Hotel"> 
                 </li>
                 <li>
-                <label>When do you plan to travel</label>
-                <input type="date" name="ciDate" value="From:">
+                <label style="width:400px">When do you plan to travel?</label>
                 </li>
                 <li>
-                <label> </label>
-                <input type="date" name="coDate" value="To:"> 
+                    <label>From:</label><input type="date" name="ciDate" value="">
+                </li>
+                <li>
+                    <label>To:</label><input type="date" name="coDate" value=""> 
                 </li>
                 <li>
                 <label for="numRooms">How many rooms do you want to book?</label>

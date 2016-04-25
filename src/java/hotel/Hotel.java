@@ -319,6 +319,9 @@ public class Hotel implements MySQLInit{
             
             if (!h.getLabel().equals(""))
             {
+                if (h.getLabel().equals(":;")){
+                    h.setLabel("");
+                }
                 String strQuery = "UPDATE [HotelInfo] SET [Label] = ? WHERE [hotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, h.getLabel());

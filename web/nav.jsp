@@ -28,6 +28,7 @@
                 <li><a href="updateProfile.jsp">Settings</a></li>
                 <li><a href="manageOrder.jsp">Manage your order</a></li>
             <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
+                <li><a href="updateProfile.jsp">Settings</a></li>
                 <li><a href="ManageHotelServlet">Manage Hotel</a></li>
                 
             <% } %>

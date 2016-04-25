@@ -22,8 +22,7 @@
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
     
-    <fieldset>
-        <legend>Hotel Room</legend>
+    <h2>Hotel Room</h2>
    
     <% 
         if (session.getAttribute("name") != null) { 
@@ -31,116 +30,7 @@
             <p class = "info">Hello <%=session.getAttribute("name")%> </p>
     <%
         }
-    %>
-    <% 
-        if (request.getParameter("currentHotel") != null || session.getAttribute("orderToModify") != null) {
-            Hotel currentHotel = null;
-            Order a = null;
-            if (request.getParameter("currentHotel") != null) {
-                currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
-            } else {
-                a = (Order) session.getAttribute("orderToModify");
-                currentHotel = Hotel.getHotelByID(a.getHotelID());
-            }
-            
-            int hotelID = currentHotel.getHotelID();
-            session.setAttribute("hotelID",hotelID);
-    %>
-            <div>
-                <span> Score: </span>
-                <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
-            </div>
-            
-    <%
-            ArrayList<Comment> commentList = Comment.getCommentByHotelName(currentHotel.getHotelName());
-            if (commentList.size() > 0) {
-                for (int i = 0; i < commentList.size(); ++i) {
-                    Comment tmp = commentList.get(i);
-                    Order o = Order.getOrderByOrderID(tmp.getOrderID());
-                    int currentUserID = Integer.parseInt((String) session.getAttribute("UserID"));
-                    //ALANTODO PRINT OUT COMMENT                
-                    out.print("<div id=comment"+tmp.getCommentID()+">");
-                    out.print("<p>"+tmp.getContent()+" </p>");
-                    out.print("<p>"+tmp.getScore()+" </p>");
-                    out.print("<p>"+tmp.getDate()+" </p>");
-                    if (currentUserID == o.getUserID())
-                    {
-                        out.println("<a onclick=delcomment(" + tmp.getCommentID() + ") >" + "Delete"+"</a>");
-                    }
-                    out.println("<br></br>");
-                    out.println("</div>");
-                }
-            } else {
-                out.print("<p> No Comment </p>");
-                //ALANTODO: NO COMMENT YET
-            }
-            
-            //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
-            ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
-            session.setAttribute("rooms",rooms);
-            Date CIDate = (Date)session.getAttribute("ciDate");
-            Date CODate = (Date)session.getAttribute("coDate");
-            int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
-            for (int i = 0; i < rooms.size(); ++i) {
-                HotelRoom room = rooms.get(i);
-                int standardRate = room.getStandardRate();
-                String username = (String) session.getAttribute("username");
-                User u = User.getUserByUsername(username);
-                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
-                int discount;
-                //See whether is guest
-                if (u==null || u.getUserType()<1){
-                    discount=100;
-                }
-                else {
-                    discount = mb.getDiscountByUserType(u.getUserType());
-                }
-                int realRate = (int) Math.floor(standardRate * (discount / 100.0)); 
-                int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
-                Order o = new Order(hotelID, room.getRoomType(),numRooms,CIDate, CODate);
-                int remained = Order.getRemainedRoom(o);
-                
-    %>
-            
-                <div>
-                    <h3> <%= room.getRoomName() %> </h3>
-                    <h4> Standard Rate: $ 
-                        <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
-                    </h4>
-                    <h4> You only need to pay: $ 
-                        <span style="color: red;"><%= realRate %> for each room</span>
-                    </h4>
-                    <h4> Total: $
-                        <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
-                        in total 
-                    </h4>
-                    <div> 
-                        <span>Size: </span> 
-                        <span> <%= room.getRoomSize() %> Square Feet.</span>
-                    </div>
-                    <% if (remained > 30) { %>
-                        <div> <span>Plenty rooms available.</span></div>
-                    <% } else if (remained <= 30 && remained>10) { %>
-                        <div> <span>Limited rooms available!</span></div>
-                    <% } else if (remained<=0){ %>
-                        <div> <span>Sold out...</span></div>
-                    <% } else { %>
-                        <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
-                    <% } %>
-                    <% if (remained>0){ %>
-                        <form method="POST" action="">
-                            <button type="submit" name="bookroom" value="<%=i%>">Book!</button>
-                        </form>
-                    <% } %>
-                </div>
-                
-        <% } %>
-    <%  } %>
-    <%  
-        
-        
-        
-        boolean hasLoggedIn=false;
+    boolean hasLoggedIn=false;
         int random_password=0;
         int randomNum=0;
         if (request.getParameter("bookroom") != null && !(request.getParameter("bookroom").isEmpty())){
@@ -221,7 +111,110 @@
                 <a href="index.jsp">Go back to main page</a>
             <% }  
         }
-    }%>
-    </fieldset>
+    }
+        else if (request.getParameter("currentHotel") != null || session.getAttribute("orderToModify") != null) {
+            Hotel currentHotel = null;
+            Order a = null;
+            if (request.getParameter("currentHotel") != null) {
+                currentHotel = Hotel.getHotelByID(Integer.parseInt(request.getParameter("currentHotel")));
+            } else { 
+                a = (Order) session.getAttribute("orderToModify");
+                currentHotel = Hotel.getHotelByID(a.getHotelID());
+            }
+            
+            int hotelID = currentHotel.getHotelID();
+            session.setAttribute("hotelID",hotelID);
+    %>
+            <div>
+                <span> Score: </span>
+                <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
+            </div>
+            
+    <%
+            ArrayList<Comment> commentList = Comment.getCommentByHotelName(currentHotel.getHotelName());
+            if (commentList!=null) {
+                for (int i = 0; i < commentList.size(); ++i) {
+                    Comment tmp = commentList.get(i);
+                    Order o = Order.getOrderByOrderID(tmp.getOrderID());
+                    int currentUserID = Integer.parseInt((String) session.getAttribute("UserID"));
+                    //alan todo PRINT OUT COMMENT                
+                    out.print("<div id=comment"+tmp.getCommentID()+">");
+                    out.print("<p>"+tmp.getContent()+" </p>");
+                    out.print("<p>"+tmp.getScore()+" </p>");
+                    out.print("<p>"+tmp.getDate()+" </p>");
+                    if (currentUserID == o.getUserID())
+                    {
+                        out.println("<a onclick=delcomment(" + tmp.getCommentID() + ") >" + "Delete"+"</a>");
+                    }
+                    out.println("<br></br>");
+                    out.println("</div>");
+                }
+            } else {
+                out.print("<p> No Comment </p>");
+                //alan todo NO COMMENT YET
+            }
+            
+            //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
+            ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
+            session.setAttribute("rooms",rooms);
+            Date CIDate = (session.getAttribute("ciDate")==null)?a.getCIDate():(Date)session.getAttribute("ciDate");
+            Date CODate = (session.getAttribute("coDate")==null)?a.getCODate():(Date)session.getAttribute("coDate");
+            int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
+            for (int i = 0; i < rooms.size(); ++i) {
+                HotelRoom room = rooms.get(i);
+                int standardRate = room.getStandardRate();
+                String username = (String) session.getAttribute("username");
+                User u = User.getUserByUsername(username);
+                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
+                int discount;
+                //See whether is guest
+                if (u==null || u.getUserType()<1){
+                    discount=100;
+                }
+                else {
+                    discount = mb.getDiscountByUserType(u.getUserType());
+                }
+                int realRate = (int) Math.floor(standardRate * (discount / 100.0));
+                
+                int numRooms=(session.getAttribute("numRooms")==null)?a.getNumOfRoom():Integer.valueOf((String)session.getAttribute("numRooms"));
+                Order o = new Order(hotelID, room.getRoomType(),numRooms,CIDate, CODate);
+                int remained = Order.getRemainedRoom(o);
+                
+    %>
+            
+                <div>
+                    <h3> <%= room.getRoomName() %> </h3>
+                    <h4> Standard Rate: $ 
+                        <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                    </h4>
+                    <h4> You only need to pay: $ 
+                        <span style="color: red;"><%= realRate %> for each room</span>
+                    </h4>
+                    <h4> Total: $
+                        <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
+                        in total 
+                    </h4>
+                    <div> 
+                        <span>Size: </span> 
+                        <span> <%= room.getRoomSize() %> Square Feet.</span>
+                    </div>
+                    <% if (remained > 30) { %>
+                        <div> <span>Plenty rooms available.</span></div>
+                    <% } else if (remained <= 30 && remained>10) { %>
+                        <div> <span>Limited rooms available!</span></div>
+                    <% } else if (remained<=0){ %>
+                        <div> <span>Sold out...</span></div>
+                    <% } else { %>
+                        <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
+                    <% } %>
+                    <% if (remained>0){ %>
+                        <form method="POST" <%="action='"+((session.getAttribute("orderToModify")==null)?"":"manageOrder.jsp")+"'"%>>
+                            <button type="submit" name="bookroom" value="<%=i%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
+                        </form>
+                    <% } %>
+                </div>
+                
+        <% } %>
+    <%  } %>     
 </body>
 </html>

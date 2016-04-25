@@ -22,6 +22,7 @@
   <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
   <link href="bootstrap_switch/docs/css/main.css" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  
   <style>
       .member-benefit-table a{
           display:block;
@@ -146,27 +147,38 @@
             
             success: function(data){
                 
-//                for hotelInfo
                 $.each(data.hotelInfo,function(key,value){
                     if (key=="isRecommended") {
                         $(".isRecommended").bootstrapSwitch("disabled",false)
                         $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
                     }
+                    else if (key=="label"){
+                        $('#label').tagsinput('removeAll');
+                        var arr=value.toString().split(";")
+                        alert(arr)
+                        for (i=0;i<arr.length;i++){
+                           $("#label").tagsinput('add',arr[i].substr(1));
+                        } 
+                        
+                         
+                         
+                        
+                    }
                     else {
                         $("#"+key).html(value)
+                        $('#'+key).editable({
+                            pk: data.hotelInfo.hotelID,
+                            url: 'ManageHotelServlet',
+                            success: function(response,newValue){
+                                if (response.status=="error") {return response.msg}
+                            },
+                            error: function(){
+                                alert("Cannot change!")
+                            }
+                        });
                     }
 
-                    $('#'+key).editable({
-                        pk: data.hotelInfo.hotelID,
-                        url: 'ManageHotelServlet',
-                        success: function(response,newValue){
-                            if (response.status=="error") {return response.msg}
-                        },
-                        error: function(){
-                            alert("no")
-                        }
-                        
-                    });
+                    
                 })
                 $(".isRecommended").attr("name",data.hotelInfo.hotelID)
                 
@@ -230,7 +242,7 @@
                     var roomID=value.roomType
                     var hotelID=value.hotelID
                     var roomName="<h3><a href='#' class='roomName' data-name='roomName' data-pk="+hotelID+"_"+roomID+">"+value.roomName+"</a></h3>"
-                    var roomSize="<h4> Room Size: <a href='#' class='roomSize' data-name='roomName' data-pk="+hotelID+"_"+roomID+">"+value.roomSize+"</a> ft.</h4>"
+                    var roomSize="<h4> Room Size: <a href='#' class='roomSize' data-name='roomSize' data-pk="+hotelID+"_"+roomID+">"+value.roomSize+"</a> ft.</h4>"
                     var standardRate="<h4> Standard Rate:$ <a href='#' class='rate' data-name='standardRate' data-pk="+hotelID+"_"+roomID+">"+value.standardRate+"</a></h4>"
                     var rate=value.standardRate
                     var numOfRoom="<h4> Total Number of Rooms: <a href='#' class='numOfRoom' data-name='numOfRoom' data-pk="+hotelID+"_"+roomID+">"+value.numOfRoom+"</a></h4>"
@@ -310,7 +322,6 @@
                     });
                     var oldValueObj = $('.numOfRoom').editable('getValue');
                     $('.numOfRoom,.roomSize').editable({
-                        //alan todo
                         type: 'text',
                         url: 'ManageHotelServlet',
                         validate: function(value) {
@@ -321,13 +332,8 @@
                                 return 'Please input a number!'
                             }
                         },
-                        success: function(data){
-                            if (data.status=="error"){
-                                clearErr()
-                                $("#room-information").append("<div><span class='alert alert-danger'><strong>Error!</strong> " + data.msg + "</span></div>")
-                                $(this).editable('setValue',oldValueObj)
-                                return false;
-                            }
+                        error: function(response){
+                            return response.responseText;
                         }
                     });
                     
@@ -376,6 +382,27 @@
 //        };)
     function init(){
         $(".isRecommended").bootstrapSwitch("disabled",true)
+        //alan to do not working well
+        $('#label').on('itemAdded', function(event) {
+                            alert(data.hotelInfo.hotelID)
+                            // event.item: contains the item
+                            $.ajax({
+                                type:"POST",
+                                url:"ManageHotelServlet",
+                                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+                                dataType:"json"
+                            })
+                         });
+                         
+                         $('#label').on('itemRemoved', function(event) {
+                            // event.item: contains the item
+                            $.ajax({
+                                type:"POST",
+                                url:"ManageHotelServlet",
+                                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+                                dataType:"json"
+                            })
+                         });
     }
     window.onload=init;
     
@@ -469,6 +496,7 @@
       <h2>Hotel Information</h2>
       <h3><a href="#" id="hotelName" data-type="text"></a></h3>
       <h4><a href="#" id="address" data-type="text"></a></h4>
+      <p>Labels: <input type="text" id="label" data-role="tagsinput" placeholder/></p>
       <div><a href="#" id="intro" class='editable editable-pre-wrapped editable-click' data-type="textarea"></a></div>
       <img>
       <h3><span class="label label-default">Recommend:</span> <input class="isRecommended hotel" type="checkbox" data-on-color="success"></h3>
@@ -541,6 +569,10 @@
 </div>
   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+  <link rel="stylesheet/less" type="text/css" href="bootstrap-tag/bootstrap-tagsinput.less" />
+  <link href="bootstrap-tag/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
+  <script src="bootstrap-tag/bootstrap-tagsinput-angular.js"></script>  
+  <script src="bootstrap-tag/bootstrap-tagsinput.js"></script>
   <script>
     $.fn.editable.defaults.mode='inline';
      $(".isRecommended").on('switchChange.bootstrapSwitch', function(event, state) {

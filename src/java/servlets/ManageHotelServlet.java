@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import com.google.gson.*;
 import hotel.*;
 import java.util.Calendar;
+import java.util.HashSet;
 import org.json.simple.*;
+import org.json.simple.parser.*;
+import java.util.Enumeration;
 import order.*;
 import user.*;
 /**
@@ -45,6 +48,7 @@ public class ManageHotelServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             HttpSession session=request.getSession();
+            
             if (request.getParameter("welcomeGift")!=null){
                 int newValue=Integer.parseInt(request.getParameter("welcomeGift"));
                 MemberBenefits mb=MemberBenefits.getMemberBenefitsByHotelID(Integer.parseInt(request.getParameter("hotelID")));
@@ -263,12 +267,14 @@ public class ManageHotelServlet extends HttpServlet {
                                 if (minReq <= newNumOfRoom) {
                                     r.setNumOfRoom(newNumOfRoom);
                                     if (!HotelRoom.updateRoom(r)) {
-                                        obj.put("status", "error");
-                                        obj.put("msg", "Cannot update hotel room!");
+                                        response.setStatus(400);
+                                        out.println("Cannot update hotel room!");
+                                        return;
                                     }
                                 } else {
-                                    obj.put("status", "error");
-                                    obj.put("msg", "TOO SMALL! Minimum # of Room: " + minReq );
+                                    response.setStatus(400);
+                                    out.println("Too small! Minimum # of Room is "+ minReq);
+                                    return;
                                 }
                             
                             
@@ -301,7 +307,22 @@ public class ManageHotelServlet extends HttpServlet {
                         String command=request.getParameter("name");
                         Hotel h=Hotel.getHotelByID(hotelID);
                         JSONObject obj=new JSONObject();
-                        if (command.indexOf("Name")!=-1){
+                        String t,v;
+                        if (command.indexOf("label")!=-1){
+                            String s = request.getParameter("value");
+                            String[] tags=s.split(",");
+                            String newString="";
+                            for (int i=0;i<tags.length;i++){
+                                newString+=":";
+                                newString+=tags[i];
+                                newString+=";";
+                            }
+                            
+                            h.setLabel(newString);  
+                            
+
+                        }
+                        else if (command.indexOf("Name")!=-1){
                             h.setHotelName(request.getParameter("value"));
                         }
                         else if (command.indexOf("address")!=-1){

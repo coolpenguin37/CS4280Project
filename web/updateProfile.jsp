@@ -15,6 +15,16 @@
         <link rel =" stylesheet" href ="css/nav.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Update Profile</title>
+        <script>
+            function checkPwd(){
+                if (document.querySelector('input[name="newPwd"]').value!=document.querySelector('input[name="newPwdRetype"]').value){
+                    if (document.querySelectorAll('form[action="ResetPasswordServlet"] p').length!=0){document.querySelector('form[action="ResetPasswordServlet"]').removeChild(document.querySelector('form[action="ResetPasswordServlet"] p'))}
+                    document.querySelector('form[action="ResetPasswordServlet"]').innerHTML+="<p>The password does not match with the retyped password! Please check."
+                    return false;
+                }
+                return true;
+            }
+        </script>
         
 </head>
 <body>
@@ -33,8 +43,26 @@
 	if(session.getAttribute("username")==null) { %>
 		<h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
 	<% } 
-            else { 
-            if (request.getParameter("name")!=null ||
+            else {
+            if (request.getParameter("resetPassword")!=null){ %>
+                <form action="ResetPasswordServlet" method="POST">
+                    <label>Old password:</label><input type="password" name="oldPwd"><br>
+                    <label>New password:</label><input type="password" name="newPwd"><br>
+                    <label>Retype New password:</label><input type="password" name="newPwdRetype"><br>
+                    <input type="submit" name="submit" value="Confirm" onclick="return checkPwd()">
+                    <input type="reset" name="cancel" value="Reset">
+                </form>
+            <%
+                return;
+            }
+            if ((request.getHeader("referer").indexOf("ResetPassword")!=-1 || request.getHeader("referer").indexOf("updateProfile")!=-1) && request.getParameter("errorMessage")==null){
+                isSuccess=-1;
+                name=(String)session.getAttribute("name");
+                userEmail=(String)session.getAttribute("userEmail");
+                userTel=(String)session.getAttribute("userTel");
+                isSubscribed=(Integer)session.getAttribute("isSubscribed");
+            }
+            else if (request.getParameter("name")!=null ||
                 request.getParameter("userEmail")!=null ||
                 request.getParameter("userTel")!=null ||
                 request.getParameter("isSubscribed")!=null){
@@ -82,10 +110,12 @@
                 isSubscribed=(Integer)session.getAttribute("isSubscribed");
             } %>
                 
-        <fieldset class = "fieldset">
-            <legend>Update Profile</legend>
+        
+            
             <p class = "info">Hello <%=name%>. Update your profile here:</p>
             <form method="POST" action="" class = "content">
+            <fieldset class = "fieldset">
+            <legend>Update Profile</legend>
             <table>
             <thead>
                 <tr>
@@ -122,7 +152,7 @@
                         <input type="submit" name="Update">
                     </td>
                     <td>
-                        <button name="resetPassword">Reset Password</button>
+                        <button name="resetPassword" onclick="window.location.href='updateProfile.jsp?resetPassword=true'">Reset Password</button>
                     </td>
                 </tr>
                 </tbody>
@@ -131,10 +161,11 @@
                     <span class = "info"> Your profile has been updated successfully! </span>
                     <% } else if (isSuccess==-1){ %>
                     <span class ="info"> Your profile cannot be updated... </span><br>
-                        <span class ="error"><%=errorMessage%></span>
+                    <span class ="error"><%=(request.getParameter("errorMessage")==null)?errorMessage:request.getParameter("errorMessage")%></span>
                     <% } %>
+            </fieldset>
             </form>
-        </fieldset>
+        
 	<% } %>
     </body>
 </html>
