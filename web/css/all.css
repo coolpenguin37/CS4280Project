@@ -35,6 +35,38 @@ body{
     font-size: 16px;
     text-align: left;
 }
+.recommended{
+    margin-top:30px;
+    width: 100%;
+    height:300px;
+    margin-left:1%;
+}
+.img{
+    width:400px;
+    height:300px;
+}
+.image{
+    width: 400px;
+    height: 300px;
+    position: relative;
+    left: 0px;
+}
+.price{
+    width: 240px;
+    height: 60px;
+    background-color: rgba(0,0,0,0.6);
+    position: relative;
+    left: 0px;
+    top: 200px;  
+}
+.text{
+    position: relative;
+    float:left;
+    width:750px
+}
+.content {
+    padding-bottom: 50px;
+}
 .content label {
     font-size: 16px;
     padding: 5px;
@@ -88,6 +120,7 @@ body{
 
 table{
     font-size: 16px;
+    margin: 1%;
 
 }
 td {
