@@ -30,15 +30,15 @@
             <p class = "info">Hello <%=session.getAttribute("name")%> </p>
     <%
         }
-    boolean hasLoggedIn=false;
+        boolean hasLoggedIn=false;
         int random_password=0;
         int randomNum=0;
-        if (request.getParameter("bookroom") != null && !(request.getParameter("bookroom").isEmpty())){
+        if (request.getParameter("bookroom") != null && !(request.getParameter("bookroom").isEmpty())) {
             ArrayList<HotelRoom> rooms = (ArrayList<HotelRoom>)session.getAttribute("rooms");
             HotelRoom room = rooms.get(Integer.parseInt(request.getParameter("bookroom")));
             int orderID;
             
-            if (session.getAttribute("orderToModify") != null){
+            if (session.getAttribute("orderToModify") != null) {
                 Order a = (Order) session.getAttribute("orderToModify");
                 if (Order.updateOrderRoomType(a, room.getRoomType()) > 0){ 
     %>
@@ -58,60 +58,60 @@
                 <%
                     return;
                 }
-            }
-
-            else {
+            } else {
             
-            int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
-            int userID;
-            if (session.getAttribute("userID")==null){
-                hasLoggedIn=false;
-                SecureRandom rn=new SecureRandom();
-                int maximum=99999999;
-                int minimum=10000000;
-                int n = maximum - minimum + 1;
-                randomNum =  minimum + Math.abs(rn.nextInt() % n);
-                while (User.usernameExist(Integer.toString(randomNum))){
-                    randomNum = minimum + Math.abs(rn.nextInt() % n);
+                int numRooms=Integer.valueOf((String)session.getAttribute("numRooms"));
+                int userID;
+                if (session.getAttribute("userID") == null){
+                    hasLoggedIn = false;
+                    SecureRandom rn = new SecureRandom();
+                    int maximum = 999999999;
+                    int minimum = 100000000;
+                    int n = maximum - minimum + 1;
+                    randomNum =  minimum + Math.abs(rn.nextInt() % n);
+                    while (User.usernameExist(Integer.toString(randomNum))){
+                        randomNum = minimum + Math.abs(rn.nextInt() % n);
+                    }
+                    random_password = minimum + Math.abs(rn.nextInt() % n);
+                    User u = new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
+                    u.insertToDatabase();
+                    u = User.getUserByUsername(Integer.toString(randomNum));
+                    userID = u.getUserID();
+    //                request.setAttribute("userID",userID);
+                } else {
+                    userID=(Integer)session.getAttribute("userID");
+                    hasLoggedIn=true;
                 }
-                random_password=minimum + Math.abs(rn.nextInt() % n);
-                User u=new User(Integer.toString(randomNum),PasswordHash.hash(Integer.toString(random_password)),Integer.toString(randomNum));
-                u.insertToDatabase();
-                u=User.getUserByUsername(Integer.toString(randomNum));
-                userID=u.getUserID();
-//                request.setAttribute("userID",userID);
-            }
-            else {
-                userID=(Integer)session.getAttribute("userID");
-                hasLoggedIn=true;
-            }
-            Date ciDate= (Date)session.getAttribute("ciDate");
-            Date coDate= (Date)session.getAttribute("coDate");
-            Order o=new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
-            orderID = o.insertToDatabase();
-            if (orderID > 0){ 
-                o.setOrderID(orderID);
-                session.setAttribute("orderToPay",o);
+                Date ciDate= (Date)session.getAttribute("ciDate");
+                Date coDate= (Date)session.getAttribute("coDate");
+                Order o = new Order(OrderStatus.PROCESSING,userID,ciDate,coDate,room.getHotelID(),room.getRoomType(),numRooms);
+                orderID = o.insertToDatabase();
+                if (orderID > 0) { 
+                    o.setOrderID(orderID);
+                    session.setAttribute("orderToPay",o);
     %>
 
-                <span> Your order has been submitted successfully! </span>
+                    <span> Your order has been submitted successfully! </span>
 
-                <% if (!hasLoggedIn) { %>
-                    <p>You are not logged in. Please remember your Order ID and Pin below in order to manage your order later.</p>
-                    <span> Your Order ID is: <%=randomNum%> </span>
-                    <p>Pin: <%=random_password%></p>
-                <%} %>
-                <form method="POST" action="Payment">
-                    <button type="submit">Pay now</button>
-                </form>
-                <a href="index.jsp">Go back to main page</a>
-            <% }
-            else { %>
-                <span> Failed to order the room...</span>
-                <a href="index.jsp">Go back to main page</a>
-            <% }  
+                    <% if (!hasLoggedIn) { %>
+                        <p>You are not logged in. Please remember your Order ID and Pin below in order to manage your order later.</p>
+                        <span> Your Order ID is: <%=randomNum%> </span>
+                        <p>Pin: <%=random_password%></p>
+                    <%} %>
+                    <form method="POST" action="Payment">
+                        <button type="submit">Pay now</button>
+                    </form>
+                    <a href="index.jsp">Go back to main page</a>
+    <% 
+                } else { 
+    %>
+                    <span> Failed to order the room...</span>
+                    <a href="index.jsp">Go back to main page</a>
+    <% 
+                }
+            }
         }
-    }
+
         else if (request.getParameter("currentHotel") != null || session.getAttribute("orderToModify") != null) {
             Hotel currentHotel = null;
             Order a = null;
