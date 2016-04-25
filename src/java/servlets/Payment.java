@@ -76,7 +76,7 @@ public class Payment extends HttpServlet {
 
                 //See whether is guest
                 
-                int realRate = ((o.getPrice()==0)?(int) Math.ceil(standardRate * (discount / 100.0)):o.getPrice()); 
+                int realRate = ((o.getPrice()==0)?(int) Math.ceil(standardRate * (discount / 100.0)):o.getPrice() / numDays); 
                 o.setPrice(realRate);
                 o.updateOrder(o);
                 int numRooms=o.getNumOfRoom();      
