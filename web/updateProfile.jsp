@@ -40,8 +40,8 @@
             String userEmail;
             String userTel;
             int isSubscribed;
-    if(session.getAttribute("username")==null) { %>
-        <h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
+        if(session.getAttribute("username")==null) { %>
+            <h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
     <% } 
             else {
             if (request.getAttribute("errorMessage")!=null && request.getHeader("referer").indexOf("Reset")!=-1){request.removeAttribute("errorMessage");}
@@ -59,14 +59,8 @@
                 return;
             }
             
-            if (request.getHeader("referer").indexOf("updateProfile")!=-1 && request.getAttribute("errorMessage")==null && request.getParameter("cancelled")==null){
-                isSuccess=1;
-                name=(String)session.getAttribute("name");
-                userEmail=(String)session.getAttribute("userEmail");
-                userTel=(String)session.getAttribute("userTel");
-                isSubscribed=(Integer)session.getAttribute("isSubscribed");
-            }
-            else if (request.getParameter("name")!=null ||
+            
+            if (request.getParameter("name")!=null ||
                 request.getParameter("userEmail")!=null ||
                 request.getParameter("userTel")!=null ||
                 request.getParameter("isSubscribed")!=null){
@@ -74,10 +68,10 @@
                 userEmail=request.getParameter("userEmail");
                 userTel=request.getParameter("userTel");
                 if (request.getParameter("isSubscribed")==null) {
-                    isSubscribed=-1;
+                    isSubscribed=0;
                 }
                 else {
-                    isSubscribed=Integer.parseInt(request.getParameter("isSubscribed"));
+                    isSubscribed=1;
                 }
                 User u=new User((String)session.getAttribute("username"),"",name,userEmail,userTel,isSubscribed,(Integer)session.getAttribute("type"));
                 if (!User.validateName(name)) {
@@ -106,6 +100,13 @@
                     userTel=(String)session.getAttribute("userTel");
                     isSubscribed=(Integer)session.getAttribute("isSubscribed");
                 }
+            }
+            else if ((request.getHeader("referer").indexOf("Reset")!=-1 || request.getHeader("referer").indexOf("update")!=-1) && request.getAttribute("errorMessage")==null && request.getParameter("cancelled")==null){
+                isSuccess=1;
+                name=(String)session.getAttribute("name");
+                userEmail=(String)session.getAttribute("userEmail");
+                userTel=(String)session.getAttribute("userTel");
+                isSubscribed=(Integer)session.getAttribute("isSubscribed");
             }
             else {
                 name=(String)session.getAttribute("name");
@@ -143,12 +144,9 @@
                 </tr> 
 
                 <tr>
-                    <td>Subscribe to our email list</td>
+                    <td>Check if you want to subscribe to our email list:</td>
                     <td>
-                        <span>Yes</span>
                         <input type="checkbox" name="isSubscribed" value="1" <%= (isSubscribed==1)?"checked":"" %>>
-                        <span>No</span>
-                        <input type="checkbox" name="isSubscribed" value="0" <%= (isSubscribed==0)?"checked":"" %>>
                     </td>
                 </tr> 
                 <tr>
