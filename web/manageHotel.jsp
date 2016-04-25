@@ -154,7 +154,10 @@
                         $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
                     }
                     else if (key=="label"){
-                        $('#label').tagsinput('removeAll');
+                        $('#label').tagsinput('destory');
+                        $('#label').val("");
+                        $('#label').attr("data-role","tagsinput");
+//                        $('#label').tagsinput('removeAll');
                         var arr=value.toString().split(";")
                         alert(arr)
                         for (i=0;i<arr.length;i++){
