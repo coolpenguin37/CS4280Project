@@ -198,6 +198,19 @@ button {
     margin-top:50px;
     color: #F23447;
 }
+.footer{
+    text-align: center;
+    clear: both;
+    position: relative;
+    z-index: 10;
+    height: 3em;
+    margin-top: 20px;
+   padding-bottom: 20px;
+   padding-top: 20px;
+   font-size:16px;
+   color: grey;
+   background:white;
+}
 
 .info{
     margin-left:2%;
@@ -229,6 +242,9 @@ button {
 
 #checkbox{
     height:70px;
+}
+#check_room{
+    margin-left:0px !important;    
 }
 
 #subtitle{

@@ -21,15 +21,12 @@
         <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
-    
-    <fieldset>
-        <legend>Hotel Room</legend>
-   
     <% 
         if (session.getAttribute("name") != null) { 
     %>
-            <p class = "info">Hello <%=session.getAttribute("name")%> </p>
-    <%
+            <div class = "info" >
+                <h1 >Hotel Room</h1>
+                <%
         }
     %>
     <% 
@@ -46,13 +43,10 @@
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
     %>
-            <div>
                 <span> Score: </span>
                 <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
-            </div>
-            
-    <%
-            ArrayList<Comment> commentList = Comment.getCommentByHotelName(currentHotel.getHotelName());
+                <%
+                ArrayList<Comment> commentList = Comment.getCommentByHotelName(currentHotel.getHotelName());
             if (commentList.size() > 0) {
                 for (int i = 0; i < commentList.size(); ++i) {
                     Comment tmp = commentList.get(i);
@@ -74,6 +68,15 @@
                 out.print("<p> No Comment </p>");
                 //ALANTODO: NO COMMENT YET
             }
+                %>
+            </div>
+
+   
+    
+    
+            
+    <%
+            
             
             //TODO: a method for hotel instance that with a ciDate and coDate, return a list of rooms that are avilable during that time (both dates included).
             ArrayList<HotelRoom> rooms = HotelRoom.getAllRoomsByHotelID(hotelID);
@@ -102,36 +105,50 @@
                 
     %>
             
-                <div>
+                <div class = "recommended">
+                    <div class ="image">
+                        <img src="image/13-2.jpg" class = "img">
+                        <div class = "price">
+                            <h3>
+                            Price: $
+                            <span style="color: red;"><%= realRate %> for each room</span>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class ="text">
                     <h3> <%= room.getRoomName() %> </h3>
                     <h4> Standard Rate: $ 
                         <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
                     </h4>
-                    <h4> You only need to pay: $ 
-                        <span style="color: red;"><%= realRate %> for each room</span>
-                    </h4>
-                    <h4> Total: $
+                    <h3> Total: $
                         <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
                         in total 
-                    </h4>
+                    </h3>
                     <div> 
                         <span>Size: </span> 
                         <span> <%= room.getRoomSize() %> Square Feet.</span>
                     </div>
                     <% if (remained > 30) { %>
-                        <div> <span>Plenty rooms available.</span></div>
+                        <div> <span>Plenty rooms available.</span>
+                            <br><br>
+                        </div>
                     <% } else if (remained <= 30 && remained>10) { %>
-                        <div> <span>Limited rooms available!</span></div>
+                        <div> <span>Limited rooms available!</span>
+                            <br><br>
+                        </div>
                     <% } else if (remained<=0){ %>
-                        <div> <span>Sold out...</span></div>
+                        <div> <span>Sold out...</span>
+                            <br><br>
+                        </div>
                     <% } else { %>
                         <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
                     <% } %>
                     <% if (remained>0){ %>
                         <form method="POST" action="">
-                            <button type="submit" name="bookroom" value="<%=i%>">Book!</button>
+                            <button id ="check_room" type="submit" name="bookroom" value="<%=i%>">Book!</button>
                         </form>
                     <% } %>
+                    </div>
                 </div>
                 
         <% } %>
@@ -152,19 +169,24 @@
                 Order a = (Order) session.getAttribute("orderToModify");
                 if (Order.updateOrderRoomType(a, room.getRoomType()) > 0){ 
     %>
+                <div class = "prompt">
                     <p> Your room type has been successfully modified! </p>
                     <form method="POST" action="Payment">
                         <button type="submit">Pay now</button>
                     </form>
                     <a href="index.jsp">Go back to main page</a>
+                </div>
                     
     <%
                     return;
                 }
                 else { 
     %>
+                    <div class ="prompt">
                     <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
+                    </div>
+                    
                 <%
                     return;
                 }
@@ -222,6 +244,8 @@
             <% }  
         }
     }%>
-    </fieldset>
+    <div class ="footer">
+                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
+            </div>
 </body>
 </html>

@@ -123,9 +123,10 @@
                                     <% for (int p=1;p<=h.getStarRating();p++){ %>
                                         <span class='glyphicon glyphicon-star' style='color:red;'></span>
                                     <% } %>
+                                    <br><br>
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
+                                <button  id ="check_room" type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
                                 </form>
                             </div>
                             
@@ -154,9 +155,10 @@
                                     <% for (int p=1;p<=h.getStarRating();p++){ %>
                                         <span class='glyphicon glyphicon-star' style='color:red;'></span>
                                     <% } %>
+                                    <br><br>
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" id =" check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
+                                <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
                                 </form>
                             </div>
                             
@@ -209,6 +211,9 @@
    
         
     </div>
+            <div class ="footer">
+                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
+            </div>
     </body>
 </html>
 
