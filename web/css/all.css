@@ -35,6 +35,43 @@ body{
     font-size: 16px;
     text-align: left;
 }
+.recommended{
+    margin-top:30px;
+    width: 100%;
+    height:250px;
+    margin-left:1%;
+    position: relative;
+}
+.img{
+    width:350px;
+    height:250px;
+}
+.image{
+    width: 350px;
+    height: 250px;
+    position: relative;
+    left: 0px;
+}
+.price{
+    width: 320px;
+    height: 60px;
+    background-color: rgba(0,0,0,0.3);
+    position: absolute;
+    right: 0px;
+    top: 180px;  
+    color: white;
+    text-align: center;
+}
+.text{
+    position:absolute;
+    top: 0px;
+    left: 370px;
+    width:750px;
+    height: 200px;
+}
+.content {
+    padding-bottom: 50px;
+}
 .content label {
     font-size: 16px;
     padding: 5px;
@@ -88,6 +125,7 @@ body{
 
 table{
     font-size: 16px;
+    margin: 1%;
 
 }
 td {
@@ -160,6 +198,19 @@ button {
     margin-top:50px;
     color: #F23447;
 }
+.footer{
+    text-align: center;
+    clear: both;
+    position: relative;
+    z-index: 10;
+    height: 3em;
+    margin-top: 20px;
+   padding-bottom: 20px;
+   padding-top: 20px;
+   font-size:16px;
+   color: grey;
+   background:white;
+}
 
 .info{
     margin-left:2%;
@@ -191,6 +242,9 @@ button {
 
 #checkbox{
     height:70px;
+}
+#check_room{
+    margin-left:0px !important;    
 }
 
 #subtitle{

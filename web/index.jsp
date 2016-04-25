@@ -126,20 +126,28 @@
                         if (h.getIsRecommended()==0){continue;}
             %>
                         <div class='recommended'>
-                            <h3> <%= h.getHotelName() %> </h3>
-                            <h4> <%= h.getAddress()%> </h4>
-                            <p> <%=h.getIntro()%></p>
-                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
-                            <div> 
-                                <span> Ratings: </span>
-                                <% for (int p=1;p<=h.getStarRating();p++){ %>
-                                    <span class='glyphicon glyphicon-star' style='color:red;'></span>
-                                <% } %>
+                            <div class ="image">
+                                <img src="image/11.jpg" class = "img">
+                                <div class = "price">
+                                <h3> Price: $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
+                                </div>
                             </div>
-                            <img src="" alt="">
-                            <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
-                            </form>
+                            <div class = "text">
+                                <h3> <%= h.getHotelName() %> </h3>
+                                <h4> <%= h.getAddress()%> </h4>
+                                <p> <%=h.getIntro()%></p>
+                                <div> 
+                                    <span> Ratings: </span>
+                                    <% for (int p=1;p<=h.getStarRating();p++){ %>
+                                        <span class='glyphicon glyphicon-star' style='color:red;'></span>
+                                    <% } %>
+                                    <br><br>
+                                </div>
+                                <form method="GET" action="showHotelRoom.jsp">
+                                <button  id ="check_room" type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
+                                </form>
+                            </div>
+                            
                         </div>
                     <% } %>
                     
@@ -148,21 +156,30 @@
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
                         if (h.getIsRecommended()==1){continue;}
             %>
-                        <div>
-                            <h3> <%= h.getHotelName() %> </h3>
-                            <h4> <%= h.getAddress()%> </h4>
-                            <p> <%=h.getIntro()%></p>
-                            <h3> $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
-                            <div> 
-                                <span> Ratings: </span>
-                                <% for (int p=1;p<=h.getStarRating();p++){ %>
-                                    <span class='glyphicon glyphicon-star' style='color:red;'></span>
-                                <% } %>
+                        <div class = "recommended">
+                            <div class="image">
+                                <img src="image/10.jpg" class = "img">
+                                <div class = "price">
+                                <h3> Price: $<%=Order.getLowestRate(h.getHotelID(),CIDate,CODate)*MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getDiscountByUserType((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))/100%></h3>
+                                </div>
                             </div>
-                            <img src="" alt="">
-                            <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room Availability </button>
-                            </form>
+                            <div class ="text">
+                                <h3> <%= h.getHotelName() %> </h3>
+                                <h4> <%= h.getAddress()%> </h4>
+                                <p> <%=h.getIntro()%></p>
+                                
+                                <div> 
+                                    <span> Ratings: </span>
+                                    <% for (int p=1;p<=h.getStarRating();p++){ %>
+                                        <span class='glyphicon glyphicon-star' style='color:red;'></span>
+                                    <% } %>
+                                    <br><br>
+                                </div>
+                                <form method="GET" action="showHotelRoom.jsp">
+                                <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
+                                </form>
+                            </div>
+                            
                         </div>
                     <% } %>
                     
@@ -213,6 +230,9 @@
    
         
     </div>
+            <div class ="footer">
+                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
+            </div>
     </body>
 </html>
 

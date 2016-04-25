@@ -51,6 +51,9 @@
             <p><%=(request.getParameter("result")!=null)?request.getParameter("result"):""%></p>
         </fieldset>
     </div>
+        <div class ="footer">
+                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
+            </div>
 </body>
 </html>
 

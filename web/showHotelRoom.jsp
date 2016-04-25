@@ -195,7 +195,11 @@
                 o.setPrice(realRate*numRooms*numDays);
                 orderMap.put(hotelID+"_"+room.getRoomType(), o);
                 int remained = Order.getRemainedRoom(o); %>
-                <div>
+                <div class="recommended">
+                    <div class="image">
+                        <img src="image/13-2.jpg" class = "img">
+                    </div>
+                    <div class="text">
                     <h3><%= room.getRoomName()%></h3>        
     <%              if (realRate != room.getStandardRate()) {           %>
                     <h4> Standard Rate: $ 
@@ -230,10 +234,14 @@
                             <button type="submit" name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
                         </form>
                     <% } %>
+                    </div>
                 </div>
                 
         <% }
             session.setAttribute("orderMap",orderMap);
-        } %>     
+        } %> 
+        <div class ="footer">
+                <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
+            </div>
 </body>
 </html>

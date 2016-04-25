@@ -16,7 +16,7 @@
         <title>Hypnos</title>
     </head>
     <body>
-        <div class="title_bar_home">
+        <div id="title_bar_home">
             <h1 id = "title" >Hypnos</h1>
             <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
             <nav class = "menu">
@@ -28,14 +28,13 @@
             </nav>
             
         </div>
-            <form method="GET" action="ManageManagerServlet" class="content">
-                <ul>
-                    <li>
-                    <label for="idOrName">Search by UserID or Username:
-                    <input type="text" id="idOrName" name="idOrName">
-                    </li>
-                </ul>
+        <div class ="prompt">
+            <form method="GET" action="ManageManagerServlet" class="content">             
+                        <p for="idOrName">Search by UserID or Username:</p>
+                        <input type="text" id="idOrName" name="idOrName">         
                 <input type="submit" value ="Search">
             </form>   
+        </div>
+
     </body>
 </html>
