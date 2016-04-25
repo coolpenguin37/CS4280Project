@@ -154,15 +154,35 @@
                         $("#"+key).bootstrapSwitch("state",(value==1)?true:false)
                     }
                     else if (key=="label"){
-                        $('#label').tagsinput('destory');
-                        $('#label').val("");
-                        $('#label').attr("data-role","tagsinput");
-//                        $('#label').tagsinput('removeAll');
+                        
+                        $('#label').off('itemAdded');
+                        $('#label').off('itemRemoved')
+                        $('#label').tagsinput('removeAll');
+                        $('#label').attr("data-role","tagsinput");                        
                         var arr=value.toString().split(";")
-                        alert(arr)
                         for (i=0;i<arr.length;i++){
                            $("#label").tagsinput('add',arr[i].substr(1));
                         } 
+                        
+                        $('#label').on('itemAdded', function(event) {
+                            // event.item: contains the item
+                        $.ajax({
+                                type:"POST",
+                                url:"ManageHotelServlet",
+                                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+                                dataType:"json"
+                            })
+                        });
+
+                        $('#label').on('itemRemoved', function(event) {
+                           // event.item: contains the item
+                           $.ajax({
+                               type:"POST",
+                               url:"ManageHotelServlet",
+                               data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+                               dataType:"json"
+                           })
+                        });
                     }
                     else {
                         $("#"+key).html(value)
@@ -177,8 +197,6 @@
                             }
                         });
                     }
-
-                    
                 })
                 $(".isRecommended").attr("name",data.hotelInfo.hotelID)
                 
@@ -383,29 +401,7 @@
     function init(){
         $(".isRecommended").bootstrapSwitch("disabled",true)
         //alan to do not working well
-        $('#label').on('itemAdded', function(event) {
-            alert(event.item);
-            alert($(this).val());
-            alert(data.hotelInfo.hotelID)
-            // event.item: contains the item
-            $.ajax({
-                type:"POST",
-                url:"ManageHotelServlet",
-                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
-                dataType:"json"
-            })
-        });
-                         
-        $('#label').on('itemRemoved', function(event) {
-            alert(event.item);
-           // event.item: contains the item
-           $.ajax({
-               type:"POST",
-               url:"ManageHotelServlet",
-               data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
-               dataType:"json"
-           })
-        });
+        
     }
     window.onload=init;
     

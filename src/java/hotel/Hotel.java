@@ -168,9 +168,10 @@ public class Hotel implements MySQLInit{
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] LIKE ?) OR ([Label] LIKE ?)");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM [HotelInfo] WHERE ([HotelName] LIKE ?) OR ([Label] LIKE ?) OR ([LABEL] LIKE ?)");
             stmt.setString(1, "%" + keyword + "%");
             stmt.setString(2, "%:" + keyword + ";%");
+            stmt.setString(3, "%" + keyword + "%");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Hotel temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"),

@@ -120,7 +120,21 @@
                             hotelIDList.remove(Integer.valueOf(h.getHotelID()));
                             hotelIDList.add(Integer.valueOf(h.getHotelID()));
                         }
-                    }           
+                    }
+                    if (location.indexOf(",") == -1 || location.indexOf(";") == -1){
+                        keywords = location.split("\\,|;");
+                    }
+                    else {
+                        keywords = new String[] {location};
+                    }
+                    for (String keyword: keywords){
+                        if (keyword.equals(" ") || keyword.equals(",") || keyword.equals(";")) {continue;}
+                        ArrayList<Hotel> hotels=Hotel.searchHotel(keyword);
+                        for (Hotel h: hotels){
+                            hotelIDList.remove(Integer.valueOf(h.getHotelID()));
+                            hotelIDList.add(Integer.valueOf(h.getHotelID()));
+                        }
+                    }
                     for (int i = 0; i < hotelIDList.size(); ++i) { 
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
                         if (h.getIsRecommended()==0){continue;}
@@ -203,7 +217,7 @@
             <ul>
                 <li>
                 <label for="location">Where are you going?</label>
-                <input id="location" type="text" name="location" value="Destination, Hotel"> 
+                <input id="location" type="text" name="location" placeholder="Destination, Hotel"> 
                 </li>
                 <li>
                 <label style="width:400px">When do you plan to travel?</label>
