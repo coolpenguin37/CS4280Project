@@ -293,7 +293,7 @@ public class Hotel implements MySQLInit{
                 }
             }
 
-            if (h.getIsRecommended()==0||h.getIsRecommended()==1)
+            if (h.getIsRecommended() == 0||h.getIsRecommended() == 1)
             {
                 String strQuery = "UPDATE [HotelInfo] SET [IsRecommended] = ? WHERE [hotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
@@ -305,7 +305,7 @@ public class Hotel implements MySQLInit{
                 }
             }
 
-            if (h.getStarRating()!=-1)
+            if (h.getStarRating() != -1)
             {
                 String strQuery = "UPDATE [HotelInfo] SET [StarRating] = ? WHERE [hotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
@@ -319,6 +319,9 @@ public class Hotel implements MySQLInit{
             
             if (!h.getLabel().equals(""))
             {
+                if (h.getLabel().equals(":;")){
+                    h.setLabel("");
+                }
                 String strQuery = "UPDATE [HotelInfo] SET [Label] = ? WHERE [hotelID] = ?";
                 PreparedStatement stmt = conn.prepareStatement(strQuery);
                 stmt.setString(1, h.getLabel());

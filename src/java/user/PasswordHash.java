@@ -12,8 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * @author yduan7
  */
 public class PasswordHash {
-    public static String hash(String password) throws NoSuchAlgorithmException{
-        
+    public static String hash(String password) throws NoSuchAlgorithmException {
         MessageDigest md= MessageDigest.getInstance("SHA-256");
         md.update(password.getBytes());
         byte[] bytes= md.digest();

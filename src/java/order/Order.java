@@ -35,7 +35,6 @@ public class Order implements MySQLInit, OrderStatus {
     private int price;
     private String roomName="";
     private String statusDescription="";
-    private int orderIDWrapper=0;
     
     public String getStatusDescription(){
         switch (status){
@@ -69,11 +68,11 @@ public class Order implements MySQLInit, OrderStatus {
         this.roomName=roomName;
     }
     public int getOrderID() {
-        return orderID+orderIDWrapper;
+        return orderID;
     }
     
     public void setOrderID(int orderID) {
-        this.orderID=orderID-orderIDWrapper;
+        this.orderID=orderID;
     }
     
     public int getStatus() {

@@ -89,13 +89,13 @@ public class Comment implements MySQLInit {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO [Comments] "
-                + "([CommentID], [OrderID], [Content], [Score], [Date]) VALUES (?, ?, ?, ?, ?)");
+                + "([OrderID], [Content], [Score], [Date]) VALUES (?, ?, ?, ?)");
 
-            stmt.setInt(1, commentID);
-            stmt.setInt(2, orderID);
-            stmt.setString(3, content);
-            stmt.setInt(4, score);
-            stmt.setDate(5, date);
+            
+            stmt.setInt(1, orderID);
+            stmt.setString(2, content);
+            stmt.setInt(3, score);
+            stmt.setDate(4, date);
             
             stmt.executeUpdate();
             if (stmt != null) {
@@ -116,7 +116,7 @@ public class Comment implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
+            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score, [Date]"
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.HotelID IN (SELECT HotelInfo.HotelID From [HotelInfo] "
                 + "WHERE [HotelName] = ?)";
@@ -169,7 +169,7 @@ public class Comment implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
+            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score, [Date]"
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.UserID IN (SELECT [User].UserID From [User] "
                 + "WHERE [Username] = ?";

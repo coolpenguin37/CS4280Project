@@ -6,21 +6,19 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import order.*;
-import comment.*;
-import java.sql.Date;
-import java.util.Calendar;
+import javax.servlet.http.HttpSession;
+import user.*;
+import javax.servlet.RequestDispatcher;
 
 /**
  *
  * @author yanlind
  */
-public class CommentServlet extends HttpServlet {
+public class ResetPasswordServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,12 +31,6 @@ public class CommentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            /* TODO output your page here. You may use following sample code. */
-           
-        } finally {
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -68,14 +60,43 @@ public class CommentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        PrintWriter out=response.getWriter();
-        String comment=request.getParameter("comment");
-        int rating=Integer.parseInt(request.getParameter("rating"));
-        int orderID=Integer.parseInt(request.getParameter("orderID"));
-        Comment c=new Comment(orderID,comment,rating,new Date(Calendar.getInstance().getTimeInMillis()));;
-        if (!c.insertToDatabase()){
-            out.println("Failed to submit comment...");
+        HttpSession session = request.getSession(true);
+        User u = User.getUserByUserID((Integer) session.getAttribute("userID"));
+        String oldPwd = u.getPassword();
+        
+        String input_oldPwd, input_newPwd;
+        try{
+            input_oldPwd = PasswordHash.hash(request.getParameter("oldPwd"));
+            input_newPwd = PasswordHash.hash(request.getParameter("newPwd"));
         }
+        catch (Exception e){
+            input_oldPwd = request.getParameter("oldPwd");
+            input_newPwd = request.getParameter("newPwd");
+        }
+        if (oldPwd.equals(input_oldPwd)) {
+            if (!User.validatePassword(request.getParameter("newPwd"))) {
+                request.setAttribute("errorMessage", User.PASSWORD_ERROR);
+            } else {
+                u.setPassword(input_newPwd);
+                if (!User.updateProfile(u)) {
+                    request.setAttribute("errorMessage", "Reset password failed....");
+                }
+                else{
+                    session.setAttribute("password", request.getParameter("newPwd"));
+                }
+            }
+        }
+        else {
+            request.setAttribute("errorMessage", "Old password is wrong!");
+        }
+        RequestDispatcher rd;
+        if (request.getAttribute("errorMessage")!=null){
+            rd = request.getRequestDispatcher("updateProfile.jsp?resetPassword=true");
+        }
+        else{
+            rd = request.getRequestDispatcher("updateProfile.jsp");
+        }
+        rd.forward(request, response);
     }
 
     /**

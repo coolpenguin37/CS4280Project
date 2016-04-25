@@ -80,6 +80,14 @@ public class CreateHotelServlet extends HttpServlet {
                 return;                
             }
             
+            if (intro == null || intro.isEmpty()) {
+                String result = "Invalid hotel intro";
+                request.setAttribute("result", result);
+                RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
+                disp.forward(request, response);
+                return;
+            }
+            
             Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label), intro);
             if (h.insertToDatabase()) {
                 out.println("<p>Yes!<p/>");

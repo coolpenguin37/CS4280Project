@@ -25,11 +25,11 @@
         <!-- Latest compiled JavaScript -->
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script>
-            function processInput(){
-               //alan to do
-                var orderID=$("#orderIDField").val();
+            function processInput(o){
+                
+                var orderID=$(o).prev("input").val();
                 var values={}
-                values["comment"]=$("#comment").val();
+                values["comment"]=$("#comment"+orderID).val();
                 values["rating"]=$(".glyphicon-star").length
                 values["orderID"]=orderID
                 $.ajax({
@@ -39,12 +39,13 @@
                     dataType:"text",
 
                     success:function(data){
-                        alert("button[data-target='#'"+orderID""]")
-                        $("button[data-target='#'"+orderID""]").click();
-                        alert("123")
+                        
                         if (data==null || data==""){
                             alert("Comment submit successfully!")
-                            $("#collapseButton").click();
+                            $("button[data-target='#"+orderID+"']").click();
+                            $("button[data-target='#"+orderID+"']").css("background","grey");
+                            $("button[data-target='#"+orderID+"']").css("border","grey");
+                            $("button[data-target='#"+orderID+"']").prop("disabled","true");
                         }
                         else {
                             alert(data)
@@ -58,33 +59,53 @@
             }
             function init(){
                     $(".rating-star").hover(function(){
-                    $(this).removeClass(".glyphicon-star-empty")
-                    var previousSiblings=$(this).prevAll(".glyphicon-star-empty")
-                    var nextSiblings=$(this).nextAll(".glyphicon-star")
-                    $(this).addClass("glyphicon-star");
-                    $(this).addClass("fake-star");
-                    $(this).css("color","red");
-                    $(previousSiblings).addClass("glyphicon-star");
-                    $(previousSiblings).addClass("fake-star");
-                    $(previousSiblings).css("color","yellow");
-                    $(nextSiblings).addClass("fake-empty");
-                    $(nextSiblings).addClass("glyphicon-star-empty")
-                    $(nextSiblings).removeClass("glyphicon-star")
-                    $(nextSiblings).css("color","")
-                },function(){
-                    $(".fake-star").css("color","");
-                    $(".fake-star").addClass("glyphicon-star-empty")
-                    $(".fake-star").removeClass("glyphicon-star")
-                    $(".fake-star").removeClass("fake-star")
-                    $(".fake-empty").css("color","yellow");
-                    $(".fake-empty").addClass("glyphicon-star")
-                    $(".fake-empty").removeClass("glyphicon-star-empty")
-                    $(".fake-empty").removeClass("fake-empty")
-                })
+                            if ($(this).hasClass("glyphicon-star-empty")){
+                                $(this).removeClass("glyphicon-star-empty");
+                                $(this).addClass("glyphicon-star");
+                                $(this).addClass("fake-star");
+                                $(this).css("color","yellow");
+                            }
+                            var previousSiblings=$(this).prevAll(".glyphicon-star-empty")
+                            
+                            var nextSiblings=$(this).nextAll(".glyphicon-star")
+                            $(previousSiblings).css("color","yellow");
+                            $.each($(previousSiblings),function(){
+                                if ($(this).hasClass("glyphicon-star-empty")){
+                                    $(this).removeClass("glyphicon-star-empty")
+                                    $(this).addClass("glyphicon-star");
+                                    $(this).addClass("fake-star");
+                                }
+                            })
+                            $(nextSiblings).css("color","");
+                            $.each($(nextSiblings),function(){
+                                if ($(this).hasClass("glyphicon-star")){
+                                    $(this).addClass("fake-empty");
+                                    $(this).addClass("glyphicon-star-empty")
+                                    $(this).removeClass("glyphicon-star")
+                                }
+                            })
+                        },
+                        function(){
+                            $(".fake-star").css("color","");
+                            $(".fake-star").addClass("glyphicon-star-empty")
+                            $(".fake-star").removeClass("glyphicon-star")
+                            $(".fake-star").removeClass("fake-star")
+                            $(".fake-empty").css("color","yellow");
+                            $(".fake-empty").addClass("glyphicon-star")
+                            $(".fake-empty").removeClass("glyphicon-star-empty")
+                            $(".fake-empty").removeClass("fake-empty")
+                        })
                 
                     $(".rating-star").click(function(){
-                        $(".fake-star").removeClass("fake-star")
-                        $(".fake-empty").removeClass("fake-empty")
+                        if($(".fake-star").length!=0 || $(".fake-empty").length!=0){
+                            $(".fake-star").removeClass("fake-star")
+                            $(".fake-empty").removeClass("fake-empty")
+                        }
+                        else{
+                            $(".glyphicon-star").addClass("glyphicon-star-empty");
+                            $(".glyphicon-star").css("color","");
+                            $(".glyphicon-star").removeClass("glyphicon-star");
+                        }
                     })
                   
             }
@@ -168,15 +189,39 @@
         <%    
                 return;
             }
-                
+            else if (request.getParameter("changeType")!=null){
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/showHotelRoom.jsp");
+                dispatcher.forward(request,response);
+            }
+            else if (request.getParameter("bookroom")!=null){
+                Order a=(Order)session.getAttribute("orderToModify");
+                Order b=new Order(a);
+                int newRoomType=((ArrayList<HotelRoom>)session.getAttribute("rooms")).get(Integer.parseInt(request.getParameter("bookroom"))).getRoomType();
+                b.setRoomType(newRoomType);
+                int c=Order.tryUpdateOrder(a, b);
+                int newOrderID=-1;
+                if (c!=0){
+                    newOrderID=Order.doUpdateOrder(a, b, c, 1);
+                }
+                if (newOrderID!=-1){ %>
+                    <div class = "info">Success! The new order ID is: <%=newOrderID%> 
+                            
+                    </div>
+                <%}
+                else{ %>
+                <div class ="info"> Update order failed... 
+                            
+                        </div>
+            <%  }   
+            } 
             else if (request.getParameter("changeDate")!=null){ 
                 Order o=(Order)session.getAttribute("orderToModify");
         %>
             <fieldset class ="fieldset">
                 <legend>Change Date</legend>
                 <form method="GET" action="" class = "content">
-                    <label>From:</label><input type="date" name="ciDate" value="<%=o.getCIDate()%>"> <br>
-                    <label>To:</label><input type="date" name="coDate" value="<%=o.getCODate()%>"> <br>
+                    <label>From:</label><input type="date" name="ciDate" <%="value="+o.getCIDate()%>> <br>
+                    <label>To:</label><input type="date" name="coDate" <%="value="+o.getCODate()%>> <br>
                     <input type="submit" value = "Update">
                 </form>
             </fieldset>
@@ -329,7 +374,7 @@
         %>
                 <div class ="prompt">    
                     <p> There is no room available for you to change number of rooms </p>
-                    <button value ="<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>" >Back</button>
+                    <button onclick='window.location.href="<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>"' >Back</button>
                 </div>
         <%
                 } else {
@@ -407,7 +452,13 @@
                     userID=User.getUserByUsername(username).getUserID();
                 }
                 ArrayList<Order> orderList = Order.getAllOrdersByUserID(userID);
-                    if (orderList.size() == 0) {
+                boolean allCanceled=true;
+                for (int i = 0; i < orderList.size(); ++i) {
+                    Order o = orderList.get(i);
+                    if (o.getStatus()!=6){allCanceled=false;break;}
+
+                }
+                    if (orderList.size() == 0 || allCanceled) {
                 %>
                         <p class = "prompt"> You don&#39;t have any order. </p>
                 <%
@@ -453,10 +504,10 @@
                                 <div class="collapse" <%="id="+o.getOrderID()%> >
                                     <div class="form-group">
                                         <label for="comment">Comment:</label>
-                                        <textarea class="form-control" rows="5" id="comment"></textarea>
+                                        <textarea class="form-control" rows="5" <%="id=comment"+o.getOrderID()%>></textarea>
                                         <label>Rating:</label><span class="glyphicon glyphicon-star-empty rating-star"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span><span class="rating-star glyphicon glyphicon-star-empty"></span>
-                                        <input type="hidden" id="orderIDField" name="orderID" value="<%=o.getOrderID()%>">
-                                        <button onclick="processInput()">Submit Comment</button>
+                                        <input type="hidden" name="orderID" value="<%=o.getOrderID()%>">
+                                        <button onclick="processInput(this)">Submit Comment</button>
                                     </div>  
                                 </div>
         <%

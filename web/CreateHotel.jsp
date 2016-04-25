@@ -36,6 +36,9 @@
             <label>Label</label>
             <input type="text" name="label"> 
             <br>
+            <label>Introduction </label>
+            <input type="text" name="intro">
+            <br>
             <input type="submit" name="Create New Hotel">
         </form>
         <% if(request.getAttribute("result") != null) { %>

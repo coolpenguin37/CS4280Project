@@ -141,7 +141,7 @@ th {
         color: #FFFFFF;
 }
 
-input[type="submit"], input[type="button"] {
+input[type="submit"], input[type="reset"], button, input[type="button"] {
         width: 200px;
         color: #FFFFFF !important;
         font-weight: bold !important;  
