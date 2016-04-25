@@ -50,7 +50,7 @@
                     <label>New password:</label><input type="password" name="newPwd"><br>
                     <label>Retype New password:</label><input type="password" name="newPwdRetype"><br>
                     <input type="submit" name="submit" value="Confirm" onclick="return checkPwd()">
-                    <input type="reset" name="cancel" value="Reset">
+                    <input type="reset" name="cancel" value="Cancel">
                 </form>
             <%
                 return;

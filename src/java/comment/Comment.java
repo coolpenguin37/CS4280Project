@@ -116,7 +116,7 @@ public class Comment implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
+            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score, [Date]"
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.HotelID IN (SELECT HotelInfo.HotelID From [HotelInfo] "
                 + "WHERE [HotelName] = ?)";
@@ -169,7 +169,7 @@ public class Comment implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score "
+            String strQuery = "SELECT Orders.OrderID, CommentID, Content, Score, [Date]"
                 + "FROM Orders INNER JOIN Comments ON Orders.OrderID = Comments.OrderID "
                 + "WHERE Orders.UserID IN (SELECT [User].UserID From [User] "
                 + "WHERE [Username] = ?";

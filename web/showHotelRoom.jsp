@@ -136,12 +136,17 @@
                 for (int i = 0; i < commentList.size(); ++i) {
                     Comment tmp = commentList.get(i);
                     Order o = Order.getOrderByOrderID(tmp.getOrderID());
-                    int currentUserID = Integer.parseInt((String) session.getAttribute("UserID"));
+                    int currentUserID;
+                    if (session.getAttribute("userID") != null) {
+                        currentUserID = (Integer) session.getAttribute("UserID");
+                    } else {
+                        currentUserID = -1;
+                    }
                     //alan todo PRINT OUT COMMENT                
                     out.print("<div id=comment"+tmp.getCommentID()+">");
-                    out.print("<p>"+tmp.getContent()+" </p>");
-                    out.print("<p>"+tmp.getScore()+" </p>");
-                    out.print("<p>"+tmp.getDate()+" </p>");
+                    out.print("<p> Comment: " + tmp.getContent() + " </p>");
+                    out.print("<p> Score: " + tmp.getScore() + " </p>");
+                    out.print("<p> Date: " + tmp.getDate() + " </p>");
                     if (currentUserID == o.getUserID())
                     {
                         out.println("<a onclick=delcomment(" + tmp.getCommentID() + ") >" + "Delete"+"</a>");

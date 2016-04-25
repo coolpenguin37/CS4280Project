@@ -61,6 +61,7 @@
                 alert(xhr.status+"\n"+thrownError);
             }
         })
+        return;
     }
     function modifyOrderStatus(command,orderID){
         var values={}
