@@ -160,10 +160,6 @@
                         for (i=0;i<arr.length;i++){
                            $("#label").tagsinput('add',arr[i].substr(1));
                         } 
-                        
-                         
-                         
-                        
                     }
                     else {
                         $("#"+key).html(value)
@@ -385,25 +381,28 @@
         $(".isRecommended").bootstrapSwitch("disabled",true)
         //alan to do not working well
         $('#label').on('itemAdded', function(event) {
-                            alert(data.hotelInfo.hotelID)
-                            // event.item: contains the item
-                            $.ajax({
-                                type:"POST",
-                                url:"ManageHotelServlet",
-                                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
-                                dataType:"json"
-                            })
-                         });
+            alert(event.item);
+            alert($(this).val());
+            alert(data.hotelInfo.hotelID)
+            // event.item: contains the item
+            $.ajax({
+                type:"POST",
+                url:"ManageHotelServlet",
+                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+                dataType:"json"
+            })
+        });
                          
-                         $('#label').on('itemRemoved', function(event) {
-                            // event.item: contains the item
-                            $.ajax({
-                                type:"POST",
-                                url:"ManageHotelServlet",
-                                data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
-                                dataType:"json"
-                            })
-                         });
+        $('#label').on('itemRemoved', function(event) {
+            alert(event.item);
+           // event.item: contains the item
+           $.ajax({
+               type:"POST",
+               url:"ManageHotelServlet",
+               data:{"pk":data.hotelInfo.hotelID,"name":"label","value":$(this).val()},
+               dataType:"json"
+           })
+        });
     }
     window.onload=init;
     

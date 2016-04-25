@@ -89,7 +89,13 @@ public class ResetPasswordServlet extends HttpServlet {
         else {
             request.setAttribute("errorMessage", "Old password is wrong!");
         }
-        RequestDispatcher rd = request.getRequestDispatcher("updateProfile.jsp");
+        RequestDispatcher rd;
+        if (request.getAttribute("errorMessage")!=null){
+            rd = request.getRequestDispatcher("updateProfile.jsp?resetPassword=true");
+        }
+        else{
+            rd = request.getRequestDispatcher("updateProfile.jsp");
+        }
         rd.forward(request, response);
     }
 

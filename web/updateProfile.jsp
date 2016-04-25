@@ -44,19 +44,23 @@
         <h1 class = "error">You have not logged in yet! Click <a href="userLogin.jsp">here</a> to log in.</h1>
     <% } 
             else {
+            if (request.getAttribute("errorMessage")!=null && request.getHeader("referer").indexOf("Reset")!=-1){request.removeAttribute("errorMessage");}
             if (request.getParameter("resetPassword")!=null){ %>
                 <form action="ResetPasswordServlet" method="POST">
                     <label>Old password:</label><input type="password" name="oldPwd"><br>
                     <label>New password:</label><input type="password" name="newPwd"><br>
                     <label>Retype New password:</label><input type="password" name="newPwdRetype"><br>
                     <input type="submit" name="submit" value="Confirm" onclick="return checkPwd()">
-                    <input type="reset" name="cancel" value="Cancel">
+                    <input type="reset" name="cancel" value="Cancel" onclick="window.location.href='updateProfile.jsp?cancelled=true'">
                 </form>
+                <span class ="error"><%=(request.getAttribute("errorMessage")==null)?"":(String)request.getAttribute("errorMessage")%></span>
             <%
+                
                 return;
             }
-            if ((request.getHeader("referer").indexOf("ResetPassword")!=-1 || request.getHeader("referer").indexOf("updateProfile")!=-1) && request.getParameter("errorMessage")==null){
-                isSuccess=-1;
+            
+            if (request.getHeader("referer").indexOf("updateProfile")!=-1 && request.getAttribute("errorMessage")==null && request.getParameter("cancelled")==null){
+                isSuccess=1;
                 name=(String)session.getAttribute("name");
                 userEmail=(String)session.getAttribute("userEmail");
                 userTel=(String)session.getAttribute("userTel");
@@ -158,10 +162,12 @@
                 </tbody>
                 </table>
                     <% if (isSuccess==1) { %>
-                    <span class = "info"> Your profile has been updated successfully! </span>
-                    <% } else if (isSuccess==-1){ %>
-                    <span class ="info"> Your profile cannot be updated... </span><br>
-                    <span class ="error"><%=(request.getParameter("errorMessage")==null)?errorMessage:request.getParameter("errorMessage")%></span>
+                        <span class = "info"> Your profile has been updated successfully! </span>
+                    <%                        
+                    } 
+                    else if (isSuccess==-1){ %>
+                        <span class ="info"> Your profile cannot be updated... </span><br>
+                        <span class ="error"><%=errorMessage%></span>
                     <% } %>
             </fieldset>
             </form>
