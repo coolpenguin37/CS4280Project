@@ -488,7 +488,7 @@
     <li class="active"><a data-toggle="tab" href="#hotel-information">Hotel Information</a></li>
     <li><a data-toggle="tab" href="#room-information">Room Information</a></li>
     <li><a data-toggle="tab" href="#manage-orders">Manage Orders</a></li>
-    <li><a data-toggle="tab" href="#report">Report</a></li>
+    <!--<li><a data-toggle="tab" href="#report">Report</a></li>-->
   </ul>
 
   <div class="tab-content">

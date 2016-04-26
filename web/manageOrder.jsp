@@ -418,7 +418,7 @@
                         </li>
                         <li>
                         <label>Your Pin:</label>
-                        <input type="text" name="pin">
+                        <input type="password" name="pin">
                         </li>
                     </ul>              
                     <input type="submit" value = "Check Order">

@@ -73,6 +73,10 @@
         <servlet-name>OrderPDFServlet</servlet-name>
         <servlet-class>servlets.OrderPDFServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FacebookLogin</servlet-name>
+        <servlet-class>servlets.FacebookLogin</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -120,6 +124,10 @@
     <servlet-mapping>
         <servlet-name>OrderPDFServlet</servlet-name>
         <url-pattern>/OrderPDFServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FacebookLogin</servlet-name>
+        <url-pattern>/FacebookLogin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

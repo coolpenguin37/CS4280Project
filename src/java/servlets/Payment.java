@@ -86,13 +86,13 @@ public class Payment extends HttpServlet {
                 out.println("<form action='confirm.jsp' method='POST' class = 'content'>");          
                 out.println("<h3 id = 'subtitle'>Personal Information</h2>");
                 out.println("<label>Name:</label>");
-                out.println("<input type='text' name='clientName' value="+u.getName()+"><br>");
+                out.println("<input type='text' name='clientName' value='"+u.getName()+"'><br>");
                 out.println("<label>E-mail Address:</label>");
-                out.println("<input type='text' name='clientEmail' value="+u.getEmail()+"><br>");
+                out.println("<input type='text' name='clientEmail' value='"+u.getEmail()+"'><br>");
                 out.println("<label>Retype Your E-mail Address:</label>");
                 out.println("<input type='text' name='clientRetypeEmail'><br>");
                 out.println("<label>Phone:</label>");
-                out.println("<input type='text' name='clientPhone' value="+u.getTel()+"><br>");
+                out.println("<input type='text' name='clientPhone' value='"+u.getTel()+"'><br>");
                 out.println("<br><br>");
                 out.println("<h3 id = 'subtitle'>The total payment amount is: "+(realRate*numRooms*numDays)+"</h2>");
                 out.println("<br><br>");

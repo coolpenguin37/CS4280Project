@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet{
                     session.setAttribute("userID", userID);
                     session.setAttribute("username", userName);
                     if (name.isEmpty()) {
-                        session.setAttribute("name",username);
+                        session.setAttribute("name",userName);
                     }
                     else {
                         session.setAttribute("name", name);

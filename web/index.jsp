@@ -180,7 +180,7 @@
                                     <br><br>
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
-                                <button  id ="check_room" type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
+                                    <button  id ="check_room" type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
                                 </form>
                             </div>
                             
@@ -225,7 +225,7 @@
                                     <br><br>
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
-                                <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
+                                    <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
                                 </form>
                             </div>
                         </div>
