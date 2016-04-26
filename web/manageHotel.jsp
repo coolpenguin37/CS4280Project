@@ -471,7 +471,78 @@
    
 </head>
 <body>
+    <% 
+        if (request.getParameter("createnewhotel") != null) {
+            String hotelName = request.getParameter("hotelName");
+            String address = request.getParameter("address");
+            int isRecommended;
+            if (request.getParameter("isRecommended")==null) {
+                isRecommended = 0;
+            }
+            else {
+                isRecommended = 1;
+            }
+            int starRating = Integer.parseInt(request.getParameter("starRating"));
+            String label = request.getParameter("label");
+            String intro = request.getParameter("intro");
 
+            if (hotelName == null || hotelName.isEmpty()) {
+                String result = "Invalid hotel name.";
+                request.setAttribute("result", result);
+                RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
+                disp.forward(request, response);
+                return;
+            }
+
+            if (address == null || address.isEmpty()) {
+                String result = "Invalid hotel address.";
+                request.setAttribute("result", result);
+                RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
+                disp.forward(request, response);
+                return;
+            }
+
+            if (Hotel.hotelExist(hotelName, address)) {
+                String result = "The hotel already exists";
+                request.setAttribute("result", result);
+                RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
+                disp.forward(request, response);
+                return;                
+            }
+            
+            if (intro == null || intro.isEmpty()) {
+                String result = "Invalid hotel intro";
+                request.setAttribute("result", result);
+                RequestDispatcher disp = request.getRequestDispatcher("CreateHotel.jsp");
+                disp.forward(request, response);
+                return;
+            }
+            
+            Hotel h = new Hotel(hotelName, address, isRecommended, starRating, label, intro);
+            h.insertToDatabase();
+            Hotel nh = Hotel.getHotelByName(hotelName, address);
+            int hotelID;
+            if (nh != null) {
+                hotelID = nh.getHotelID();
+            } else {
+                hotelID = 0;
+            }
+            if (hotelID > 0) {              
+                String username = (String) session.getAttribute("username");
+                User u = User.getUserByUsername(username);
+                Manager m = new Manager(u.getUserID(), hotelID);
+                if (m.insertToDatabase()) {
+                    out.println("<p>Yes!<p/>");
+                } else {
+                    out.println("<p>manager datebase error<p/>");
+                }
+                
+                
+            } else {
+                out.println("<p>hotel database error!<p/>");
+            }
+        }
+    %>
 <div class="container">
   <h2>Hotel and Room Management System (HRMS)</h2>
   
@@ -488,7 +559,7 @@
     <li class="active"><a data-toggle="tab" href="#hotel-information">Hotel Information</a></li>
     <li><a data-toggle="tab" href="#room-information">Room Information</a></li>
     <li><a data-toggle="tab" href="#manage-orders">Manage Orders</a></li>
-    <!--<li><a data-toggle="tab" href="#report">Report</a></li>-->
+    <li><a data-toggle="tab" href="#report">Add Hotel</a></li>
   </ul>
 
   <div class="tab-content">
@@ -563,7 +634,32 @@
     </div>
     <div id="report" class="tab-pane fade">
       <h3>Report</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        <form method="GET" action="" class = "content">
+
+            <label>Hotel Name:</label>
+            <input type="text" name="hotelName">
+            <br>
+            <label>Address:</label>
+            <input type="text" name="address"> 
+            <br>
+            <label>Star Rating:</label>
+            <input type="radio" name="starRating" value="1" checked> 1
+            <input type="radio" name="starRating" value="2"> 2
+            <input type="radio" name="starRating" value="3"> 3
+            <input type="radio" name="starRating" value="4"> 4
+            <input type="radio" name="starRating" value="5"> 5
+            <br>
+            <label>Do you want to recommend this hotel?</label>
+            <input type="checkbox" name="isRecommended" value="yes" checked>
+            <br>
+            <label>Label</label>
+            <input type="text" name="label"> 
+            <br>
+            <label>Introduction </label>
+            <input type="text" name="intro">
+            <br>
+            <input type="submit" name="createnewhotel" value="Create">
+        </form>
     </div>
   </div>
 </div>
