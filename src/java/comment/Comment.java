@@ -163,6 +163,28 @@ public class Comment implements MySQLInit {
         avg = avg / 10;
         return avg;
     }
+    
+    public static boolean deleteCommentByCommentID(int commentID) {
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "DELETE FROM [Comments] WHERE [CommentID] = ?"
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setInt(1, commentID);
+
+            stmt.executeUpdate();
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return false;
+        }   
+        return true;
+    }
 
     public static ArrayList<Comment> getCommentByUsername(String username) {
         ArrayList<Comment> commentList = new ArrayList<Comment>();
