@@ -168,7 +168,7 @@ public class Comment implements MySQLInit {
         try {
             Class.forName(SQLDriver);
             Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
-            String strQuery = "DELETE FROM [Comments] WHERE [CommentID] = ?"
+            String strQuery = "DELETE FROM [Comments] WHERE [CommentID] = ?";
             PreparedStatement stmt = conn.prepareStatement(strQuery);
             stmt.setInt(1, commentID);
 
