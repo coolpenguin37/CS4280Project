@@ -15,6 +15,11 @@
         <title>Create New Hotel</title>
     </head>
     <body>
+        <div id = "title_bar_home">
+            <h1 id = "title" >Hypnos</h1>
+            <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+            <jsp:include page="nav.jsp"></jsp:include>
+        </div>
         <form method="POST" action="CreateHotelServlet" class = "content">
 
             <label>Hotel Name:</label>
