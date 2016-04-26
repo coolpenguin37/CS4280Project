@@ -3,8 +3,12 @@
     Created on : Mar 25, 2016, 11:54:19 PM
     Author     : yanlind
 --%>
-<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,comment.*,java.sql.Date,java.sql.Date,org.joda.time.DateTime,org.joda.time.Days,org.joda.time.LocalDate,java.security.SecureRandom,java.util.*"%>
+<%@page import="java.util.ArrayList,hotel.*,user.*,order.*,comment.*,java.sql.Date,org.joda.time.DateTime,org.joda.time.Days,org.joda.time.LocalDate,java.security.SecureRandom,java.util.*,org.quartz.*,org.quartz.impl.StdSchedulerFactory, java.util.*,org.quartz.ee.servlet.QuartzInitializerServlet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="static org.quartz.JobBuilder.newJob"%>
+<%@ page import="static org.quartz.TriggerBuilder.newTrigger"%>
+<%@ page import="static org.quartz.SimpleScheduleBuilder.simpleSchedule"%>
+<%@ page import="static org.quartz.DateBuilder.nextGivenSecondDate"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,11 +116,26 @@
                 }
                 o.setUserID(userID);
                 o.setStatus(OrderStatus.PROCESSING);
+                
                 orderID = o.insertToDatabase();
                 //successfully submit order
                 if (orderID > 0) {
                     o.setOrderID(orderID);
                     session.setAttribute("orderToPay",o);
+//                    SchedulerFactory sf=null;
+//                    try{
+//                        sf = new StdSchedulerFactory();
+//                    }
+//                    catch (Exception e){
+//                        Exception f=e;
+//                    }
+//                    java.util.Date startTime = nextGivenSecondDate(null, 10);
+//                    Scheduler sched = sf.getScheduler();
+//                    JobDetail job1 = newJob(CancelOrder.class).withIdentity("job1", "group1").build();
+//                    SimpleTrigger trigger1 = (SimpleTrigger) newTrigger().withIdentity("trigger1", "group1").startAt(startTime).build();
+//                    job1.getJobDataMap().put("orderID", orderID);
+//                    java.util.Date scheduleTime1 = sched.scheduleJob(job1, trigger1);
+//                    sched.start();
     %>
                     <div class="prompt">
                     <span> Your order has been submitted successfully! </span>

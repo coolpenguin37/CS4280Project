@@ -77,6 +77,15 @@
         <servlet-name>FacebookLogin</servlet-name>
         <servlet-class>servlets.FacebookLogin</servlet-class>
     </servlet>
+    <servlet>
+	  <servlet-name>QuartzInitializer</servlet-name>
+	  <servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+	  <init-param>
+	    <param-name>shutdown-on-unload</param-name>
+	    <param-value>true</param-value>
+	  </init-param>
+	  <load-on-startup>2</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>

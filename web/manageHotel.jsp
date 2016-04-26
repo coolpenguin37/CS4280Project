@@ -531,15 +531,20 @@
                 String username = (String) session.getAttribute("username");
                 User u = User.getUserByUsername(username);
                 Manager m = new Manager(u.getUserID(), hotelID);
-                if (m.insertToDatabase()) {
-                    out.println("<p>Yes!<p/>");
-                } else {
-                    out.println("<p>manager datebase error<p/>");
+                if (m.insertToDatabase()) { %>
+                <script>alert("Hotel added!")</script>
+                <% session.setAttribute("managers",Manager.getManagerByUserID(m.getUserID())); %>
+                <script>window.reload</script>
+                <%
+                } else { %>
+                <script>alert("Failed to add hotel!")</script>
+                <%
                 }
                 
                 
-            } else {
-                out.println("<p>hotel database error!<p/>");
+            } else { %>
+                <script>alert("Hotel database failure!")</script>
+            <%
             }
         }
     %>
