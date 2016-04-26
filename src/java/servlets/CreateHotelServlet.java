@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import hotel.*;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
+import user.PasswordHash;
+import user.User;
 
 /**
  *
@@ -32,16 +35,17 @@ public class CreateHotelServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession(true);
+        //PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CreateHotelServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CreateHotelServlet at " + request.getContextPath() + "</h1>");
+//            out.println("<!DOCTYPE html>");
+//            out.println("<html>");
+//            out.println("<head>");
+//            out.println("<title>Servlet CreateHotelServlet</title>");            
+//            out.println("</head>");
+//            out.println("<body>");
+//            out.println("<h1>Servlet CreateHotelServlet at " + request.getContextPath() + "</h1>");
 
             String hotelName = request.getParameter("hotelName");
             String address = request.getParameter("address");
@@ -90,15 +94,16 @@ public class CreateHotelServlet extends HttpServlet {
             
             Hotel h = new Hotel(hotelName, address, isRecommended, starRating, processLabel(label), intro);
             if (h.insertToDatabase()) {
-                out.println("<p>Yes!<p/>");
+//                out.println("<p>Yes!<p/>");
             } else {
-                out.println("<p>No!<p/>");
+//                out.println("<p>No!<p/>");
             }
-            out.println("</html>");
-            out.println("</html>");
+            //out.println("</html>");
         } finally {
-            out.close();
+            //out.close();
         }
+        getServletContext().getRequestDispatcher((String)session.getAttribute("previousPage")).forward(request, response);
+//        response.sendRedirect((String)session.getAttribute("previousPage"));
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -127,7 +132,7 @@ public class CreateHotelServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response);               
     }
 
     /**

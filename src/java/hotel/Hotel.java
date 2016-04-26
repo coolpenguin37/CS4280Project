@@ -130,6 +130,38 @@ public class Hotel implements MySQLInit{
         return temp;
     }
     
+    public static Hotel getHotelByName(String hotelName, String address) {
+        Hotel temp = null;
+        try {
+            Class.forName(SQLDriver);
+            Connection conn = DriverManager.getConnection(SQLHost, SQLUser, SQLPassword);
+            String strQuery = "SELECT * FROM [HotelInfo] WHERE [HotelName] = ? AND [Address] = ?";
+            PreparedStatement stmt = conn.prepareStatement(strQuery);
+            stmt.setString(1, hotelName);
+            stmt.setString(2, address);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                temp = new Hotel(rs.getInt("HotelID"), rs.getString("HotelName"), rs.getString("Address"), 
+                    rs.getInt("IsRecommended"), rs.getInt("StarRating"), rs.getString("Label"), rs.getString("Intro"));
+            }
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (stmt != null) {
+                stmt.close();
+            }
+
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return temp;
+    }
+    
     public static ArrayList<Hotel> getAllHotel() {
         ArrayList<Hotel> hotelList = new ArrayList<Hotel> ();
         try {
