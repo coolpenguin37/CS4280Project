@@ -421,8 +421,9 @@
                         <input type="text" name="pin">
                         </li>
                     </ul>              
-                    </form>
                     <input type="submit" value = "Check Order">
+                    </form>
+                    
             </fieldset>
             <% 
             } else {
@@ -434,7 +435,7 @@
                     String username =request.getParameter("orderID");
                     if (!User.usernameExist(username)){ %>
                         <div class = "prompt">Cannot find order with this ID!
-                            <button value ="<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>" >Back</button>
+                            <button onclick ="window.location.href='<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>'" >Back</button>
                             
                         </div>
                     <%
@@ -443,7 +444,7 @@
                     else {
                         if (!User.getUserByUsername(username).getPassword().equals(PasswordHash.hash(request.getParameter("pin")))) { %>
                             <div class = "prompt">Pin does not match! Please check.
-                                <button value ="<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>" >Back</button>
+                                <button onclick ="window.location.href='<%=request.getHeader("referer")+((request.getQueryString()==null)?"":"?"+request.getQueryString())%>'" >Back</button>
                             </div>
                         <%
                             return;

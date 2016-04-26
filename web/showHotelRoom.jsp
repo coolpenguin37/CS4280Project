@@ -13,6 +13,43 @@
         <link rel =" stylesheet" href ="css/nav.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Show Hotel Room</title>
+    <script>
+     function delcomment(id){
+         $("#comment"+id).remove()
+         $.ajax({
+            type:"POST",
+            url:"CommentServlet",
+            data:{"deleteComment":id}
+            dataType:"text",
+            
+            success:function(data){
+            },
+            
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
+            }
+        })
+        return;
+    }
+    function modifyOrderStatus(command,orderID){
+        var values={}
+        values[command]=orderID
+        $.ajax({
+            type:"POST",
+            url:"ManageHotelServlet",
+            data:values,
+            dataType:"text",
+            
+            success:function(data){
+                $(".col-md-12").append("<div class='alert alert-success fade in'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success!</strong> The order has been updated successfully. </div>")
+            },
+            
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
+            }
+        })
+     }
+    </script>
 </head>
 <body>
     

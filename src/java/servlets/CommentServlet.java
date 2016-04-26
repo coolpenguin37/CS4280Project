@@ -69,12 +69,18 @@ public class CommentServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         PrintWriter out=response.getWriter();
-        String comment=request.getParameter("comment");
-        int rating=Integer.parseInt(request.getParameter("rating"));
-        int orderID=Integer.parseInt(request.getParameter("orderID"));
-        Comment c=new Comment(orderID,comment,rating,new Date(Calendar.getInstance().getTimeInMillis()));;
-        if (!c.insertToDatabase()){
-            out.println("Failed to submit comment...");
+        if (request.getParameter("comment")!=null){
+            String comment=request.getParameter("comment");
+            int rating=Integer.parseInt(request.getParameter("rating"));
+            int orderID=Integer.parseInt(request.getParameter("orderID"));
+            Comment c=new Comment(orderID,comment,rating,new Date(Calendar.getInstance().getTimeInMillis()));;
+            if (!c.insertToDatabase()){
+                out.println("Failed to submit comment...");
+            }
+        }
+        else if (request.getParameter("deleteComment")!=null){
+            int commentID=Integer.parseInt(request.getParameter("deleteComment"));
+                //Comment.remove(commentID);
         }
     }
 
