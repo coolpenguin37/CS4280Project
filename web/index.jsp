@@ -146,6 +146,7 @@
                         if (h.getIsRecommended()==0){continue;}
             %>
                         <div class='recommended'>
+                            <div class="recommendedTag">Recommended!</div>
                             <div class ="image">
                                 <img src="image/11.jpg" class = "img">
                                 <div class = "price">

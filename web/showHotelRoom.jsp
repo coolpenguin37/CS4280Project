@@ -234,6 +234,7 @@
                 orderMap.put(hotelID+"_"+room.getRoomType(), o);
                 int remained = Order.getRemainedRoom(o); %>
                 <div class="recommended">
+                    <div class="recommendedTag">Recommended!</div>
                     <div class="image">
                         <img src="image/13-2.jpg" class = "img">
                     </div>
