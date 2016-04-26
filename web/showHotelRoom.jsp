@@ -44,8 +44,9 @@
         <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
         <jsp:include page="nav.jsp"></jsp:include>
     </div>
-    
-    <h2>Hotel Room</h2>
+    <div >
+    <h2 style="text-align:center; ">Hotel Room</h2>
+    </div>
    
     <%  if (session.getAttribute("name") != null) { %>
         <p class = "info">Hello <%=session.getAttribute("name")%> </p>
@@ -66,6 +67,7 @@
             if (session.getAttribute("orderToModify") != null) {
                 Order a = (Order) session.getAttribute("orderToModify");
                 if (Order.updateOrderRoomType(a, room.getRoomType()) > 0){ %>
+                    <div class="prompt">
                     <p> Your room type has been successfully modified! </p>
                     <form method="POST" action="Payment">
                         <button type="submit">Pay now</button>
@@ -77,6 +79,7 @@
                 else { %>
                     <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
+                    </div>
                 <%  return;
                 }
             }
@@ -115,6 +118,7 @@
                     o.setOrderID(orderID);
                     session.setAttribute("orderToPay",o);
     %>
+                    <div class="prompt">
                     <span> Your order has been submitted successfully! </span>
                     <% if (!hasLoggedIn) { %>
                         <p>You are not logged in. Please remember your temporary User ID and Pin below in order to manage your order later.</p>
@@ -132,6 +136,7 @@
     %>
                     <span> Failed to order the room...</span>
                     <a href="index.jsp">Go back to main page</a>
+                    </div>
     <% 
                 }
             }
@@ -153,7 +158,7 @@
             int hotelID = currentHotel.getHotelID();
             session.setAttribute("hotelID",hotelID);
     %>
-            <div>
+            <div class="prompt" style="margin-top: 10px; height: 40px;">
                 <span> Score: </span>
                 <span> <%= Comment.getScoreByHotelName(currentHotel.getHotelName()) %> </span>
             </div>
@@ -170,22 +175,27 @@
                     } else {
                         currentUserID = -1;
                     } %>
-                                  
-                    <div <%="id=comment"+tmp.getCommentID()%>>
-                        <p> Comment: <%=tmp.getContent()%> </p>
-                        <p> Score <%=tmp.getScore()%> </p>
-                        <p> Date <%=tmp.getDate()%> </p>
-                    
-                <%  if (currentUserID == o.getUserID()) { %>
-                        <a href="#" onclick='return delcomment(<%=tmp.getCommentID()%>)'>Delete</a>
-                <%  } %>
-                    <br>
-                    </div>
+                    <fieldset class="fieldset">    
+                        <legend> Comment</legend>
+                        <div <%="id=comment"+tmp.getCommentID()%> class ="conmment">
+                            <p> Comment: <%=tmp.getContent()%> </p>
+                            <p> Score: <%=tmp.getScore()%> </p>
+                            <p> Date: <%=tmp.getDate()%> </p>
+
+                    <%  if (currentUserID == o.getUserID()) { %>
+                            <a href="#" onclick='return delcomment(<%=tmp.getCommentID()%>)'>Delete</a>
+                    <%  } %>
+                        <br>
+                        </div>
+                    </fieldset>
                 
             <%  }
             } 
             else { %>
+            <fieldset>
                 <p> No comment </p>
+            </fieldset>
+                    
                 
             <%
             }
@@ -196,7 +206,6 @@
             Date CODate = (session.getAttribute("coDate")==null)?a.getCODate():(Date)session.getAttribute("coDate");
             int numDays = Days.daysBetween(new LocalDate(CIDate), new LocalDate(CODate)).getDays();
             HashMap<String, Order> orderMap=new HashMap<String, Order>();
-            
             for (int i = 0; i < rooms.size(); ++i) {
                 HotelRoom room = rooms.get(i);
                 if (room.getIsRecommended()==0){continue;}
@@ -257,7 +266,7 @@
                     <% } %>
                     <% if (remained>0){ %>
                         <form method="POST" <%="action='"+((session.getAttribute("orderToModify")==null)?"":"manageOrder.jsp")+"'"%>>
-                            <button type="submit" name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
+                            <button type="submit"  name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
                         </form>
                     <% } %>
                     </div>
