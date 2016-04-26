@@ -62,6 +62,8 @@ public class OrderPDFServlet extends HttpServlet {
             Chapter chapter = new Chapter(new Paragraph(chunk), 1);
             chapter.setNumberDepth(0);
             chapter.add(new Paragraph(sb.toString(), paragraphFont));
+            Chunk c2 = new Chunk("\n\nMade by Hypnos", chapterFont);
+            chapter.add(new Paragraph(c2));
             document.add(chapter);
             
             

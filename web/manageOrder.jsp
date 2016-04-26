@@ -477,7 +477,7 @@
                             <p> Check-in date: <%= o.getCIDate() %> </p>
                             <p> Check-out date: <%= o.getCODate() %> </p>
                             <p> Total price: <%=o.getPrice() %> </p>
-                            <form method="GET" action="OrderPDFServlet" target="_blank">
+                            <form method="POST" action="OrderPDFServlet" target="_blank">
                                 <input type="hidden" name="OrderID" value="<%= o.getOrderID() %>" />
                                 <button type="submit" name="download"> Download </button>
                             </form>
