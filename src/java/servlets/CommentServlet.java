@@ -34,9 +34,10 @@ public class CommentServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        int commentID = Integer.parseInt(request.getParameter("deleteComment"));
         try {
             /* TODO output your page here. You may use following sample code. */
-           
+            Comment.deleteCommentByCommentID(commentID);
         } finally {
         }
     }
