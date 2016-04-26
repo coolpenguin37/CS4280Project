@@ -29,3 +29,30 @@
     font-family: Georgia;
     color: #145b7d;
 }
+#menu_index a{
+    color: white;
+    font-size:18px;
+    margin-right: 20px;
+    display: inline;
+    float:right;
+    text-align: center;
+    text-decoration: none;
+    line-height: 40px;
+    padding: 0 20px;
+    filter: none;
+    
+}
+#menu_index ul li{
+    display: inline;
+    list-style-type:none;  
+    color: white;
+    
+}
+#menu_index{
+    position: absolute;
+    top:0px;
+    width:100%;
+    height:50px;
+    background-color: rgba(0,0,0,0.6);
+    
+}

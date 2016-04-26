@@ -87,10 +87,59 @@
 </head>
 <body>
     <header>
-        <div id = "title_bar_home">
-            <h1 id = "title" >Hypnos</h1>
-            <p id = "intro" >Your One Stop Solution for High Quality Rest During Your Trip</p>
-            <jsp:include page="nav.jsp"></jsp:include>
+        <div id = "title_bar_home_index">
+            <h1 id = "title_index" >Hypnos</h1>
+            <p id = "intro_index" >Your One Stop Solution for High Quality Rest During Your Trip</p>
+            <div id="menu_index">
+                <% if (session.getAttribute("name") == null) { %>
+                <ul>
+                         
+                    <li><a href="userLogin.jsp">Login</a></li>
+                    <li><a href="newAccount.jsp">Sign Up</a></li>
+                    <li><a href="manageOrder.jsp">Manage Order</a></li> 
+                    <li><a href="index.jsp">Home</a></li>
+                    
+                </ul>
+            <% } else { %>
+                <ul>
+                    <li><a href="logout.jsp">Log Out</a>
+                    
+                <% if (session.getAttribute("type") != null && (((Integer) session.getAttribute("type")) < 10)) { %>
+                    <li><a href="updateProfile.jsp">Setting</a></li>
+                    <li><a href="manageOrder.jsp">Manage Order</a></li>
+                <% } else if (session.getAttribute("type") != null && ((Integer) session.getAttribute("type") >= 10)) { %> 
+                    <li><a href="updateProfile.jsp">Setting</a></li>
+                    <li><a href="ManageHotelServlet">Manage Hotel</a></li>
+
+                <% } %>
+                    <li><a href="index.jsp">Home</a></li>
+                </ul>
+            </div>
+        <% } %>
+<!--        <h2> <%= session.getAttribute("type") %> </h2>
+        <h2> <%= ((session.getAttribute("type") != null) && (((Integer) session.getAttribute("type")) == 1)) %>  </h2>-->
+            <form method="GET" action="" class = "search"> 
+            <ul>
+                <li>
+                <label for="location">Destination</label>
+                <input id="location" type="text" name="location" placeholder="Destination, Hotel"> 
+                </li>
+                <li>
+                    <label>From:</label><input type="date" name="ciDate" value="">
+                </li>
+                <li>
+                    <label>To:</label><input type="date" name="coDate" value=""> 
+                </li>
+                <li>
+                <label for="numRooms">Humber</label>
+                <input id="numRooms" type="number" name="numRooms" min="1" max="99">
+                </li>  
+                <li>
+                <input type="submit" name="search" value="Search">
+                </li>
+            </ul>
+            
+            </form>
         </div>
     </header>
     <div>
@@ -303,37 +352,26 @@
                 }
             }
         } %>
-    
-        
-        
-        <fieldset class = "fieldset">
-            <legend>Search The Hotel</legend>
-            <form method="GET" action="" class = "content"> 
-            <ul>
-                <li>
-                <label for="location">Where are you going?</label>
-                <input id="location" type="text" name="location" placeholder="Destination, Hotel"> 
-                </li>
-                <li>
-                <label style="width:400px">When do you plan to travel?</label>
-                </li>
-                <li>
-                    <label>From:</label><input type="date" name="ciDate" value="">
-                </li>
-                <li>
-                    <label>To:</label><input type="date" name="coDate" value=""> 
-                </li>
-                <li>
-                <label for="numRooms">How many rooms do you want to book?</label>
-                <input id="numRooms" type="number" name="numRooms" min="1" max="99">
-                </li>  
-            </ul>
-            <p class = "submit" ><input type="submit" name="search" value="Search"></p>
+
             <% if (e!=null && !e.isEmpty()){ %>
-                <span class = "error"><%=e%></span>
+                <span class = "prompt"><%=e%></span>
             <% } %>
-            </form>
-        </fieldset>
+ 
+            <div class="pic" align="center">
+                <div class="pic.img">
+                <img src="image/hk.jpg" class = "img_index" title="Hong Kong">
+                <p class="pic_text1">Hong Kong</p>
+                </div>
+                <div class="pic.img">
+                <img src="image/ny.jpg" class = "img_index" title="New York">
+                <p class="pic_text2">New York</p>
+                </div>
+                <div class="pic.img">
+                <img src="image/sh.jpg" class = "img_index" title="Shang Hai">
+                <p class="pic_text3">Shang Hai</p>
+                </div>
+                
+            </div>
         
                 
    

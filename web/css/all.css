@@ -5,6 +5,13 @@
     height: 400px;
     background-size: cover;    
 }
+#title_bar_home_index {
+    background-image: url('../image/background.jpg');
+    background-position: 50% 50%;
+    width: 100%;
+    height: 490px;
+    background-size: cover;    
+}
 
 body{
         background-color: #ECFFFF;
@@ -45,6 +52,55 @@ body{
 .img{
     width:350px;
     height:250px;
+}
+.img_index{
+    position:relative;
+    width:31%;
+    height:280px;
+    margin-left: 30px;
+    padding-left: 20px;
+    margin:auto;
+    float:left;
+    opacity:0.6;
+}
+.img_index:hover{
+    opacity: 1;  
+}
+.pic_img{
+    position:relative;
+    float:left;
+}
+.pic_text1{
+    position:absolute;
+    top:100px;
+    font-size:30px;
+    width:31%;
+    float:left;
+}
+
+.pic_text2{
+    position:absolute;
+    top:100px;
+    font-size:30px;
+    //display:none;
+    width:31%;
+    margin-left:32%;
+}
+.pic_text3{
+    position:absolute;
+    top:100px;
+    font-size:30px;
+    //display:none;
+    width:31%;
+    margin-left:63%;
+}
+
+.pic{  
+    width:100%;
+    height: 330px;
+    position: relative;
+    top:50px;
+    left:20px;
 }
 .image{
     width: 350px;
@@ -93,6 +149,55 @@ body{
         vertical-align: middle;
 	color:grey;
 }
+.search input[type="text"], input[type="number"],input[type="date"]{
+        font-family: Georgia;
+	border-left: 1px solid rgb(0, 0, 0);
+	padding: 2px 10px 2px 10px;
+        margin-left: 0px !important;
+        margin-top: 20px !important;
+	height: 50px;
+	line-height: 25px;
+	border-radius: 0px !important;
+        width: 150px;
+        vertical-align: middle;
+	color:grey;      
+}
+.search label{
+    padding: 2px 10px 2px 10px;
+    height: 50px;
+    color: white;
+    
+}
+.search{
+    position: absolute;
+    top: 400px;
+    width: 100%;
+    height:90px;
+    background-color: rgba(0,0,0,0.5);
+}
+.search ul li{
+    display: inline;
+    list-style-type:none;  
+    color: white;
+}
+.search input[type="submit"]{
+    width: 200px;
+        color: #FFFFFF !important;
+        font-weight: bold !important;  
+        padding: 5px 13px;
+        margin-left: 0% !important;
+        border-radius: 0 !important;
+        width: 100px;
+        margin-left:20px !important;
+        height:50px;
+        border: 1px solid white !important;
+        filter: none;
+        vertical-align: middle;
+}
+.input_text{
+    float:left;
+}
+
 .content ul{
 
     list-style-type:none;
@@ -121,6 +226,7 @@ body{
     border-bottom: 1px solid white;
     font-size: 16px;
 }
+
 
 #order_ID{
     font-size: 20px;
@@ -234,6 +340,15 @@ button {
     left: 250px;
     font-size: 50px;
 }
+#title_index{
+    text-align: center;
+    font-size: 50px;
+    position: absolute;
+    top:150px;
+    left:0px;
+    right:0px;
+    
+}
 #intro{
     font-family: Georgia;
     position: absolute;
@@ -242,6 +357,17 @@ button {
     width: 800px;
     font-size: 20px;
     font-style: italic;
+}
+#intro_index{
+    text-align:center;
+    font-size: 20px;
+    font-style: italic;
+    position: absolute;
+    top:250px;
+    left:0px;
+    right:0px;
+    
+    
 }
 
 #checkbox{
