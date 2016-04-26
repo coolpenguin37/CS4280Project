@@ -13,12 +13,24 @@
 <html>
 <head>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel ="stylesheet" href =" css/all.css">
     <link rel ="stylesheet" href ="css/nav.css">
     <link href="css/bootstrap.icon-large.min.css" rel="stylesheet">
     <title>Hypnos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script>
+        function getSrc(s){
+           var src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFkJ_-IVPI5GQKCo-hODB_G6XDzy4Sj4k&q="
+           var q=s.split(" ")
+           var qs=q[0];
+           for (i=1;i<q.length;i++){
+               qs+="+";
+               qs+=q[i];
+           }
+           $("iframe").attr("src",src+qs);
+       }
         function getDateString(today){
             var year=today.getFullYear();
             var month=today.getMonth()+1;
@@ -51,6 +63,25 @@
                 }
             %>
         }
+        
+        var getMap = function(opts) {
+  var src = "http://maps.googleapis.com/maps/api/staticmap?",
+      params = $.extend({
+        center: 'Hong Kong',
+        zoom: 14,
+        size: '512x512',
+        maptype: 'roadmap',
+        sensor: false
+      }, opts),
+      query = [];
+
+  $.each(params, function(k, v) {
+    query.push(k + '=' + encodeURIComponent(v));
+  });
+
+  src += query.join('&');
+  return '<img src="' + src + '" />';
+}
         window.onload=init;
     </script>
 </head>
@@ -181,6 +212,7 @@
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
                                     <button  id ="check_room" type="submit" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room </button>
+                                    <button type="button" onclick="getSrc('<%=h.getHotelName()%>')" data-toggle="modal" data-target="#myModal">View in Google Map</button>
                                 </form>
                             </div>
                             
@@ -191,6 +223,7 @@
                     for (int i = 0; i < hotelIDList.size(); ++i) { 
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
                         if (h.getIsRecommended()==1){continue;}
+                        String q=h.getHotelName().replaceAll(" ", "+");
             %>
                         <div class='recommended'>
                             <div class="image">
@@ -226,12 +259,40 @@
                                 </div>
                                 <form method="GET" action="showHotelRoom.jsp">
                                     <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
+                                    <button type="button" onclick="getSrc('<%=h.getHotelName()%>')" data-toggle="modal" data-target="#myModal">View in Google Map</button>
                                 </form>
+                                    <!-- Button trigger modal -->
+
+
+
                             </div>
                         </div>
                     <% } %>
                     
-                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Google Map</h4>
+      </div>
+      <div class="modal-body">
+          <div class="container">
+        <iframe
+  width="500"
+  height="450"
+  frameborder="0" style="border:0"
+  allowfullscreen>
+</iframe>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
                     
                     
                     
