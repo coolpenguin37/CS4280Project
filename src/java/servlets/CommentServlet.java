@@ -33,13 +33,7 @@ public class CommentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        int commentID = Integer.parseInt(request.getParameter("deleteComment"));
-        try {
-            /* TODO output your page here. You may use following sample code. */
-            Comment.deleteCommentByCommentID(commentID);
-        } finally {
-        }
+        response.setContentType("text/plain");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -81,7 +75,12 @@ public class CommentServlet extends HttpServlet {
         }
         else if (request.getParameter("deleteComment")!=null){
             int commentID=Integer.parseInt(request.getParameter("deleteComment"));
-                //Comment.remove(commentID);
+            if (Comment.deleteCommentByCommentID(commentID)){
+                out.println("Done!");
+            }
+            else {
+                out.println("Comment deletion failed");
+            }
         }
     }
 

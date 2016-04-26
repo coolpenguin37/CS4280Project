@@ -11,26 +11,11 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel =" stylesheet" href =" css/all.css">
         <link rel =" stylesheet" href ="css/nav.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Show Hotel Room</title>
     <script>
-     function delcomment(id){
-         $("#comment"+id).remove()
-         $.ajax({
-            type:"POST",
-            url:"CommentServlet",
-            data:{"deleteComment":id}
-            dataType:"text",
-            
-            success:function(data){
-            },
-            
-            error: function(xhr,ajaxOptions,thrownError){
-                alert(xhr.status+"\n"+thrownError);
-            }
-        })
-        return;
-    }
+     
     function modifyOrderStatus(command,orderID){
         var values={}
         values[command]=orderID
@@ -191,7 +176,7 @@
                         <p> Date <%=tmp.getDate()%> </p>
                     
                 <%  if (currentUserID == o.getUserID()) { %>
-                        <a onclick='delcomment(<%=tmp.getCommentID()%>)'>Delete</a>
+                        <a href="#" onclick='return delcomment(<%=tmp.getCommentID()%>)'>Delete</a>
                 <%  } %>
                     <br>
                     </div>
@@ -347,5 +332,27 @@
         <div class ="footer">
                 <p>All the web pages are only for assignment usages for Course CS4280 in City University of Hong Kong</p>
             </div>
+<script>
+    function delcomment(id){
+         $("#comment"+id).remove()
+         $.ajax({
+            type:"POST",
+            url:"CommentServlet",
+            data:{"deleteComment":id},
+            dataType:"text",
+            
+            success:function(data){
+                alert("Comment delete successfully!")
+                window.reload;
+            },
+            
+            error: function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status+"\n"+thrownError);
+            }
+        })
+        return;
+    }
+</script>
 </body>
+
 </html>
