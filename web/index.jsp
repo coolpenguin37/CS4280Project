@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel ="stylesheet" href =" css/all.css">
     <link rel ="stylesheet" href ="css/nav.css">
+    <link href="css/bootstrap.icon-large.min.css" rel="stylesheet">
     <title>Hypnos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script>
@@ -147,6 +148,7 @@
             %>
                         <div class='recommended'>
                             <div class="recommendedTag">Recommended!</div>
+                            
                             <div class ="image">
                                 <img src="image/11.jpg" class = "img">
                                 <div class = "price">
@@ -156,6 +158,19 @@
                             <div class = "text">
                                 <h3> <%= h.getHotelName() %> </h3>
                                 <h4> <%= h.getAddress()%> </h4>
+                                <%
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getFreeWiFi()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-wifi-alt" title="Free wifi"></i>
+                                <% }
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getWelcomeGift()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-gift" title="Welcome gift"></i>
+                                <% }
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getLateCheckout()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-clock" title="Late checkout"></i>
+                                <% } 
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getBreakfast()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-cutlery" title="Breakfast available"></i>
+                                <% } %>
                                 <p> <%=h.getIntro()%></p>
                                 <div> 
                                     <span> Ratings: </span>
@@ -187,6 +202,19 @@
                             <div class ="text">
                                 <h3> <%= h.getHotelName() %> </h3>
                                 <h4> <%= h.getAddress()%> </h4>
+                                 <%
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getFreeWiFi()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-wifi-alt" title="Free wifi"></i>
+                                <% }
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getWelcomeGift()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-gift" title="Welcome gift"></i>
+                                <% }
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getLateCheckout()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-clock" title="Late checkout"></i>
+                                <% }
+                                if (MemberBenefits.getMemberBenefitsByHotelID(h.getHotelID()).getBreakfast()<=((session.getAttribute("type")==null)?0:(Integer)session.getAttribute("type"))){ %>
+                                    <i class="icon-large icon-cutlery" title="Breakfast available"></i>
+                                <% } %>
                                 <p> <%=h.getIntro()%></p>
                                 
                                 <div> 

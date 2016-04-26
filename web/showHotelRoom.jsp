@@ -12,6 +12,7 @@
         <link rel =" stylesheet" href =" css/all.css">
         <link rel =" stylesheet" href ="css/nav.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Show Hotel Room</title>
     <script>
@@ -224,7 +225,8 @@
                         <img src="image/13-2.jpg" class = "img">
                     </div>
                     <div class="text">
-                    <h3><%= room.getRoomName()%></h3>        
+                    <h3><%= room.getRoomName()%></h3> 
+                    <span class="">
     <%              if (realRate != room.getStandardRate()) {           %>
                     <h4> Standard Rate: $ 
                         <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
