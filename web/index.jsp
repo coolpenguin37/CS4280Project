@@ -135,6 +135,12 @@
                             hotelIDList.add(Integer.valueOf(h.getHotelID()));
                         }
                     }
+                    if (hotelIDList==null||hotelIDList.size()==0) { %>
+                        <div class="recommended">
+                            <p>Sorry...no hotel matching your criteria can be found!</p>
+                        </div>
+                    <%
+                    }
                     for (int i = 0; i < hotelIDList.size(); ++i) { 
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
                         if (h.getIsRecommended()==0){continue;}
@@ -170,7 +176,7 @@
                         Hotel h = Hotel.getHotelByID(hotelIDList.get(i).intValue());
                         if (h.getIsRecommended()==1){continue;}
             %>
-                        <div class = "recommended">
+                        <div class='recommended'>
                             <div class="image">
                                 <img src="image/10.jpg" class = "img">
                                 <div class = "price">
@@ -193,7 +199,6 @@
                                 <button type="submit" id ="check_room" name="currentHotel" value="<%=h.getHotelID()%>"> Check Room</button>
                                 </form>
                             </div>
-                            
                         </div>
                     <% } %>
                     

@@ -30,7 +30,7 @@
         </div>
         <div class ="prompt">
             <form method="GET" action="ManageManagerServlet" class="content">             
-                        <p for="idOrName">Search by UserID or Username:</p>
+                        <p>Search by UserID or Username:</p>
                         <input type="text" id="idOrName" name="idOrName">         
                 <input type="submit" value ="Search">
             </form>   

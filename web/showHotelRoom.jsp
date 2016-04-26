@@ -213,6 +213,72 @@
             
             for (int i = 0; i < rooms.size(); ++i) {
                 HotelRoom room = rooms.get(i);
+                if (room.getIsRecommended()==0){continue;}
+                int standardRate = room.getStandardRate();
+                String username = (String) session.getAttribute("username");
+                User u = User.getUserByUsername(username);
+                MemberBenefits mb = MemberBenefits.getMemberBenefitsByHotelID(hotelID);
+                int discount;
+                //See whether is guest
+                if (u==null || u.getUserType()<1){
+                    discount=100;
+                }
+                else {
+                    discount = mb.getDiscountByUserType(u.getUserType());
+                }
+                int realRate = (int) Math.floor(standardRate * (discount / 100.0));
+                
+                int numRooms=(session.getAttribute("numRooms")==null)?a.getNumOfRoom():Integer.valueOf((String)session.getAttribute("numRooms"));
+                Order o=new Order(room.getHotelID(), room.getRoomType(), numRooms, CIDate, CODate);
+                o.setPrice(realRate*numRooms*numDays);
+                orderMap.put(hotelID+"_"+room.getRoomType(), o);
+                int remained = Order.getRemainedRoom(o); %>
+                <div class="recommended">
+                    <div class="image">
+                        <img src="image/13-2.jpg" class = "img">
+                    </div>
+                    <div class="text">
+                    <h3><%= room.getRoomName()%></h3>        
+    <%              if (realRate != room.getStandardRate()) {           %>
+                    <h4> Standard Rate: $ 
+                        <span style="text-decoration:line-through;"><%= room.getStandardRate() %></span>
+                    </h4>
+                    <h4> You only need to pay: $ 
+                        <span style="color: red;"><%= realRate %> for each room</span>
+                    </h4>
+    <%              } else {        %>
+                    <h4> Standard Rate: $ 
+                        <span> <%= room.getStandardRate() %> </span>
+                    </h4>
+    <%              }               %>
+                    <h4> Total: $
+                        <span style="color: red; font-weight: bold;"><%=realRate*numRooms*numDays%></span> 
+                        in total 
+                    </h4>
+                    <div> 
+                        <span>Size: </span> <span> <%= room.getRoomSize() %> Square Feet.</span>
+                    </div>
+                    <% if (remained > 30) { %>
+                        <div> <span>Plenty rooms available.</span></div>
+                    <% } else if (remained <= 30 && remained>10) { %>
+                        <div> <span>Limited rooms available!</span></div>
+                    <% } else if (remained<=0){ %>
+                        <div> <span>Sold out...</span></div>
+                    <% } else { %>
+                        <div> <span>Only <%= remained %> Room(s) available now! Act Fast!</span></div>
+                    <% } %>
+                    <% if (remained>0){ %>
+                        <form method="POST" <%="action='"+((session.getAttribute("orderToModify")==null)?"":"manageOrder.jsp")+"'"%>>
+                            <button type="submit" name="bookroom" value="<%=hotelID+"_"+room.getRoomType()%>"><%=(session.getAttribute("orderToModify")==null)?"Book!":"Modify!"%></button>
+                        </form>
+                    <% } %>
+                    </div>
+                </div>
+                
+        <% }
+            for (int i = 0; i < rooms.size(); ++i) {
+                HotelRoom room = rooms.get(i);
+                if (room.getIsRecommended()==1){continue;}
                 int standardRate = room.getStandardRate();
                 String username = (String) session.getAttribute("username");
                 User u = User.getUserByUsername(username);
